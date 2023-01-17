@@ -1,0 +1,32 @@
+﻿@model List<CategoryViewModel>
+@{
+}
+
+<h3>Categories</h3>
+<a asp-area="" asp-controller="Category" asp-action="Form" asp-route-id="@Guid.Empty">Create category</a>
+
+  <div class="list">
+      <table class="table">
+         <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Icon</th>
+                <th scope="col">Type</th>
+            </tr>
+         </thead>
+          @foreach (var category in Model)
+          {
+              <tbody>
+                  <tr>
+                      <td>@category.Title</td>
+                      <td>@category.Icon</td>
+                      <td>@category.Type</td>
+                    <td><a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Form" asp-route-id="@category.CategoryId.ToString()">Edit</a></td>
+                    <td><a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Delete" asp-route-id="@category.CategoryId">Home</a></td>
+                  </tr>
+              </tbody>
+          }
+      </table>
+        
+  </div>
+
