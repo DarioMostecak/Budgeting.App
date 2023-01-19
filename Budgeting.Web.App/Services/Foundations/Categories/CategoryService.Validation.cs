@@ -46,6 +46,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             Message = "Date is required"
         };
 
+        //remove this method
         private static dynamic IsNotSame(
             Guid firstId,
             Guid secondId,
@@ -108,7 +109,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             {
                 if (rule.Condition)
                 {
-                    invalidCategorytException.Errors.Add((parameter, parameter));
+                    invalidCategorytException.Errors.Add((parameter, rule.Message));
                 }
             }
 

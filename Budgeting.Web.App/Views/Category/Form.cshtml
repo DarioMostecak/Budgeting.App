@@ -11,43 +11,48 @@ else
     <h4>Update Category</h4>
 }
 
-<div class="container widget">
-    <form>
-        <input id="hiden-element" type="hidden" name="CategoryId" value="@Model.CategoryId" />
-        <input id="hiden-element" type="hidden" name="TimeCreated" value="@Model.TimeCreated" />
-        <input id="hiden-element" type="hidden" name="TimeCModify" value="@Model.TimeModify" />
-        <div class="row padding-row-radio">
-            <div class="col border d-flex justify-content-center div-col-expanse">
-                <label>
-                    <input class="radio-input radio-inline" type="radio" name="Type" value="Expanse" checked>Expanse
-                </label>
+<div class="grid-container">
+    <div class="container widget">
+        <form>
+            <input id="hiden-element" type="hidden" name="CategoryId" value="@Model.CategoryId" />
+            <input id="hiden-element" type="hidden" name="TimeCreated" value="@Model.TimeCreated" />
+            <input id="hiden-element" type="hidden" name="TimeCModify" value="@Model.TimeModify" />
+            <div class="row padding-row-radio">
+                <div class="col border d-flex justify-content-center div-col-expanse">
+                    <label>
+                        <input class="radio-input radio-inline" type="radio" name="Type" value="Expanse" checked>Expanse
+                    </label>
+                </div>
+                <div class="col border d-flex justify-content-center radio-css div-col-income">
+                    <label class="radio-label">
+                        <input class="radio-input radio-inline income_radio" type="radio" name="Income" value="Income">Income
+                    </label>
+                </div>
             </div>
-            <div class="col border d-flex justify-content-center radio-css div-col-income">
-                <label class="radio-label">
-                    <input class="radio-input radio-inline income_radio" type="radio" name="Income" value="Income">Income
-                </label>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row padding-row-input">
+                <div class="col">
+                    <label id="text-label" for="title">Title: </label>
+                    <input class="input-title " type="text" id="title" asp-for="@Model.Title" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
             </div>
-        </div>
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row padding-row-input">
-            <div class="col">
-                <label id="text-label" for="title">Title: </label>
-                <input class="input-title " type="text" id="title" asp-for="@Model.Title" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="row padding-row-input">
+                <div class="col">
+                    <label id="text-label" for="icon">Icon: </label>
+                    <input class="input-icon" type="text" id="icon" asp-for="@Model.Icon" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
             </div>
-        </div>
-        <div class="row padding-row-input">
-            <div class="col">
-                <label id="text-label" for="icon">Icon: </label>
-                <input class="input-icon" type="text" id="icon" asp-for="@Model.Icon" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div class="row padding-row-button">
+                <div class="col">
+                    <input class="btn btn-secondary" type="submit" value="Submit" />
+                </div>
             </div>
-        </div>
-        <div class="row padding-row-button">
-            <div class="col">
-                <input class="btn btn-secondary" type="submit" value="Submit" />
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    <div class="container widget message">
+        <p>Chose your icon for free at <a href="https://emojipedia.org/" target="_blank">emojipedija.org</a>!</p>
+    </div>
 </div>
 

@@ -25,13 +25,17 @@ body {
 
 
 
-/**************************** Form View css ***********************************/
-/******************************************************************************/
+/**************************** Form category View css ***********************************/
+/***************************************************************************************/
+.grid-container {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap:2rem;
+}
+
 .widget {
     border-radius: 1rem;
     background-color: #1a222b;
-    width:30%;
-    float: none;
     margin: 0 auto;
 }
 
@@ -70,15 +74,8 @@ body {
 
 /*Text input*/
 .padding-row-input {
-   padding-left:23px;
+   padding-left:20px;
    padding-right:20px;
-}
-
-.padding-row-input-icon {
-    padding-top: 20px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 40px;
 }
 
 .input-title, .input-icon {
@@ -96,12 +93,51 @@ body {
 }
 
 .padding-row-button {
-    padding-top:10px;
-    padding-left: 23px;
+    padding-top: 10px;
+    padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 40px;
 }
+
+/*container message*/
+.message {
+    align-content: center;
+    text-align: center;
+}
+
+.widget > p {
+    padding-top: 23%;
+}
+
 /*************************************************************************/
 /*************************************************************************/
 
 
+
+/***********************CATEGORY INDEX VIEW*******************************/
+/*************************************************************************/
+
+/*button for list*/
+
+.table-category {
+    border-radius: 1rem;
+    background-color: #1a222b;
+    margin: 0 auto;
+}
+
+.btn-expense {
+    border-radius: 1rem;
+    width: 50%;
+    background-color: #931414;
+    border: none;
+    color: white;
+}
+
+.icon-list {
+    text-decoration:none;
+    color:white;
+}
+
+
+/*************************************************************************/
+/*************************************************************************/

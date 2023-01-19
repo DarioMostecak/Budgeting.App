@@ -1,9 +1,53 @@
 ﻿@model List<CategoryViewModel>
 @{
 }
-
 <h3>Categories</h3>
-<a asp-area="" asp-controller="Category" asp-action="Form" asp-route-id="@Guid.Empty">Create category</a>
+<div class="container table-category">
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Icon @category.Title</td>
+                    <td>
+                        @if(category.Type == "Expense")
+                        {
+                            <button class="btn-expense">Expense</button>
+                        }
+                        else
+                        {
+                            <button class="btn-income">Income</button>
+                        }        
+                     </td>
+                     <td>
+                        <a class="icon-list" asp-controller="Category" asp-action="Form" asp-route-id="@category.CategoryId.ToString()">
+                            <i class="bi bi-pen-fill"></i>
+                        </a>
+                        &nbsp;&nbsp;
+                        <a class="icon-list" asp-controller="Category" asp-action="Form" asp-route-id="@category.CategoryId">
+                            <i class="bi bi-trash3-fill"></i>
+                        </a>
+                        
+                     </td>
+                </tr>              
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+@*<a asp-area="" asp-controller="Category" asp-action="Form" asp-route-id="@Guid.Empty">Create category</a>
 
   <div class="list">
       <table class="table">
@@ -27,6 +71,5 @@
               </tbody>
           }
       </table>
-        
-  </div>
+</div>*@
 
