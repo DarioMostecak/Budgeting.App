@@ -1,4 +1,4 @@
-﻿namespace Budgeting.Web.App.Attributes
+﻿namespace Budgeting.App.Api.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class BsonCollectionAttribute : Attribute

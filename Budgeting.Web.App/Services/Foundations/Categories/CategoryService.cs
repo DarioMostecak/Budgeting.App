@@ -1,4 +1,5 @@
-﻿using Budgeting.Web.App.Brokers.Loggings;
+﻿using Budgeting.Web.App.Brokers.DateTimes;
+using Budgeting.Web.App.Brokers.Loggings;
 using Budgeting.Web.App.Brokers.Storages;
 using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.Models;
@@ -8,36 +9,36 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
     public partial class CategoryService : ICategoryService
     {
         private readonly IStorageBroker storageBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
 
         public CategoryService(
             IStorageBroker storageBroker,
+            IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
+            this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
         }
+
+        public ValueTask<List<CategoryViewModel>> RetrieveAllCategoriesAsync() =>
+        TryCatch(async () =>
+        {
+            var listCategories = await this.storageBroker.SelectAllCategoriesAsync();
+            var listCategoryViewModels = listCategories.Select(category => (CategoryViewModel)category);
+
+            return listCategoryViewModels.ToList();
+        });
 
         public ValueTask<CategoryViewModel> CreateCategoryAsync(CategoryViewModel categoryViewModel) =>
         TryCatch(async () =>
         {
-            Category newCategory = categoryViewModel;
-            newCategory.SetTimeCreatedAndTimeModify();
-
+            var newCategory = MapToCategoryInsert(categoryViewModel);
             ValidateCategoryOnCreate(newCategory);
             await this.storageBroker.InsertCategoryAsync(newCategory);
 
             return (CategoryViewModel)newCategory;
-
-        });
-
-        public IQueryable<CategoryViewModel> RetrieveAllCategories() =>
-        TryCatch(() =>
-        {
-            var listCategory = this.storageBroker.SelectAllCategories().ToList();
-            var listCategoryViewModel = listCategory.ConvertAll(category => (CategoryViewModel)category);
-
-            return listCategoryViewModel.AsQueryable();
         });
 
         public ValueTask<CategoryViewModel> RetriveCategoryByIdAsync(Guid categoryId) =>
@@ -53,8 +54,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         public ValueTask<CategoryViewModel> ModifyCategoryAsync(CategoryViewModel categoryViewModel) =>
         TryCatch(async () =>
         {
-            Category inputCategory = categoryViewModel;
-            inputCategory.UpdateTimeModify();
+            var inputCategory = MapToCategoryUpdate(categoryViewModel);
             ValidateCategoryOnModify(inputCategory);
 
             Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(inputCategory.CategoryId);
@@ -71,9 +71,41 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             ValidateCategoryIdIsNull(categoryId);
             Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(categoryId);
             ValidateStorageCategory(maybeCategory, categoryId);
+            var deletedCategory = await this.storageBroker.DeleteCategoryAsync(categoryId);
 
-            var deletedCategory = await this.storageBroker.DeleteCategoryAsync(maybeCategory);
             return (CategoryViewModel)deletedCategory;
         });
+
+        #region Private methods
+        private Category MapToCategoryInsert(CategoryViewModel categoryViewModel)
+        {
+            DateTime currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+
+            return new Category
+            {
+                CategoryId = Guid.NewGuid(),
+                Title = categoryViewModel.Title,
+                Icon = categoryViewModel.Icon,
+                Type = categoryViewModel.Type,
+                TimeCreated = currentDateTime,
+                TimeModify = currentDateTime
+            };
+        }
+
+        private Category MapToCategoryUpdate(CategoryViewModel categoryViewModel)
+        {
+            DateTime currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+
+            return new Category
+            {
+                CategoryId = categoryViewModel.CategoryId,
+                Title = categoryViewModel.Title,
+                Icon = categoryViewModel.Icon,
+                Type = categoryViewModel.Type,
+                TimeCreated = categoryViewModel.TimeCreated,
+                TimeModify = currentDateTime
+            };
+        }
+        #endregion
     }
 }

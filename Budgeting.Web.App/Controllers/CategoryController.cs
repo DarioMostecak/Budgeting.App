@@ -15,9 +15,9 @@ namespace Budgeting.Web.App.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async ValueTask<IActionResult> Index()
         {
-            var operationResult = this.manager.GetAllCategories();
+            var operationResult = await this.manager.GetAllCategoriesAsync();
             return View(operationResult.Payload);
         }
 
@@ -40,20 +40,21 @@ namespace Budgeting.Web.App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async ValueTask<IActionResult> UpdateCategory([Bind("CategoryId", "Title", "Type", "TimeCreated", "TimeModify")] CategoryViewModel model)
+        public async ValueTask<IActionResult> UpdateCategory([Bind("CategoryId", "Title", "Icon", "Type", "TimeCreated", "TimeModify")] CategoryViewModel model)
         {
             var operationResult = await this.manager.UpdateCategoryAsync(model);
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async ValueTask<IActionResult> DeleteCategory(Guid id)
+        [HttpGet]
+        [Route("Category/DeleteCategory/{categoryId}")]
+        public async ValueTask<IActionResult> DeleteCategory(Guid categoryId)
         {
-            var oprationResult = await this.manager.DeleteCategoryAsync(id);
+            var oprationResult = await this.manager.DeleteCategoryAsync(categoryId);
             return RedirectToAction("Index");
         }
 
-        //put in partial class category controller utilites
+
         private string SetFormViewData(OperationResult<CategoryViewModel> operationResult)
         {
             var categoryId = operationResult.Payload.CategoryId;

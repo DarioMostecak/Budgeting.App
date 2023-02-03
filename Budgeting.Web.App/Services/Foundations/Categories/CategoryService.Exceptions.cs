@@ -1,43 +1,37 @@
 ﻿using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.Models.Exceptions;
-using MongoDB.Driver;
+using System.Text;
 
 namespace Budgeting.Web.App.Services.Foundations.Categories
 {
     public partial class CategoryService
     {
-        private delegate ValueTask<CategoryViewModel> ReturnCategoryFunction();
-        private delegate IQueryable<CategoryViewModel> ReturnigQueryableCategoryFunction();
+        private delegate ValueTask<CategoryViewModel> ReturnCategoryViewModelFunction();
+        private delegate ValueTask<List<CategoryViewModel>> ReturnigCategoryViewModelsFunction();
 
         private async ValueTask<CategoryViewModel> TryCatch(
-            ReturnCategoryFunction returnAssignmentFunction)
+            ReturnCategoryViewModelFunction returnCategoryViewModelFunction)
         {
             try
             {
-                return await returnAssignmentFunction();
+                return await returnCategoryViewModelFunction();
             }
             catch (NullCategoryException nullCategoryException)
             {
                 throw CreateAndLogValidationException(nullCategoryException);
             }
-            catch (InvalidCategoryException invalidInputException)
+            catch (InvalidCategoryException invalidCategoryException)
+               when (invalidCategoryException.ValidationErrors.Count != 0)
             {
-                throw CreateAndLogValidationException(invalidInputException);
+                throw CreateAndLogValidationException(invalidCategoryException);
+            }
+            catch (InvalidCategoryException invalidCategoryException)
+            {
+                throw CreateAndLogValidationException(invalidCategoryException as Exception);
             }
             catch (NotFoundCategoryException notFoundCategoryException)
             {
                 throw CreateAndLogValidationException(notFoundCategoryException);
-            }
-            catch (MongoDuplicateKeyException mongoDuplicateKeyException)
-            {
-                var alreadyExistsCategoryException =
-                    new AlreadyExistsCategoryException(mongoDuplicateKeyException);
-
-                throw CreateAndLogValidationException(alreadyExistsCategoryException);
-            }
-            catch (MongoException mongoException)
-            {
-                throw CreateAndLogCriticalDependencyException(mongoException);
             }
             catch (Exception exception)
             {
@@ -48,16 +42,12 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             }
         }
 
-        private IQueryable<CategoryViewModel> TryCatch(
-            ReturnigQueryableCategoryFunction returnigQueryableCategoryFunction)
+        private ValueTask<List<CategoryViewModel>> TryCatch(
+            ReturnigCategoryViewModelsFunction returnigCategoryViewModelsFunction)
         {
             try
             {
-                return returnigQueryableCategoryFunction();
-            }
-            catch (MongoException mongoException)
-            {
-                throw CreateAndLogCriticalDependencyException(mongoException);
+                return returnigCategoryViewModelsFunction();
             }
             catch (Exception exception)
             {
@@ -71,6 +61,24 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         private CategoryValidationException CreateAndLogValidationException(Exception exception)
         {
             var categoryValidationException = new CategoryValidationException(exception);
+            this.loggingBroker.LogError(categoryValidationException);
+
+            return categoryValidationException;
+        }
+
+        private CategoryValidationException CreateAndLogValidationException(InvalidCategoryException invalidCategoryException)
+        {
+            var categoryValidationException = new CategoryValidationException(invalidCategoryException);
+
+            var validationMessage = new StringBuilder();
+            validationMessage.AppendLine(invalidCategoryException.Message);
+
+            foreach (var validationErrors in invalidCategoryException.ValidationErrors)
+            {
+                validationMessage.AppendFormat("{0} : {1}\n", validationErrors.Item1, validationErrors.Item2);
+            }
+
+            this.loggingBroker.LogWarning(validationMessage.ToString());
             this.loggingBroker.LogError(categoryValidationException);
 
             return categoryValidationException;

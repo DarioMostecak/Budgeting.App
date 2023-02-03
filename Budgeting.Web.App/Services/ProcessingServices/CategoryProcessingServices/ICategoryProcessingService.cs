@@ -5,7 +5,7 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
 {
     public interface ICategoryProcessingService
     {
-        OperationResult<IEnumerable<CategoryViewModel>> GetAllCategories();
+        ValueTask<OperationResult<List<CategoryViewModel>>> GetAllCategoriesAsync();
         ValueTask<OperationResult<CategoryViewModel>> CreateCategoryAsync(CategoryViewModel categoryViewModel);
         ValueTask<OperationResult<CategoryViewModel>> UpdateCategoryAsync(CategoryViewModel categoryViewModel);
         ValueTask<OperationResult<CategoryViewModel>> DeleteCategoryAsync(Guid id);

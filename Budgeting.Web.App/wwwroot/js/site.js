@@ -10,21 +10,45 @@
 
 $('.div-col-income').click(function () {
     //toggle radio button checked prop
-    $('input[name=Income]').prop('checked', true);
-    $('input[name=Type]').prop('checked', false);
+    $('input[value=Income]').prop('checked', true);
+    $('input[value=Expense]').prop('checked', false);
 
     //changing classes
     $('.radio-css').removeClass('div-col-income');
-    $('.div-col-expanse').addClass('div-col-income');
+    $('.div-col-expense').addClass('div-col-income');
 });
 
-$('.div-col-expanse').click(function () {
-    $('input[name=Type]').prop('checked', true);
-    $('input[name=Income]').prop('checked', false);
+$('.div-col-expense').click(function () {
+    $('input[value=Expense]').prop('checked', true);
+    $('input[value=Income]').prop('checked', false);
 
-    $('.div-col-expanse').removeClass('div-col-income');
+    $('.div-col-expense').removeClass('div-col-income');
     $('.radio-css').addClass('div-col-income');
 });
+
+
+
+/**Category Form Validation*/
+function validateCategory() {
+    event = event || window.event || event.srcElement;
+
+    let title = $('#title').val();
+    var IsValid;
+
+    if (title < 3) {
+        $('#title').next('span').text('Title must be between 3 and 20 charachters.').show();
+        isValid = false;
+    }
+    else {
+        $('#title').next('span').hide();
+    }
+
+    if (!isValid) {
+        event.preventDefault();
+    }
+}
+
+
 
 /****************************************************/
 /****************************************************/

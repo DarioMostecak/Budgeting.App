@@ -1,32 +1,78 @@
-﻿using Budgeting.Web.App.Attributes;
-using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
+﻿using Newtonsoft.Json;
 
 namespace Budgeting.Web.App.Brokers.Storages
 {
-    public partial class StorageBroker : DbContext, IStorageBroker
+    public partial class StorageBroker : IStorageBroker
     {
         private readonly IConfiguration configuration;
-        private readonly IMongoDatabase db;
+        private HttpClient httpClient;
+        private IHttpClientFactory httpClientFactory { get; set; }
 
-        public StorageBroker(IConfiguration configuration)
+        public StorageBroker(IConfiguration configuration,
+            HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             this.configuration = configuration;
-            this.db = GetDatabase();
+            this.httpClientFactory = httpClientFactory;
+            this.httpClient = GetHttpClient(httpClient);
+
         }
 
-        private string GetCollectionName<T>() where T : class
+
+        private async ValueTask<T> GetAsync<T>(string relativeUrl)
+            where T : class
         {
-            return (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true)
-                .FirstOrDefault() as BsonCollectionAttribute)!.CollectionName;
+            var client = this.httpClientFactory.CreateClient("BudgetApi");
+            using var response = await client.GetAsync(relativeUrl);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(result);
         }
 
-        private IMongoDatabase GetDatabase()
+        private async ValueTask<T> PostAsync<T>(string relativeUrl, T entity)
         {
-            var connectionString = this.configuration["BudgedDatabaseSettings:ConnectionString"];
-            var client = new MongoClient(connectionString);
-            return client
-                .GetDatabase(this.configuration["BudgedDatabaseSettings:DatabaseName"]);
+            var client = this.httpClientFactory.CreateClient("BudgetApi");
+            using var response = await client.PostAsJsonAsync(relativeUrl, entity);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(result);
+
         }
+
+        private async ValueTask<T> PutAsync<T>(string relativeUrl, T entity)
+            where T : class
+        {
+            var client = this.httpClientFactory.CreateClient("BudgetApi");
+            using var response = await client.PutAsJsonAsync(relativeUrl, entity);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(result);
+        }
+
+        private async ValueTask<T> DeleteAsync<T>(string relativeUrl)
+            where T : class
+        {
+            var client = this.httpClientFactory.CreateClient("BudgetApi");
+            using var response = await client.DeleteAsync(relativeUrl);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(result);
+        }
+
+        private HttpClient GetHttpClient(HttpClient client)
+        {
+            var baseAddress = this.configuration["ApiBaseUrl"];
+            client.BaseAddress = new Uri(baseAddress);
+
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+
+            return client;
+        }
+
+
     }
 }

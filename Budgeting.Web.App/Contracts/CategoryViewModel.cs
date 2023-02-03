@@ -23,12 +23,5 @@ namespace Budgeting.Web.App.Contracts
                 TimeModify = category.TimeModify
             };
         }
-
-        public static implicit operator Category(CategoryViewModel categoryViewModel)
-        {
-            return Category.CreateNewCategory(categoryViewModel.CategoryId, categoryViewModel.Title
-                , categoryViewModel.Icon, categoryViewModel.Type
-                , categoryViewModel.TimeCreated.ToUniversalTime(), categoryViewModel.TimeModify.ToUniversalTime());
-        }
     }
 }

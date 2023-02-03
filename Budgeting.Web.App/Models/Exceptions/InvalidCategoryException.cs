@@ -6,27 +6,16 @@ namespace Budgeting.Web.App.Models.Exceptions
     {
 
         public InvalidCategoryException()
-            : base(message: CategoryExceptionErrorMessages.InvalidCategoryExceptionErrorMessage)
-        {
-            this.Errors = new List<(string, string)>();
-        }
+            : base(message: CategoryExceptionErrorMessages.InvalidCategoryExceptionErrorMessage) { }
 
         public InvalidCategoryException(Guid parameterId)
-            : base(message: string.Format(CategoryExceptionErrorMessages.InvalidCategoryExceptionErrorOneParametersMessage, parameterId))
-        {
-            this.Errors = new List<(string, string)>();
-        }
+            : base(message: string.Format(CategoryExceptionErrorMessages.InvalidCategoryExceptionErrorOneParametersMessage, parameterId)) { }
+
 
         public InvalidCategoryException(string parameterName, object parameterValue)
-            : base(message: string.Format(CategoryExceptionErrorMessages.InvalidCategoryExceptionErrorTwoParametersMessage, parameterName, parameterValue))
-        {
-            this.Errors = new List<(string, string)>();
-        }
-
-        public List<(string, string)> Errors { get; set; }
+            : base(message: string.Format(CategoryExceptionErrorMessages.InvalidCategoryExceptionErrorTwoParametersMessage, parameterName, parameterValue)) { }
 
 
-
-
+        public List<(string, string)> ValidationErrors = new List<(string, string)>();
     }
 }

@@ -40,7 +40,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
 
         };
 
-        private static dynamic IsInvalidX(DateTime date) => new
+        private static dynamic IsInvalidX(DateTimeOffset date) => new
         {
             Condition = date == default,
             Message = "Date is required"
@@ -89,17 +89,19 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
                     throw new InvalidCategoryException(
                         parameterId: inputCategory.CategoryId);
 
-                case { } when inputCategory.TimeCreated != storageCategory.TimeCreated:
+                case { } when Math.Abs((inputCategory.TimeCreated - storageCategory.TimeCreated).TotalSeconds) >= 1:
                     throw new InvalidCategoryException(
                         parameterName: nameof(Category.TimeCreated),
                         parameterValue: inputCategory.TimeCreated);
 
-                case { } when inputCategory.TimeModify == storageCategory.TimeModify:
+                case { } when Math.Abs((inputCategory.TimeModify - storageCategory.TimeModify).TotalSeconds) <= 1:
                     throw new InvalidCategoryException(
                         parameterName: nameof(Category.TimeModify),
                         parameterValue: inputCategory.TimeModify);
             }
         }
+
+
 
         private static void Validate(params (dynamic rule, string parameter)[] validations)
         {
@@ -109,11 +111,12 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             {
                 if (rule.Condition)
                 {
-                    invalidCategorytException.Errors.Add((parameter, rule.Message));
+                    invalidCategorytException.ValidationErrors.Add((parameter, rule.Message));
                 }
             }
 
-            if (invalidCategorytException.Errors.Count > 0) throw invalidCategorytException;
+            if (invalidCategorytException.ValidationErrors.Count > 0) throw invalidCategorytException;
         }
+
     }
 }

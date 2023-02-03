@@ -1,4 +1,5 @@
-﻿using Budgeting.Web.App.Contracts;
+﻿using Budgeting.Web.App.Brokers.Loggings;
+using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.OperationResults;
 using Budgeting.Web.App.Services.Foundations.Categories;
 
@@ -7,19 +8,22 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
     public partial class CategoryProcessingService : ICategoryProcessingService
     {
         private readonly ICategoryService service;
+        private readonly ILoggingBroker loggingBroker;
 
-        public CategoryProcessingService(ICategoryService service)
+        public CategoryProcessingService(ICategoryService service,
+            ILoggingBroker loggingBroker)
         {
             this.service = service;
+            this.loggingBroker = loggingBroker;
         }
 
-        public OperationResult<IEnumerable<CategoryViewModel>> GetAllCategories()
+        public ValueTask<OperationResult<List<CategoryViewModel>>> GetAllCategoriesAsync()
         {
-            var operationResult = new OperationResult<IEnumerable<CategoryViewModel>>();
-            return TryCatch(operationResult, () =>
+            var operationResult = new OperationResult<List<CategoryViewModel>>();
+            return TryCatch(operationResult, async () =>
             {
-                var categoryViewModelList = service.RetrieveAllCategories();
-                operationResult.Payload = categoryViewModelList.ToList();
+                var categoryViewModelList = await this.service.RetrieveAllCategoriesAsync();
+                operationResult.Payload = categoryViewModelList;
 
                 return operationResult;
             });
@@ -30,7 +34,7 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
             var operationResult = new OperationResult<CategoryViewModel>();
             return TryCatch(operationResult, async () =>
             {
-                var newCategoryViewModel = await service.CreateCategoryAsync(categoryViewModel);
+                var newCategoryViewModel = await this.service.CreateCategoryAsync(categoryViewModel);
                 operationResult.Payload = newCategoryViewModel;
 
                 return operationResult;
@@ -42,7 +46,7 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
             var operationResult = new OperationResult<CategoryViewModel>();
             return TryCatch(operationResult, async () =>
             {
-                var updateCategorViewModel = await service.ModifyCategoryAsync(categoryViewModel);
+                var updateCategorViewModel = await this.service.ModifyCategoryAsync(categoryViewModel);
                 operationResult.Payload = updateCategorViewModel;
 
                 return operationResult;
@@ -54,7 +58,7 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
             var operationResult = new OperationResult<CategoryViewModel>();
             return TryCatch(operationResult, async () =>
             {
-                var deletedCategoryViewModel = await service.RemoveCategoryByIdAsync(id);
+                var deletedCategoryViewModel = await this.service.RemoveCategoryByIdAsync(id);
                 operationResult.Payload = deletedCategoryViewModel;
                 return operationResult;
             });
@@ -70,7 +74,7 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
                     operationResult.Payload = new CategoryViewModel();
                     return operationResult;
                 }
-                var categoryViewModel = await service.RetriveCategoryByIdAsync(new Guid(categoryId));
+                var categoryViewModel = await this.service.RetriveCategoryByIdAsync(new Guid(categoryId));
                 operationResult.Payload = categoryViewModel;
                 return operationResult;
             });

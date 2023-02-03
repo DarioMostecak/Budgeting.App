@@ -6,16 +6,16 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
 {
     public partial class CategoryProcessingService
     {
-        private delegate ValueTask<OperationResult<CategoryViewModel>> ReturnigCategoryProcessingFunction();
-        private delegate OperationResult<IEnumerable<CategoryViewModel>> ReturnigListCategoryProcessingFunction();
+        private delegate ValueTask<OperationResult<CategoryViewModel>> ReturnigCategoryViewModelFunction();
+        private delegate ValueTask<OperationResult<List<CategoryViewModel>>> ReturnigListCategoryViewModelsFunction();
 
         private async ValueTask<OperationResult<CategoryViewModel>> TryCatch(
             OperationResult<CategoryViewModel> operationResult,
-            ReturnigCategoryProcessingFunction returnigCategoryProcessingFunction)
+            ReturnigCategoryViewModelFunction returnigCategoryViewModelFunction)
         {
             try
             {
-                return await returnigCategoryProcessingFunction();
+                return await returnigCategoryViewModelFunction();
             }
             catch (CategoryValidationException)
             {
@@ -31,13 +31,13 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
             }
         }
 
-        private OperationResult<IEnumerable<CategoryViewModel>> TryCatch(
-            OperationResult<IEnumerable<CategoryViewModel>> operationResult,
-            ReturnigListCategoryProcessingFunction returnigListCategoryProcessingFunction)
+        private async ValueTask<OperationResult<List<CategoryViewModel>>> TryCatch(
+            OperationResult<List<CategoryViewModel>> operationResult,
+            ReturnigListCategoryViewModelsFunction returnigListCategoryViewModelsFunction)
         {
             try
             {
-                return returnigListCategoryProcessingFunction();
+                return await returnigListCategoryViewModelsFunction();
             }
             catch (CategoryDependencyException)
             {
@@ -52,7 +52,7 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
 
 
         private OperationResult<CategoryViewModel> HandleExceptionError(
-            OperationResult<CategoryViewModel> operationResult, ErrorCode errorCode)
+             OperationResult<CategoryViewModel> operationResult, ErrorCode errorCode)
         {
             operationResult.IsError = true;
             operationResult.ErrorCode = errorCode;
@@ -60,8 +60,8 @@ namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServic
             return operationResult;
         }
 
-        private OperationResult<IEnumerable<CategoryViewModel>> HandleExceptionError(
-            OperationResult<IEnumerable<CategoryViewModel>> operationResult, ErrorCode errorCode)
+        private OperationResult<List<CategoryViewModel>> HandleExceptionError(
+            OperationResult<List<CategoryViewModel>> operationResult, ErrorCode errorCode)
         {
             operationResult.IsError = true;
             operationResult.ErrorCode = errorCode;
