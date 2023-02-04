@@ -1,6 +1,6 @@
-﻿using Budgeting.Web.App.Brokers.DateTimes;
+﻿using Budgeting.Web.App.Brokers.Apis;
+using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
-using Budgeting.Web.App.Brokers.Storages;
 using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.Models;
 
@@ -8,16 +8,16 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
 {
     public partial class CategoryService : ICategoryService
     {
-        private readonly IStorageBroker storageBroker;
+        private readonly IApiBroker apiBroker;
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
 
         public CategoryService(
-            IStorageBroker storageBroker,
+            IApiBroker apiBroker,
             IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
-            this.storageBroker = storageBroker;
+            this.apiBroker = apiBroker;
             this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
         }
@@ -25,7 +25,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         public ValueTask<List<CategoryViewModel>> RetrieveAllCategoriesAsync() =>
         TryCatch(async () =>
         {
-            var listCategories = await this.storageBroker.SelectAllCategoriesAsync();
+            var listCategories = await this.apiBroker.SelectAllCategoriesAsync();
             var listCategoryViewModels = listCategories.Select(category => (CategoryViewModel)category);
 
             return listCategoryViewModels.ToList();
@@ -36,7 +36,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         {
             var newCategory = MapToCategoryInsert(categoryViewModel);
             ValidateCategoryOnCreate(newCategory);
-            await this.storageBroker.InsertCategoryAsync(newCategory);
+            await this.apiBroker.InsertCategoryAsync(newCategory);
 
             return (CategoryViewModel)newCategory;
         });
@@ -45,7 +45,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         TryCatch(async () =>
         {
             ValidateCategoryIdIsNull(categoryId);
-            Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(categoryId);
+            Category maybeCategory = await this.apiBroker.SelectCategoriesByIdAsync(categoryId);
             ValidateStorageCategory(maybeCategory, categoryId);
 
             return (CategoryViewModel)maybeCategory;
@@ -57,11 +57,11 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             var inputCategory = MapToCategoryUpdate(categoryViewModel);
             ValidateCategoryOnModify(inputCategory);
 
-            Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(inputCategory.CategoryId);
+            Category maybeCategory = await this.apiBroker.SelectCategoriesByIdAsync(inputCategory.CategoryId);
             ValidateStorageCategory(storageCategory: maybeCategory, inputCategory.CategoryId);
             ValidateAgainstStorageCategoryOnModify(inputCategory: inputCategory, storageCategory: maybeCategory);
 
-            var updateCategory = await this.storageBroker.UpdateCategoryAsync(inputCategory);
+            var updateCategory = await this.apiBroker.UpdateCategoryAsync(inputCategory);
             return (CategoryViewModel)updateCategory;
         });
 
@@ -69,9 +69,9 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         TryCatch(async () =>
         {
             ValidateCategoryIdIsNull(categoryId);
-            Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(categoryId);
+            Category maybeCategory = await this.apiBroker.SelectCategoriesByIdAsync(categoryId);
             ValidateStorageCategory(maybeCategory, categoryId);
-            var deletedCategory = await this.storageBroker.DeleteCategoryAsync(categoryId);
+            var deletedCategory = await this.apiBroker.DeleteCategoryAsync(categoryId);
 
             return (CategoryViewModel)deletedCategory;
         });

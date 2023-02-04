@@ -1,8 +1,8 @@
 ﻿using Budgeting.Web.App.Models;
 
-namespace Budgeting.Web.App.Brokers.Storages
+namespace Budgeting.Web.App.Brokers.Apis
 {
-    public partial class StorageBroker
+    public partial class ApiBroker
     {
         private const string relativeUrl = "categories";
 

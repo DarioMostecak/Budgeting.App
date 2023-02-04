@@ -2,9 +2,9 @@
 using Budgeting.Web.App.Models.Exceptions;
 using Budgeting.Web.App.OperationResults;
 
-namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServices
+namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
-    public partial class CategoryProcessingService
+    public partial class CategoryViewService
     {
         private delegate ValueTask<OperationResult<CategoryViewModel>> ReturnigCategoryViewModelFunction();
         private delegate ValueTask<OperationResult<List<CategoryViewModel>>> ReturnigListCategoryViewModelsFunction();

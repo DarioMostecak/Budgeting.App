@@ -1,8 +1,8 @@
 ﻿using Budgeting.Web.App.Models;
 
-namespace Budgeting.Web.App.Brokers.Storages
+namespace Budgeting.Web.App.Brokers.Apis
 {
-    public partial interface IStorageBroker
+    public partial interface IApiBroker
     {
         ValueTask<List<Category>> SelectAllCategoriesAsync();
         ValueTask<Category> InsertCategoryAsync(Category category);

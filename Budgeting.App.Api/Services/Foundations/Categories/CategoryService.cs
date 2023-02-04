@@ -38,8 +38,6 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             return listCategoryDto.AsQueryable();
         });
 
-
-
         public ValueTask<CategoryDto> RetriveCategoryByIdAsync(Guid categoryId) =>
         TryCatch(async () =>
         {

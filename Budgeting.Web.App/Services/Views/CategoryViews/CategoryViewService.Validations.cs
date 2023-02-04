@@ -1,6 +1,6 @@
-﻿namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServices
+﻿namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
-    public partial class CategoryProcessingService
+    public partial class CategoryViewService
     {
         public bool IsGuidId(string categoryId)
         {

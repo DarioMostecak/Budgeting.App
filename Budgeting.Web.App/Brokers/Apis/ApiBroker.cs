@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
 
-namespace Budgeting.Web.App.Brokers.Storages
+namespace Budgeting.Web.App.Brokers.Apis
 {
-    public partial class StorageBroker : IStorageBroker
+    public partial class ApiBroker : IApiBroker
     {
         private readonly IConfiguration configuration;
         private HttpClient httpClient;
         private IHttpClientFactory httpClientFactory { get; set; }
 
-        public StorageBroker(IConfiguration configuration,
+        public ApiBroker(IConfiguration configuration,
             HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             this.configuration = configuration;

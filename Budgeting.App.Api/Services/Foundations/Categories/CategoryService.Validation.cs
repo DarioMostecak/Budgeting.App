@@ -10,6 +10,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             ValidateCategoryIsNull(category);
 
             Validate(
+                (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
                 (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
                 (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
@@ -20,10 +21,10 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             ValidateCategoryIsNull(category);
 
             Validate(
-                (rule: IsInvalidX(category.CategoryId), parameter: nameof(category.CategoryId)),
-                (rule: IsInvalidX(category.Title), parameter: nameof(category.Title)),
-                (rule: IsInvalidX(category.TimeCreated), parameter: nameof(category.TimeCreated)),
-                (rule: IsInvalidX(category.TimeModify), parameter: nameof(category.TimeModify)));
+                (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
+                (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
+                (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
+                (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
         }
 
 
@@ -87,7 +88,8 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             {
                 case { } when inputCategory.CategoryId != storageCategory.CategoryId:
                     throw new InvalidCategoryException(
-                        parameterId: inputCategory.CategoryId);
+                        parameterName: nameof(Category.CategoryId),
+                        parameterValue: inputCategory.CategoryId);
 
                 case { } when Math.Abs((inputCategory.TimeCreated - storageCategory.TimeCreated).TotalSeconds) >= 1:
                     throw new InvalidCategoryException(

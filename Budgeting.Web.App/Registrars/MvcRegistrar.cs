@@ -1,8 +1,8 @@
-﻿using Budgeting.Web.App.Brokers.DateTimes;
+﻿using Budgeting.Web.App.Brokers.Apis;
+using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
-using Budgeting.Web.App.Brokers.Storages;
 using Budgeting.Web.App.Services.Foundations.Categories;
-using Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServices;
+using Budgeting.Web.App.Services.Views.CategoryViews;
 
 namespace Budgeting.Web.App.Registrars
 {
@@ -18,7 +18,7 @@ namespace Budgeting.Web.App.Registrars
             });
 
             #region Add Brokers
-            builder.Services.AddScoped<IStorageBroker, StorageBroker>();
+            builder.Services.AddScoped<IApiBroker, ApiBroker>();
             builder.Services.AddScoped<ILogger, Logger<LoggingBroker>>();
             builder.Services.AddScoped<ILoggingBroker, LoggingBroker>();
             builder.Services.AddScoped<IDateTimeBroker, DateTimeBroker>();
@@ -29,7 +29,7 @@ namespace Budgeting.Web.App.Registrars
             #endregion
 
             #region Add ProccesService
-            builder.Services.AddScoped<ICategoryProcessingService, CategoryProcessingService>();
+            builder.Services.AddScoped<ICategoryViewService, CategoryViewService>();
             #endregion
         }
     }

@@ -3,14 +3,14 @@ using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.OperationResults;
 using Budgeting.Web.App.Services.Foundations.Categories;
 
-namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServices
+namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
-    public partial class CategoryProcessingService : ICategoryProcessingService
+    public partial class CategoryViewService : ICategoryViewService
     {
         private readonly ICategoryService service;
         private readonly ILoggingBroker loggingBroker;
 
-        public CategoryProcessingService(ICategoryService service,
+        public CategoryViewService(ICategoryService service,
             ILoggingBroker loggingBroker)
         {
             this.service = service;

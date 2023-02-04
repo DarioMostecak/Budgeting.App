@@ -1,15 +1,15 @@
 ﻿using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.OperationResults;
-using Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServices;
+using Budgeting.Web.App.Services.Views.CategoryViews;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Budgeting.Web.App.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryProcessingService manager;
+        private readonly ICategoryViewService manager;
 
-        public CategoryController(ICategoryProcessingService manager)
+        public CategoryController(ICategoryViewService manager)
         {
             this.manager = manager;
         }

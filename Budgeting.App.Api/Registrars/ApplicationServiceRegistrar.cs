@@ -2,7 +2,6 @@
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.Storages;
 using Budgeting.App.Api.Services.Foundations.Categories;
-using Budgeting.App.Api.Services.ProcessingServices.CategoryProcessingServices;
 
 namespace Budgeting.App.Api.Registrars
 {
@@ -21,7 +20,7 @@ namespace Budgeting.App.Api.Registrars
             #endregion
 
             #region Add ProccesService
-            builder.Services.AddTransient<ICategoryProcessingService, CategoryProcessingService>();
+
             #endregion
         }
     }

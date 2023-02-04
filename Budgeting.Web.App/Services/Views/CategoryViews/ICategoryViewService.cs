@@ -1,9 +1,9 @@
 ﻿using Budgeting.Web.App.Contracts;
 using Budgeting.Web.App.OperationResults;
 
-namespace Budgeting.Web.App.Services.ProcessingServices.CategoryProcessingServices
+namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
-    public interface ICategoryProcessingService
+    public interface ICategoryViewService
     {
         ValueTask<OperationResult<List<CategoryViewModel>>> GetAllCategoriesAsync();
         ValueTask<OperationResult<CategoryViewModel>> CreateCategoryAsync(CategoryViewModel categoryViewModel);
