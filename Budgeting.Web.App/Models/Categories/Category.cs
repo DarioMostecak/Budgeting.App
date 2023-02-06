@@ -1,4 +1,4 @@
-﻿namespace Budgeting.Web.App.Models
+﻿namespace Budgeting.Web.App.Models.Categories
 {
 
     public sealed class Category

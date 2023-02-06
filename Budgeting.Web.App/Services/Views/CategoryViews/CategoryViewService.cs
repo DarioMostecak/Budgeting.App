@@ -1,6 +1,7 @@
-﻿using Budgeting.Web.App.Brokers.Loggings;
-using Budgeting.Web.App.Contracts;
-using Budgeting.Web.App.OperationResults;
+﻿using Budgeting.Web.App.Brokers.DateTimes;
+using Budgeting.Web.App.Brokers.Loggings;
+using Budgeting.Web.App.Models.Categories;
+using Budgeting.Web.App.Models.CategoryViews;
 using Budgeting.Web.App.Services.Foundations.Categories;
 
 namespace Budgeting.Web.App.Services.Views.CategoryViews
@@ -9,75 +10,125 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
     {
         private readonly ICategoryService service;
         private readonly ILoggingBroker loggingBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
 
-        public CategoryViewService(ICategoryService service,
-            ILoggingBroker loggingBroker)
+        public CategoryViewService(
+            ICategoryService service,
+            ILoggingBroker loggingBroker,
+            IDateTimeBroker dateTimeBroker)
         {
             this.service = service;
             this.loggingBroker = loggingBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<OperationResult<List<CategoryViewModel>>> GetAllCategoriesAsync()
+        public ValueTask<List<CategoryView>> GetAllCategoriesAsync() =>
+        TryCatch(async () =>
         {
-            var operationResult = new OperationResult<List<CategoryViewModel>>();
-            return TryCatch(operationResult, async () =>
-            {
-                var categoryViewModelList = await this.service.RetrieveAllCategoriesAsync();
-                operationResult.Payload = categoryViewModelList;
+            var categories = await this.service.RetrieveAllCategoriesAsync();
 
-                return operationResult;
-            });
-        }
+            return categories.Select(AsCategoryViewModel).ToList();
+        });
 
-        public ValueTask<OperationResult<CategoryViewModel>> CreateCategoryAsync(CategoryViewModel categoryViewModel)
+
+        public ValueTask CreateCategoryAsync(CategoryView categoryViewModel) =>
+        TryCatch(async () =>
         {
-            var operationResult = new OperationResult<CategoryViewModel>();
-            return TryCatch(operationResult, async () =>
-            {
-                var newCategoryViewModel = await this.service.CreateCategoryAsync(categoryViewModel);
-                operationResult.Payload = newCategoryViewModel;
+            //ValidateCategoryViewModelOnCreate
 
-                return operationResult;
-            });
-        }
+            var categoryToCreate = MapToCategoryInsert(categoryViewModel);
 
-        public ValueTask<OperationResult<CategoryViewModel>> UpdateCategoryAsync(CategoryViewModel categoryViewModel)
+            await this.service.CreateCategoryAsync(categoryToCreate);
+        });
+
+
+        public ValueTask UpdateCategoryAsync(CategoryView categoryViewModel) =>
+        TryCatch(async () =>
         {
-            var operationResult = new OperationResult<CategoryViewModel>();
-            return TryCatch(operationResult, async () =>
-            {
-                var updateCategorViewModel = await this.service.ModifyCategoryAsync(categoryViewModel);
-                operationResult.Payload = updateCategorViewModel;
+            //ValidateCategoryiewModelOnCreate
 
-                return operationResult;
-            });
-        }
+            var categoryToUpdate = MapToCategoryUpdate(categoryViewModel);
 
-        public ValueTask<OperationResult<CategoryViewModel>> DeleteCategoryAsync(Guid id)
+            await this.service.ModifyCategoryAsync(categoryToUpdate);
+        });
+
+
+        public ValueTask DeleteCategoryAsync(Guid id) =>
+        TryCatch(async () =>
         {
-            var operationResult = new OperationResult<CategoryViewModel>();
-            return TryCatch(operationResult, async () =>
+            //ValidateId
+            await this.service.RemoveCategoryByIdAsync(id);
+        });
+
+
+        public ValueTask<CategoryView> GetCategoryById(string categoryId) =>
+        TryCatch(async () =>
+        {
+            //ValidateId
+            var category = await this.service.RetriveCategoryByIdAsync(Guid.Parse(categoryId));
+            var categoryView = MapToCategoryView(category);
+
+            return categoryView;
+        });
+
+
+
+        #region Private methods
+
+        private static Func<Category, CategoryView> AsCategoryViewModel =>
+            category => new CategoryView
             {
-                var deletedCategoryViewModel = await this.service.RemoveCategoryByIdAsync(id);
-                operationResult.Payload = deletedCategoryViewModel;
-                return operationResult;
-            });
+                CategoryId = category.CategoryId,
+                Title = category.Title,
+                Icon = category.Icon,
+                Type = category.Type,
+                TimeCreated = category.TimeCreated,
+                TimeModify = category.TimeModify
+            };
+
+        private Category MapToCategoryInsert(CategoryView categoryViewModel)
+        {
+            DateTime currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+
+            return new Category
+            {
+                CategoryId = Guid.NewGuid(),
+                Title = categoryViewModel.Title,
+                Icon = categoryViewModel.Icon,
+                Type = categoryViewModel.Type,
+                TimeCreated = currentDateTime,
+                TimeModify = currentDateTime
+            };
         }
 
-        public ValueTask<OperationResult<CategoryViewModel>> GetCategoryById(string categoryId)
+        private Category MapToCategoryUpdate(CategoryView categoryViewModel)
         {
-            var operationResult = new OperationResult<CategoryViewModel>();
-            return TryCatch(operationResult, async () =>
+            DateTime currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+
+            return new Category
             {
-                if (!IsGuidId(categoryId))
-                {
-                    operationResult.Payload = new CategoryViewModel();
-                    return operationResult;
-                }
-                var categoryViewModel = await this.service.RetriveCategoryByIdAsync(new Guid(categoryId));
-                operationResult.Payload = categoryViewModel;
-                return operationResult;
-            });
+                CategoryId = categoryViewModel.CategoryId,
+                Title = categoryViewModel.Title,
+                Icon = categoryViewModel.Icon,
+                Type = categoryViewModel.Type,
+                TimeCreated = categoryViewModel.TimeCreated,
+                TimeModify = currentDateTime
+            };
         }
+
+        private CategoryView MapToCategoryView(Category category)
+        {
+            return new CategoryView
+            {
+                CategoryId = category.CategoryId,
+                Title = category.Title,
+                Icon = category.Icon,
+                Type = category.Type,
+                TimeCreated = category.TimeCreated,
+                TimeModify = category.TimeModify
+            };
+        }
+
+        #endregion
     }
 }

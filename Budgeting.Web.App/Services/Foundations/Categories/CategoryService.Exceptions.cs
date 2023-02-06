@@ -1,15 +1,15 @@
-﻿using Budgeting.Web.App.Contracts;
-using Budgeting.Web.App.Models.Exceptions;
+﻿using Budgeting.Web.App.Models.Categories;
+using Budgeting.Web.App.Models.Categories.Exceptions;
 using System.Text;
 
 namespace Budgeting.Web.App.Services.Foundations.Categories
 {
     public partial class CategoryService
     {
-        private delegate ValueTask<CategoryViewModel> ReturnCategoryViewModelFunction();
-        private delegate ValueTask<List<CategoryViewModel>> ReturnigCategoryViewModelsFunction();
+        private delegate ValueTask<Category> ReturnCategoryViewModelFunction();
+        private delegate ValueTask<List<Category>> ReturnigCategoryViewModelsFunction();
 
-        private async ValueTask<CategoryViewModel> TryCatch(
+        private async ValueTask<Category> TryCatch(
             ReturnCategoryViewModelFunction returnCategoryViewModelFunction)
         {
             try
@@ -33,6 +33,13 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             {
                 throw CreateAndLogValidationException(notFoundCategoryException);
             }
+            catch (HttpRequestException httpRequestException)
+            {
+                var failedCategoryServiceException =
+                    new FailedCategoryServiceException(httpRequestException);
+
+                throw CreateAndLogServiceException(failedCategoryServiceException);
+            }
             catch (Exception exception)
             {
                 var failedCategoryServiceException =
@@ -42,12 +49,19 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             }
         }
 
-        private ValueTask<List<CategoryViewModel>> TryCatch(
+        private ValueTask<List<Category>> TryCatch(
             ReturnigCategoryViewModelsFunction returnigCategoryViewModelsFunction)
         {
             try
             {
                 return returnigCategoryViewModelsFunction();
+            }
+            catch (HttpRequestException httpRequestException)
+            {
+                var failedCategoryServiceException =
+                    new FailedCategoryServiceException(httpRequestException);
+
+                throw CreateAndLogServiceException(failedCategoryServiceException);
             }
             catch (Exception exception)
             {

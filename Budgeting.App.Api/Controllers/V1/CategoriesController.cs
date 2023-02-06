@@ -100,11 +100,11 @@ namespace Budgeting.App.Api.Controllers.V1
             }
             catch (CategoryDependencyException categoryDependencyException)
             {
-                return StatusCode(500, categoryDependencyException.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, categoryDependencyException.Message);
             }
             catch (CategoryServiceException categoryServiceException)
             {
-                return StatusCode(500, categoryServiceException.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, categoryServiceException.Message);
             }
 
         }

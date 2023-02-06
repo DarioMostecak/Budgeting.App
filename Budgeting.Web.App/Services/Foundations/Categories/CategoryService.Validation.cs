@@ -1,5 +1,5 @@
-﻿using Budgeting.Web.App.Models;
-using Budgeting.Web.App.Models.Exceptions;
+﻿using Budgeting.Web.App.Models.Categories;
+using Budgeting.Web.App.Models.Categories.Exceptions;
 
 namespace Budgeting.Web.App.Services.Foundations.Categories
 {

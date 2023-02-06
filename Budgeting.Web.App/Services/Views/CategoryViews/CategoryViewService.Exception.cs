@@ -1,16 +1,15 @@
-﻿using Budgeting.Web.App.Contracts;
-using Budgeting.Web.App.Models.Exceptions;
-using Budgeting.Web.App.OperationResults;
+﻿using Budgeting.Web.App.Models.Categories.Exceptions;
+using Budgeting.Web.App.Models.CategoryViews;
 
 namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
     public partial class CategoryViewService
     {
-        private delegate ValueTask<OperationResult<CategoryViewModel>> ReturnigCategoryViewModelFunction();
-        private delegate ValueTask<OperationResult<List<CategoryViewModel>>> ReturnigListCategoryViewModelsFunction();
+        private delegate ValueTask<CategoryView> ReturnigCategoryViewModelFunction();
+        private delegate ValueTask<List<CategoryView>> ReturnigListCategoryViewModelsFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
-        private async ValueTask<OperationResult<CategoryViewModel>> TryCatch(
-            OperationResult<CategoryViewModel> operationResult,
+        private async ValueTask<CategoryView> TryCatch(
             ReturnigCategoryViewModelFunction returnigCategoryViewModelFunction)
         {
             try
@@ -19,20 +18,19 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
             }
             catch (CategoryValidationException)
             {
-                return HandleExceptionError(operationResult, ErrorCode.Validation);
+                throw;
             }
             catch (CategoryDependencyException)
             {
-                return HandleExceptionError(operationResult, ErrorCode.Dependency);
+                throw;
             }
             catch (Exception)
             {
-                return HandleExceptionError(operationResult, ErrorCode.Service);
+                throw;
             }
         }
 
-        private async ValueTask<OperationResult<List<CategoryViewModel>>> TryCatch(
-            OperationResult<List<CategoryViewModel>> operationResult,
+        private async ValueTask<List<CategoryView>> TryCatch(
             ReturnigListCategoryViewModelsFunction returnigListCategoryViewModelsFunction)
         {
             try
@@ -41,32 +39,25 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
             }
             catch (CategoryDependencyException)
             {
-                return HandleExceptionError(operationResult, ErrorCode.Dependency);
+                throw;
             }
             catch (Exception)
             {
-                return HandleExceptionError(operationResult, ErrorCode.Service);
+                throw;
             }
         }
 
-
-
-        private OperationResult<CategoryViewModel> HandleExceptionError(
-             OperationResult<CategoryViewModel> operationResult, ErrorCode errorCode)
+        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
-            operationResult.IsError = true;
-            operationResult.ErrorCode = errorCode;
+            try
+            {
+                await returningNothingFunction();
+            }
 
-            return operationResult;
-        }
-
-        private OperationResult<List<CategoryViewModel>> HandleExceptionError(
-            OperationResult<List<CategoryViewModel>> operationResult, ErrorCode errorCode)
-        {
-            operationResult.IsError = true;
-            operationResult.ErrorCode = errorCode;
-
-            return operationResult;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

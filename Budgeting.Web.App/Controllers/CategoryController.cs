@@ -1,5 +1,4 @@
-﻿using Budgeting.Web.App.Contracts;
-using Budgeting.Web.App.OperationResults;
+﻿using Budgeting.Web.App.Models.CategoryViews;
 using Budgeting.Web.App.Services.Views.CategoryViews;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,32 +16,32 @@ namespace Budgeting.Web.App.Controllers
         [HttpGet]
         public async ValueTask<IActionResult> Index()
         {
-            var operationResult = await this.manager.GetAllCategoriesAsync();
-            return View(operationResult.Payload);
+            var categoryViews = await this.manager.GetAllCategoriesAsync();
+            return View(categoryViews);
         }
 
         [HttpGet]
         [Route("Category/Form/{categoryId}")]
         public async ValueTask<IActionResult> Form(string categoryId)
         {
-            var operationResult = await this.manager.GetCategoryById(categoryId);
-            ViewData["ActionOperation"] = SetFormViewData(operationResult);
-            return View(operationResult.Payload);
+            var categoryView = await this.manager.GetCategoryById(categoryId);
+            ViewData["ActionOperation"] = SetFormViewData(categoryView);
+            return View(categoryView);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async ValueTask<IActionResult> NewCategory([Bind("Title", "Icon", "Type")] CategoryViewModel model)
+        public async ValueTask<IActionResult> NewCategory([Bind("Title", "Icon", "Type")] CategoryView model)
         {
-            var operationResult = await manager.CreateCategoryAsync(model);
+            await manager.CreateCategoryAsync(model);
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async ValueTask<IActionResult> UpdateCategory([Bind("CategoryId", "Title", "Icon", "Type", "TimeCreated", "TimeModify")] CategoryViewModel model)
+        public async ValueTask<IActionResult> UpdateCategory([Bind("CategoryId", "Title", "Icon", "Type", "TimeCreated", "TimeModify")] CategoryView model)
         {
-            var operationResult = await this.manager.UpdateCategoryAsync(model);
+            await this.manager.UpdateCategoryAsync(model);
             return RedirectToAction("Index");
         }
 
@@ -50,14 +49,14 @@ namespace Budgeting.Web.App.Controllers
         [Route("Category/DeleteCategory/{categoryId}")]
         public async ValueTask<IActionResult> DeleteCategory(Guid categoryId)
         {
-            var oprationResult = await this.manager.DeleteCategoryAsync(categoryId);
+            await this.manager.DeleteCategoryAsync(categoryId);
             return RedirectToAction("Index");
         }
 
 
-        private string SetFormViewData(OperationResult<CategoryViewModel> operationResult)
+        private string SetFormViewData(CategoryView categoryView)
         {
-            var categoryId = operationResult.Payload.CategoryId;
+            var categoryId = categoryView.CategoryId;
             return (categoryId == default) ? nameof(NewCategory) : nameof(UpdateCategory);
         }
     }

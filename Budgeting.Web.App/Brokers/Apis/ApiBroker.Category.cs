@@ -1,4 +1,4 @@
-﻿using Budgeting.Web.App.Models;
+﻿using Budgeting.Web.App.Models.Categories;
 
 namespace Budgeting.Web.App.Brokers.Apis
 {

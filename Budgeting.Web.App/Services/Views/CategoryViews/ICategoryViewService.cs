@@ -1,14 +1,13 @@
-﻿using Budgeting.Web.App.Contracts;
-using Budgeting.Web.App.OperationResults;
+﻿using Budgeting.Web.App.Models.CategoryViews;
 
 namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
     public interface ICategoryViewService
     {
-        ValueTask<OperationResult<List<CategoryViewModel>>> GetAllCategoriesAsync();
-        ValueTask<OperationResult<CategoryViewModel>> CreateCategoryAsync(CategoryViewModel categoryViewModel);
-        ValueTask<OperationResult<CategoryViewModel>> UpdateCategoryAsync(CategoryViewModel categoryViewModel);
-        ValueTask<OperationResult<CategoryViewModel>> DeleteCategoryAsync(Guid id);
-        ValueTask<OperationResult<CategoryViewModel>> GetCategoryById(string id);
+        ValueTask<List<CategoryView>> GetAllCategoriesAsync();
+        ValueTask CreateCategoryAsync(CategoryView categoryViewModel);
+        ValueTask UpdateCategoryAsync(CategoryView categoryViewModel);
+        ValueTask DeleteCategoryAsync(Guid id);
+        ValueTask<CategoryView> GetCategoryById(string id);
     }
 }
