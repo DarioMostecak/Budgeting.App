@@ -31,23 +31,21 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
         });
 
 
-        public ValueTask CreateCategoryAsync(CategoryView categoryViewModel) =>
+        public ValueTask CreateCategoryAsync(CategoryView categoryView) =>
         TryCatch(async () =>
         {
-            //ValidateCategoryViewModelOnCreate
-
-            var categoryToCreate = MapToCategoryInsert(categoryViewModel);
+            ValidateCategoryViewIsNull(categoryView);
+            var categoryToCreate = MapToCategoryInsert(categoryView);
 
             await this.service.CreateCategoryAsync(categoryToCreate);
         });
 
 
-        public ValueTask UpdateCategoryAsync(CategoryView categoryViewModel) =>
+        public ValueTask UpdateCategoryAsync(CategoryView categoryView) =>
         TryCatch(async () =>
         {
-            //ValidateCategoryiewModelOnCreate
-
-            var categoryToUpdate = MapToCategoryUpdate(categoryViewModel);
+            ValidateCategoryViewIsNull(categoryView);
+            var categoryToUpdate = MapToCategoryUpdate(categoryView);
 
             await this.service.ModifyCategoryAsync(categoryToUpdate);
         });
@@ -56,7 +54,8 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
         public ValueTask DeleteCategoryAsync(Guid id) =>
         TryCatch(async () =>
         {
-            //ValidateId
+            IsGuidDefault(id);
+
             await this.service.RemoveCategoryByIdAsync(id);
         });
 
@@ -64,7 +63,11 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
         public ValueTask<CategoryView> GetCategoryById(string categoryId) =>
         TryCatch(async () =>
         {
-            //ValidateId
+            IsGuidValid(categoryId);
+
+            if (IsGuidDefault(categoryId))
+                return new CategoryView();
+
             var category = await this.service.RetriveCategoryByIdAsync(Guid.Parse(categoryId));
             var categoryView = MapToCategoryView(category);
 

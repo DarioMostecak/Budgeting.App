@@ -5,17 +5,18 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
 {
     public partial class CategoryService
     {
-        private void ValidateCategoryOnCreate(Category category)
+        private static void ValidateCategoryOnCreate(Category category)
         {
             ValidateCategoryIsNull(category);
 
             Validate(
+                (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
                 (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
                 (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
         }
 
-        private void ValidateCategoryOnModify(Category category)
+        private static void ValidateCategoryOnModify(Category category)
         {
             ValidateCategoryIsNull(category);
 

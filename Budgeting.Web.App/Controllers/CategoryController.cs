@@ -1,4 +1,5 @@
 ﻿using Budgeting.Web.App.Models.CategoryViews;
+using Budgeting.Web.App.Models.CategoryViews.Exceptions;
 using Budgeting.Web.App.Services.Views.CategoryViews;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +17,23 @@ namespace Budgeting.Web.App.Controllers
         [HttpGet]
         public async ValueTask<IActionResult> Index()
         {
-            var categoryViews = await this.manager.GetAllCategoriesAsync();
-            return View(categoryViews);
+            try
+            {
+                var categoryViews = await this.manager.GetAllCategoriesAsync();
+                return View(categoryViews);
+            }
+            catch (CategoryViewDependencyException)
+            {
+                return Redirect("error/500");
+            }
+            catch (CategoryViewServiceException)
+            {
+                return Redirect("error/500");
+            }
+            catch (Exception)
+            {
+                return Redirect("error/500");
+            }
         }
 
         [HttpGet]
@@ -33,24 +49,102 @@ namespace Budgeting.Web.App.Controllers
         [ValidateAntiForgeryToken]
         public async ValueTask<IActionResult> NewCategory([Bind("Title", "Icon", "Type")] CategoryView model)
         {
-            await manager.CreateCategoryAsync(model);
-            return RedirectToAction("Index");
+            try
+            {
+                await manager.CreateCategoryAsync(model);
+                return RedirectToAction("Index");
+            }
+            catch (CategoryViewValidationException categoryViewValidationException)
+               when (categoryViewValidationException.InnerException is NullCategoryViewException)
+            {
+                return Redirect("error/404");
+            }
+            catch (CategoryViewValidationException)
+            {
+                return Redirect("error/400");
+            }
+            catch (CategoryViewDependencyValidationException)
+            {
+                return Redirect("error/400");
+            }
+            catch (CategoryViewDependencyException)
+            {
+                return Redirect("error/500");
+            }
+            catch (CategoryViewServiceException)
+            {
+                return Redirect("error/500");
+            }
+            catch (Exception)
+            {
+                return Redirect("error/500");
+            }
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async ValueTask<IActionResult> UpdateCategory([Bind("CategoryId", "Title", "Icon", "Type", "TimeCreated", "TimeModify")] CategoryView model)
         {
-            await this.manager.UpdateCategoryAsync(model);
-            return RedirectToAction("Index");
+            try
+            {
+                await this.manager.UpdateCategoryAsync(model);
+                return RedirectToAction("Index");
+            }
+            catch (CategoryViewValidationException categoryViewValidationException)
+               when (categoryViewValidationException.InnerException is NullCategoryViewException)
+            {
+                return Redirect("error/404");
+            }
+            catch (CategoryViewValidationException)
+            {
+                return Redirect("error/400");
+            }
+            catch (CategoryViewDependencyValidationException)
+            {
+                return Redirect("error/400");
+            }
+            catch (CategoryViewDependencyException)
+            {
+                return Redirect("error/500");
+            }
+            catch (CategoryViewServiceException)
+            {
+                return Redirect("error/500");
+            }
         }
 
         [HttpGet]
         [Route("Category/DeleteCategory/{categoryId}")]
         public async ValueTask<IActionResult> DeleteCategory(Guid categoryId)
         {
-            await this.manager.DeleteCategoryAsync(categoryId);
-            return RedirectToAction("Index");
+            try
+            {
+                await this.manager.DeleteCategoryAsync(categoryId);
+                return RedirectToAction("Index");
+            }
+            catch (CategoryViewValidationException categoryViewValidationException)
+               when (categoryViewValidationException.InnerException is NullCategoryViewException)
+            {
+                return Redirect("error/404");
+            }
+            catch (CategoryViewValidationException)
+            {
+                return Redirect("error/400");
+            }
+            catch (CategoryViewDependencyValidationException)
+            {
+                return Redirect("error/400");
+            }
+            catch (CategoryViewDependencyException)
+            {
+                return Redirect("error/500");
+            }
+            catch (CategoryViewServiceException)
+            {
+                return Redirect("error/500");
+            }
+
         }
 
 

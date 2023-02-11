@@ -27,6 +27,31 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
         }
 
+        private static void ValidateAgainstStorageCategoryOnModify(
+            Category inputCategory,
+            Category storageCategory)
+        {
+            Validate(
+                (rule: IsNotSame(
+                        firstId: inputCategory.CategoryId,
+                        secondId: storageCategory.CategoryId,
+                        secondIdName: nameof(Category.CategoryId)),
+                parameter: nameof(Category.CategoryId)),
+
+                (rule: IsNotSame(
+                        firstDate: inputCategory.TimeCreated,
+                        secondDate: storageCategory.TimeCreated,
+                        secondDateName: nameof(Category.TimeCreated)),
+                parameter: nameof(Category.TimeCreated)),
+
+                (rule: IsSame(
+                        firstDate: inputCategory.TimeModify,
+                        secondDate: storageCategory.TimeModify,
+                        secondDateName: nameof(Category.TimeModify)),
+                parameter: nameof(Category.TimeModify))
+                );
+        }
+
 
         private static dynamic IsInvalidX(Guid categoryId) => new
         {
@@ -47,7 +72,6 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             Message = "Date is required"
         };
 
-        //remove this method
         private static dynamic IsNotSame(
             Guid firstId,
             Guid secondId,
@@ -57,6 +81,23 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
                 Message = $"Id is not the same as {secondIdName}"
             };
 
+        private static dynamic IsNotSame(
+            DateTime firstDate,
+            DateTime secondDate,
+            string secondDateName) => new
+            {
+                Condition = Math.Abs((firstDate - secondDate).TotalSeconds) >= 1,
+                Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private static dynamic IsSame(
+            DateTime firstDate,
+            DateTime secondDate,
+            string secondDateName) => new
+            {
+                Condition = Math.Abs((firstDate - secondDate).TotalSeconds) <= 1,
+                Message = $"Date is the same as {secondDateName}"
+            };
 
         private static bool IsInvalid(Guid input) => input == default;
 
@@ -79,31 +120,6 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
         {
             if (storageCategory is null) throw new NotFoundCategoryException(categoryId);
         }
-
-        private static void ValidateAgainstStorageCategoryOnModify(
-            Category inputCategory,
-            Category storageCategory)
-        {
-            switch (inputCategory)
-            {
-                case { } when inputCategory.CategoryId != storageCategory.CategoryId:
-                    throw new InvalidCategoryException(
-                        parameterName: nameof(Category.CategoryId),
-                        parameterValue: inputCategory.CategoryId);
-
-                case { } when Math.Abs((inputCategory.TimeCreated - storageCategory.TimeCreated).TotalSeconds) >= 1:
-                    throw new InvalidCategoryException(
-                        parameterName: nameof(Category.TimeCreated),
-                        parameterValue: inputCategory.TimeCreated);
-
-                case { } when Math.Abs((inputCategory.TimeModify - storageCategory.TimeModify).TotalSeconds) <= 1:
-                    throw new InvalidCategoryException(
-                        parameterName: nameof(Category.TimeModify),
-                        parameterValue: inputCategory.TimeModify);
-            }
-        }
-
-
 
         private static void Validate(params (dynamic rule, string parameter)[] validations)
         {

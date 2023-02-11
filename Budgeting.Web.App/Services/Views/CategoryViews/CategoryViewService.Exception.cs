@@ -1,5 +1,6 @@
 ﻿using Budgeting.Web.App.Models.Categories.Exceptions;
 using Budgeting.Web.App.Models.CategoryViews;
+using Budgeting.Web.App.Models.CategoryViews.Exceptions;
 
 namespace Budgeting.Web.App.Services.Views.CategoryViews
 {
@@ -16,17 +17,32 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
             {
                 return await returnigCategoryViewModelFunction();
             }
-            catch (CategoryValidationException)
+            catch (NullCategoryViewException nullCategoryViewException)
             {
-                throw;
+                throw CreateAndLogValidationException(nullCategoryViewException);
             }
-            catch (CategoryDependencyException)
+            catch (InvalidCategoryViewException invalidCategoryViewException)
             {
-                throw;
+                throw CreateAndLogValidationException(invalidCategoryViewException);
             }
-            catch (Exception)
+            catch (CategoryValidationException categoryValidationException)
             {
-                throw;
+                throw CreateAndLogDependencyValidationException(categoryValidationException);
+            }
+            catch (CategoryDependencyException categoryDependencyException)
+            {
+                throw CreateAndLogDependencyException(categoryDependencyException);
+            }
+            catch (CategoryServiceException categoryServiceException)
+            {
+                throw CreateAndLogServiceException(categoryServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedCategoryViewServiceException =
+                    new FailedCategoryViewServiceException(exception);
+
+                throw CreateAndLogServiceException(failedCategoryViewServiceException);
             }
         }
 
@@ -37,13 +53,20 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
             {
                 return await returnigListCategoryViewModelsFunction();
             }
-            catch (CategoryDependencyException)
+            catch (CategoryDependencyException categoryDependencyException)
             {
-                throw;
+                throw CreateAndLogDependencyException(categoryDependencyException);
             }
-            catch (Exception)
+            catch (CategoryServiceException categoryServiceexception)
             {
-                throw;
+                throw CreateAndLogServiceException(categoryServiceexception);
+            }
+            catch (Exception exception)
+            {
+                var failedCategoryViewServiceException =
+                   new FailedCategoryViewServiceException(exception);
+
+                throw CreateAndLogServiceException(failedCategoryViewServiceException);
             }
         }
 
@@ -53,11 +76,73 @@ namespace Budgeting.Web.App.Services.Views.CategoryViews
             {
                 await returningNothingFunction();
             }
-
-            catch (Exception)
+            catch (NullCategoryViewException nullCategoryViewException)
             {
-                throw;
+                throw CreateAndLogValidationException(nullCategoryViewException);
             }
+            catch (InvalidCategoryViewException invalidCategoryViewException)
+            {
+                throw CreateAndLogValidationException(invalidCategoryViewException);
+            }
+            catch (CategoryValidationException categoryValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(categoryValidationException);
+            }
+            catch (CategoryDependencyException categoryDependencyException)
+            {
+                throw CreateAndLogDependencyException(categoryDependencyException);
+            }
+            catch (CategoryServiceException categoryServiceexception)
+            {
+                throw CreateAndLogServiceException(categoryServiceexception);
+            }
+            catch (Exception exception)
+            {
+                var failedCategoryViewServiceException =
+                   new FailedCategoryViewServiceException(exception);
+
+                throw CreateAndLogServiceException(failedCategoryViewServiceException);
+            }
+        }
+
+        private CategoryViewValidationException CreateAndLogValidationException(Exception exception)
+        {
+            var categoryViewValidationException =
+                new CategoryViewValidationException(exception);
+
+            this.loggingBroker.LogError(categoryViewValidationException);
+
+            return categoryViewValidationException;
+        }
+
+        private CategoryViewDependencyValidationException CreateAndLogDependencyValidationException(Exception exception)
+        {
+            var categoryViewDependencyValidationException =
+                new CategoryViewDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(categoryViewDependencyValidationException);
+
+            return categoryViewDependencyValidationException;
+        }
+
+        private CategoryViewDependencyException CreateAndLogDependencyException(Exception exception)
+        {
+            var categoryViewDependencyException =
+                new CategoryViewDependencyException(exception);
+
+            this.loggingBroker.LogError(categoryViewDependencyException);
+
+            return categoryViewDependencyException;
+        }
+
+        private CategoryViewServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var categoryViewServiceException =
+                new CategoryViewServiceException(exception);
+
+            this.loggingBroker.LogError(categoryViewServiceException);
+
+            return categoryViewServiceException;
         }
     }
 }

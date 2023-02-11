@@ -42,7 +42,10 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             }
             catch (MongoException mongoException)
             {
-                throw CreateAndLogCriticalDependencyException(mongoException);
+                var failedCategoryServiceException =
+                    new FailedCategoryServiceException(mongoException);
+
+                throw CreateAndLogDependencyException(failedCategoryServiceException);
             }
             catch (Exception exception)
             {
@@ -62,7 +65,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             }
             catch (MongoException mongoException)
             {
-                throw CreateAndLogCriticalDependencyException(mongoException);
+                throw CreateAndLogDependencyException(mongoException);
             }
             catch (Exception exception)
             {
@@ -81,31 +84,26 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             return categoryValidationException;
         }
 
-        //see to add that validation errors are writen on console 
         private CategoryValidationException CreateAndLogValidationException(InvalidCategoryException invalidCategoryException)
         {
             var categoryValidationException = new CategoryValidationException(invalidCategoryException);
-            AddErrorMessages(invalidCategoryException.ValidationErrors, categoryValidationException.ValidationErrorMessages);
-
             this.loggingBroker.LogError(categoryValidationException);
 
             return categoryValidationException;
         }
 
-        private void AddErrorMessages(List<(string, string)> listValidationErrors, List<string> errors)
-        {
-            foreach (var validationError in listValidationErrors)
-            {
-                errors.Add(validationError.Item1 + ": " + validationError.Item2);
-            }
-        }
+        //private void AddErrorMessages(List<(string, string)> listValidationErrors, List<string> errors)
+        //{
+        //    foreach (var validationError in listValidationErrors)
+        //    {
+        //        errors.Add(validationError.Item1 + ": " + validationError.Item2);
+        //    }
+        //}
 
-
-
-        private CategoryDependencyException CreateAndLogCriticalDependencyException(Exception exception)
+        private CategoryDependencyException CreateAndLogDependencyException(Exception exception)
         {
             var categoryDependencyException = new CategoryDependencyException(exception);
-            this.loggingBroker.LogCritical(categoryDependencyException);
+            this.loggingBroker.LogError(categoryDependencyException);
 
             return categoryDependencyException;
         }

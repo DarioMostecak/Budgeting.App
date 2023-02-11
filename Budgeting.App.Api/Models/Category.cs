@@ -7,8 +7,6 @@ namespace Budgeting.App.Api.Models
     [BsonCollection("categories")]
     public class Category
     {
-        private Category() { }
-
         [BsonId]
         [BsonElement("_categoryId")]
         [BsonRepresentation(BsonType.String)]

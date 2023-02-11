@@ -1,4 +1,5 @@
-﻿using Budgeting.App.Api.Brokers.Loggings;
+﻿using Budgeting.App.Api.Brokers.DateTimes;
+using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.Storages;
 using Budgeting.App.Api.Contracts;
 using Budgeting.App.Api.Models;
@@ -9,13 +10,16 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
 
         public CategoryService(
             IStorageBroker storageBroker,
-            ILoggingBroker loggingBroker)
+            ILoggingBroker loggingBroker,
+            IDateTimeBroker dateTimeBroker)
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
         public ValueTask<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto) =>
