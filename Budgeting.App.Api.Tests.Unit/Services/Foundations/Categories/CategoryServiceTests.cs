@@ -2,10 +2,12 @@
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.Storages;
 using Budgeting.App.Api.Contracts;
+using Budgeting.App.Api.Models;
 using Budgeting.App.Api.Services.Foundations.Categories;
 using MongoDB.Driver;
 using Moq;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
@@ -34,7 +36,14 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         private static CategoryDto CreateRandomCategoryDto() =>
             CreateRandomCategoryDtoFiller(dates: DateTime.UtcNow).Create();
 
+        private static IQueryable<CategoryDto> CreateRandomCategoryDtos(DateTime dates) =>
+            CreateRandomCategoryDtoFiller(dates).Create(GetRandomNumber()).AsQueryable();
+
+        private static DateTime GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
         //private static string CreateRandomMessage() => new MnemonicString().GetValue();
+        private static int GetRandomNumber() => new IntRange(min: 2, max: 10).GetValue();
 
         private static MongoException GetMongoException() =>
             (MongoException)FormatterServices.GetSafeUninitializedObject(typeof(MongoException));
@@ -48,6 +57,19 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             return actualException =>
                 actualException.Message == expectedException.Message
                 && actualException.InnerException.Message == expectedException.InnerException.Message;
+        }
+
+        private static IQueryable<Category> ProjectToCategory(IQueryable<CategoryDto> categoryDtos)
+        {
+            return categoryDtos.Select(categoryDto => new Category
+            {
+                CategoryId = categoryDto.CategoryId,
+                Title = categoryDto.Title,
+                Icon = categoryDto.Icon,
+                Type = categoryDto.Type,
+                TimeCreated = categoryDto.TimeCreated,
+                TimeModify = categoryDto.TimeModify
+            });
         }
 
         private static Filler<CategoryDto> CreateRandomCategoryDtoFiller(DateTime dates)

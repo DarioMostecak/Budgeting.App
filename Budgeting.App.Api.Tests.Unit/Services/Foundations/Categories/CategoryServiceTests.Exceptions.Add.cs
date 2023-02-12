@@ -31,12 +31,12 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
 
             //when
-            ValueTask<CategoryDto> createCategoryTask =
-                this.categoryService.CreateCategoryAsync(someCategoryDto);
+            ValueTask<CategoryDto> addCategoryTask =
+                this.categoryService.AddCategoryAsync(someCategoryDto);
 
             //then
             await Assert.ThrowsAsync<CategoryValidationException>(() =>
-               createCategoryTask.AsTask());
+               addCategoryTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
@@ -70,12 +70,12 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(mongoException);
 
             //when
-            ValueTask<CategoryDto> createCategoryTask =
-                this.categoryService.CreateCategoryAsync(someCategoryDto);
+            ValueTask<CategoryDto> addCategoryTask =
+                this.categoryService.AddCategoryAsync(someCategoryDto);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
-                createCategoryTask.AsTask());
+                addCategoryTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(
@@ -109,12 +109,12 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(serviceException);
 
             //when
-            ValueTask<CategoryDto> createCategoryTask =
-                this.categoryService.CreateCategoryAsync(someCategoryDto);
+            ValueTask<CategoryDto> addCategoryTask =
+                this.categoryService.AddCategoryAsync(someCategoryDto);
 
             //then
             await Assert.ThrowsAsync<CategoryServiceException>(() =>
-                createCategoryTask.AsTask());
+                addCategoryTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                broker.LogError(It.Is(SameExceptionAs(

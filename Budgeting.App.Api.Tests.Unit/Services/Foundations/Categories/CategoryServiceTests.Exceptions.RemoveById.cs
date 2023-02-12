@@ -12,7 +12,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
     public partial class CategoryServiceTests
     {
         [Fact]
-        public async Task ShouldThrowDependencyExceptionOnRemoveIfMongoExceptionErrorOccursAndLogItAsync()
+        public async Task ShouldThrowDependencyExceptionOnRemoveByIdIfMongoExceptionErrorOccursAndLogItAsync()
         {
             //given
             Guid someId = Guid.NewGuid();
@@ -55,7 +55,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnRemoveByIdIfExceptionOccursAndLogItAsync()
         {
             //given
             Guid someId = Guid.NewGuid();

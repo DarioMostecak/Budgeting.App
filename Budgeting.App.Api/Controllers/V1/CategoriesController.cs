@@ -77,7 +77,7 @@ namespace Budgeting.App.Api.Controllers.V1
             try
             {
                 CategoryDto createdCategoryDto =
-                await this.categoryService.CreateCategoryAsync(categoryDto);
+                await this.categoryService.AddCategoryAsync(categoryDto);
 
                 return CreatedAtAction(nameof(GetCategoryById)
                     , new { categoryId = categoryDto.CategoryId }, categoryDto);

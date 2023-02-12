@@ -4,7 +4,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
 {
     public interface ICategoryService
     {
-        ValueTask<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto);
+        ValueTask<CategoryDto> AddCategoryAsync(CategoryDto categoryDto);
         IQueryable<CategoryDto> RetrieveAllCategories();
         ValueTask<CategoryDto> RetriveCategoryByIdAsync(Guid categoryId);
         ValueTask<CategoryDto> ModifyCategoryAsync(CategoryDto categoryDto);

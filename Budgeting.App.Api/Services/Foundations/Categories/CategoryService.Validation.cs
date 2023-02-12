@@ -66,7 +66,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
 
         };
 
-        private static dynamic IsInvalidX(DateTimeOffset date) => new
+        private static dynamic IsInvalidX(DateTime date) => new
         {
             Condition = date == default,
             Message = "Date is required"

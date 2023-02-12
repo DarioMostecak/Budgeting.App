@@ -22,7 +22,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<CategoryDto> CreateCategoryAsync(CategoryDto categoryDto) =>
+        public ValueTask<CategoryDto> AddCategoryAsync(CategoryDto categoryDto) =>
         TryCatch(async () =>
         {
             Category newCategory = categoryDto;
