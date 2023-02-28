@@ -1,12 +1,13 @@
 ﻿using Budgeting.App.Api.Brokers.DateTimes;
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.Storages;
-using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
+using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.ExceptionModels;
 using Budgeting.App.Api.Services.Foundations.Categories;
 using MongoDB.Driver;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -33,11 +34,11 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
-        private static CategoryDto CreateRandomCategoryDto() =>
-            CreateRandomCategoryDtoFiller(dates: DateTime.UtcNow).Create();
+        private static Category CreateRandomCategory() =>
+            CreateRandomCategoryFiller(dates: DateTime.UtcNow).Create();
 
-        private static IQueryable<CategoryDto> CreateRandomCategoryDtos(DateTime dates) =>
-            CreateRandomCategoryDtoFiller(dates).Create(GetRandomNumber()).AsQueryable();
+        private static IQueryable<Category> CreateRandomCategories(DateTime dates) =>
+            CreateRandomCategoryFiller(dates).Create(GetRandomNumber()).AsQueryable();
 
         private static DateTime GetRandomDateTime() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
@@ -53,28 +54,22 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
         private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
         {
-
             return actualException =>
                 actualException.Message == expectedException.Message
                 && actualException.InnerException.Message == expectedException.InnerException.Message;
         }
 
-        private static IQueryable<Category> ProjectToCategory(IQueryable<CategoryDto> categoryDtos)
+        private static Expression<Func<Exception, bool>> SameValidationExceptionAs(Exception expectedException)
         {
-            return categoryDtos.Select(categoryDto => new Category
-            {
-                CategoryId = categoryDto.CategoryId,
-                Title = categoryDto.Title,
-                Icon = categoryDto.Icon,
-                Type = categoryDto.Type,
-                TimeCreated = categoryDto.TimeCreated,
-                TimeModify = categoryDto.TimeModify
-            });
+            return actualException =>
+            actualException.Message == expectedException.Message
+            && (actualException.InnerException as ExceptionModel).DataEquals(expectedException.InnerException.Data);
+
         }
 
-        private static Filler<CategoryDto> CreateRandomCategoryDtoFiller(DateTime dates)
+        private static Filler<Category> CreateRandomCategoryFiller(DateTime dates)
         {
-            var filler = new Filler<CategoryDto>();
+            var filler = new Filler<Category>();
             Guid categoryId = Guid.NewGuid();
 
             filler.Setup()
@@ -87,5 +82,14 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             return filler;
         }
+
+        private static IEnumerable<object[]> InvalidDataCategory() =>
+            new List<object[]>
+            {
+                new object[] {Guid.Empty, "   ", DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, null, DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, new MnemonicString(1, 1, 1).GetValue(), DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, new MnemonicString(1, 20, 20).GetValue(), DateTime.MinValue, DateTime.MinValue }
+            };
     }
 }

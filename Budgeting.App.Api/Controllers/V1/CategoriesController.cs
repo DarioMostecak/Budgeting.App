@@ -1,5 +1,5 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.Categories.Exceptions;
 using Budgeting.App.Api.Services.Foundations.Categories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,7 @@ namespace Budgeting.App.Api.Controllers.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : BaseController
     {
         private readonly ICategoryService categoryService;
 
@@ -22,18 +22,18 @@ namespace Budgeting.App.Api.Controllers.V1
         {
             try
             {
-                IQueryable categoryDtos =
+                IQueryable categories =
                     this.categoryService.RetrieveAllCategories();
 
-                return Ok(categoryDtos);
+                return Ok(categories);
             }
             catch (CategoryValidationException categoryValidationException)
             {
-                return Problem(categoryValidationException.Message);
+                return InternalServerError(categoryValidationException);
             }
             catch (CategoryServiceException categoryServiceException)
             {
-                return Problem(categoryServiceException.Message);
+                return InternalServerError(categoryServiceException);
             }
         }
 
@@ -43,111 +43,95 @@ namespace Budgeting.App.Api.Controllers.V1
         {
             try
             {
-                CategoryDto categoryDto =
+                Category category =
                     await this.categoryService.RetriveCategoryByIdAsync(categoryId);
 
-                return Ok(categoryDto);
+                return Ok(category);
             }
             catch (CategoryValidationException categoryValidationException)
                when (categoryValidationException.InnerException is NotFoundCategoryException)
             {
-                string innerMessage = GetInnerMessage(categoryValidationException);
-                return NotFound(innerMessage);
+                return NotFound(categoryValidationException.InnerException);
             }
             catch (CategoryValidationException categoryValidationException)
             {
-                string innerMessage = GetInnerMessage(categoryValidationException);
-                return BadRequest(innerMessage);
+                return BadRequest(categoryValidationException);
             }
             catch (CategoryDependencyException categoryDependencyException)
             {
-                return Problem(categoryDependencyException.Message);
+                return InternalServerError(categoryDependencyException);
             }
             catch (CategoryServiceException categoryServiceException)
             {
-                return Problem(categoryServiceException.Message);
+                return InternalServerError(categoryServiceException);
             }
 
 
         }
 
         [HttpPost]
-        public async ValueTask<IActionResult> PostCategory([FromBody] CategoryDto categoryDto)
+        public async ValueTask<IActionResult> PostCategory([FromBody] Category category)
         {
             try
             {
-                CategoryDto createdCategoryDto =
-                await this.categoryService.AddCategoryAsync(categoryDto);
+                Category createdCategory =
+                await this.categoryService.AddCategoryAsync(category);
 
                 return CreatedAtAction(nameof(GetCategoryById)
-                    , new { categoryId = categoryDto.CategoryId }, categoryDto);
+                    , new { categoryId = category.CategoryId }, category);
             }
             catch (CategoryValidationException categoryValidationException)
               when (categoryValidationException.InnerException is AlreadyExistsCategoryException)
             {
-                return Conflict(categoryValidationException.InnerException.Message);
+                return Conflict(categoryValidationException.InnerException);
             }
             catch (CategoryValidationException categoryValidationException)
-              when (categoryValidationException.ValidationErrorMessages.Count > 0)
+              when (categoryValidationException.Data.Count > 0)
             {
-                var errorResponse = new ErrorResponse();
-                errorResponse.Message = categoryValidationException.Message;
-                foreach (var error in categoryValidationException.ValidationErrorMessages)
-                {
-                    errorResponse.Errors.Add(error);
-                }
-                return BadRequest(errorResponse);
+                return BadRequest(categoryValidationException);
             }
             catch (CategoryDependencyException categoryDependencyException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, categoryDependencyException.Message);
+                return InternalServerError(categoryDependencyException);
             }
             catch (CategoryServiceException categoryServiceException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, categoryServiceException.Message);
+                return InternalServerError(categoryServiceException);
             }
 
         }
 
         [HttpPut]
-        public async ValueTask<IActionResult> PutCategory([FromBody] CategoryDto categoryDto)
+        public async ValueTask<IActionResult> PutCategory([FromBody] Category category)
         {
             try
             {
-                CategoryDto updatedCategoryDto =
-                    await this.categoryService.ModifyCategoryAsync(categoryDto);
+                Category updatedCategory =
+                    await this.categoryService.ModifyCategoryAsync(category);
 
-                return Ok(updatedCategoryDto);
+                return Ok(updatedCategory);
             }
             catch (CategoryValidationException categoryValidationException)
                when (categoryValidationException.InnerException is NotFoundCategoryException)
             {
-                string innerMessage = GetInnerMessage(categoryValidationException);
-                return NotFound(innerMessage);
+                return NotFound(categoryValidationException.InnerException);
             }
             catch (CategoryValidationException categoryValidationException)
-              when (categoryValidationException.ValidationErrorMessages.Count > 0)
+              when (categoryValidationException.Data.Count > 0)
             {
-                var errorResponse = new ErrorResponse();
-                errorResponse.Message = categoryValidationException.Message;
-                foreach (var error in categoryValidationException.ValidationErrorMessages)
-                {
-                    errorResponse.Errors.Add(error);
-                }
-                return BadRequest(errorResponse);
+                return BadRequest(categoryValidationException);
             }
             catch (CategoryValidationException categoryValidationException)
             {
-                string innerMessage = GetInnerMessage(categoryValidationException);
-                return BadRequest(innerMessage);
+                return BadRequest(categoryValidationException);
             }
             catch (CategoryDependencyException categoryDependencyException)
             {
-                return StatusCode(500, categoryDependencyException.Message);
+                return InternalServerError(categoryDependencyException);
             }
             catch (CategoryServiceException categoryServiceException)
             {
-                return StatusCode(500, categoryServiceException.Message);
+                return InternalServerError(categoryServiceException);
             }
 
         }
@@ -158,33 +142,28 @@ namespace Budgeting.App.Api.Controllers.V1
         {
             try
             {
-                CategoryDto deletedCategoryDto =
+                Category deletedCategory =
                     await this.categoryService.RemoveCategoryByIdAsync(categoryId);
 
-                return Ok(deletedCategoryDto);
+                return Ok(deletedCategory);
             }
             catch (CategoryValidationException categoryValidationException)
                when (categoryValidationException.InnerException is NotFoundCategoryException)
             {
-                string innerMessage = GetInnerMessage(categoryValidationException);
-                return NotFound(innerMessage);
+                return NotFound(categoryValidationException.InnerException);
             }
             catch (CategoryValidationException categoryValidationException)
             {
-                string innerMessage = GetInnerMessage(categoryValidationException);
-                return BadRequest(innerMessage);
+                return BadRequest(categoryValidationException);
             }
             catch (CategoryDependencyException categoryDependencyException)
             {
-                return StatusCode(500, categoryDependencyException.Message);
+                return InternalServerError(categoryDependencyException);
             }
             catch (CategoryServiceException categoryServiceException)
             {
-                return StatusCode(500, categoryServiceException.Message);
+                return InternalServerError(categoryServiceException);
             }
         }
-
-        private static string GetInnerMessage(Exception exception) =>
-            exception.InnerException.Message;
     }
 }

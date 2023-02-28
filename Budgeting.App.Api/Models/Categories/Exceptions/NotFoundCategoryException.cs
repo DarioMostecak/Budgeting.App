@@ -1,4 +1,4 @@
-﻿namespace Budgeting.App.Api.Models.Exceptions
+﻿namespace Budgeting.App.Api.Models.Categories.Exceptions
 {
     public class NotFoundCategoryException : Exception
     {

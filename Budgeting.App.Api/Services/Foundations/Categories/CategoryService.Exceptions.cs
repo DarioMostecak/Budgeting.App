@@ -1,33 +1,28 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.Categories.Exceptions;
 using MongoDB.Driver;
 
 namespace Budgeting.App.Api.Services.Foundations.Categories
 {
     public partial class CategoryService
     {
-        private delegate ValueTask<CategoryDto> ReturnCategoryDtoFunction();
-        private delegate IQueryable<CategoryDto> ReturnigQueryableCategoryDtosFunction();
+        private delegate ValueTask<Category> ReturnCategoryFunction();
+        private delegate IQueryable<Category> ReturnigQueryableCategoriesFunction();
 
-        private async ValueTask<CategoryDto> TryCatch(
-            ReturnCategoryDtoFunction returnCategoryDtoFunction)
+        private async ValueTask<Category> TryCatch(
+            ReturnCategoryFunction returnCategoryFunction)
         {
             try
             {
-                return await returnCategoryDtoFunction();
+                return await returnCategoryFunction();
             }
             catch (NullCategoryException nullCategoryException)
             {
                 throw CreateAndLogValidationException(nullCategoryException);
             }
             catch (InvalidCategoryException invalidCategoryException)
-               when (invalidCategoryException.ValidationErrors.Count != 0)
             {
                 throw CreateAndLogValidationException(invalidCategoryException);
-            }
-            catch (InvalidCategoryException invalidCategoryException)
-            {
-                throw CreateAndLogValidationException(invalidCategoryException as Exception);
             }
             catch (NotFoundCategoryException notFoundCategoryException)
             {
@@ -56,12 +51,12 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             }
         }
 
-        private IQueryable<CategoryDto> TryCatch(
-            ReturnigQueryableCategoryDtosFunction returnigQueryableCategoryDtosFunction)
+        private IQueryable<Category> TryCatch(
+            ReturnigQueryableCategoriesFunction returnigQueryableCategoriesFunction)
         {
             try
             {
-                return returnigQueryableCategoryDtosFunction();
+                return returnigQueryableCategoriesFunction();
             }
             catch (MongoException mongoException)
             {
@@ -83,22 +78,6 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
 
             return categoryValidationException;
         }
-
-        private CategoryValidationException CreateAndLogValidationException(InvalidCategoryException invalidCategoryException)
-        {
-            var categoryValidationException = new CategoryValidationException(invalidCategoryException);
-            this.loggingBroker.LogError(categoryValidationException);
-
-            return categoryValidationException;
-        }
-
-        //private void AddErrorMessages(List<(string, string)> listValidationErrors, List<string> errors)
-        //{
-        //    foreach (var validationError in listValidationErrors)
-        //    {
-        //        errors.Add(validationError.Item1 + ": " + validationError.Item2);
-        //    }
-        //}
 
         private CategoryDependencyException CreateAndLogDependencyException(Exception exception)
         {

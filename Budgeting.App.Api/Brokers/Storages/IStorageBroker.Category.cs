@@ -1,4 +1,4 @@
-﻿using Budgeting.App.Api.Models;
+﻿using Budgeting.App.Api.Models.Categories;
 
 namespace Budgeting.App.Api.Brokers.Storages
 {

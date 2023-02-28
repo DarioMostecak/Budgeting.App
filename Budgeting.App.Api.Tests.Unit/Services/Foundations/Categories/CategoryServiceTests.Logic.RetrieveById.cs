@@ -1,5 +1,4 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
+﻿using Budgeting.App.Api.Models.Categories;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
@@ -15,20 +14,21 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldRetreiveCategoryById()
         {
             //given
-            CategoryDto randomCategoryDto = CreateRandomCategoryDto();
-            Category storageCategory = randomCategoryDto;
-            CategoryDto expectedCategoryDto = randomCategoryDto.DeepClone();
-            Guid categoryId = randomCategoryDto.CategoryId;
+            Category randomCategory = CreateRandomCategory();
+            Category storageCategory = randomCategory;
+            Category expectedCategory = randomCategory.DeepClone();
+            Guid categoryId = randomCategory.CategoryId;
 
             this.storageBrokerMock.Setup(broker =>
                broker.SelectCategoriesByIdAsync(categoryId))
                 .ReturnsAsync(storageCategory);
 
             //when
-            CategoryDto actualCategoryDto = await this.categoryService.RetriveCategoryByIdAsync(categoryId);
+            Category actualCategoryDto =
+                await this.categoryService.RetriveCategoryByIdAsync(categoryId);
 
             //then
-            actualCategoryDto.Should().BeEquivalentTo(expectedCategoryDto);
+            actualCategoryDto.Should().BeEquivalentTo(expectedCategory);
 
             this.storageBrokerMock.Verify(broker =>
                broker.SelectCategoriesByIdAsync(It.IsAny<Guid>()),

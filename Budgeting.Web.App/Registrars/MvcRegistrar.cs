@@ -12,10 +12,8 @@ namespace Budgeting.Web.App.Registrars
         {
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddHttpClient("BudgetApi", client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:7149/api/v1/");
-            });
+            builder.Services.AddHttpClient<IApiBroker, ApiBroker>();
+
 
             #region Add Brokers
             builder.Services.AddScoped<IApiBroker, ApiBroker>();

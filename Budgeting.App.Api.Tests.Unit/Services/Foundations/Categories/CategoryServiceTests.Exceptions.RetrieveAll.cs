@@ -1,4 +1,4 @@
-﻿using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories.Exceptions;
 using MongoDB.Driver;
 using Moq;
 using System;

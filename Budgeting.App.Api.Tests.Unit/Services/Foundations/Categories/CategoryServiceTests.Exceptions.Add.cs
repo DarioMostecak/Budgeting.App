@@ -1,6 +1,5 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
-using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.Categories.Exceptions;
 using MongoDB.Driver;
 using Moq;
 using System;
@@ -15,7 +14,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowDependencyValidationExceptionOnCreateWhenCategoryAlredyExistLogItAasync()
         {
             //given
-            CategoryDto someCategoryDto = CreateRandomCategoryDto();
+            Category someCategory = CreateRandomCategory();
             MongoDuplicateKeyException mongoDuplicateKeyException =
                 GetMongoDuplicateKeyException();
 
@@ -31,8 +30,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
 
             //when
-            ValueTask<CategoryDto> addCategoryTask =
-                this.categoryService.AddCategoryAsync(someCategoryDto);
+            ValueTask<Category> addCategoryTask =
+                this.categoryService.AddCategoryAsync(someCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryValidationException>(() =>
@@ -56,7 +55,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowDependencyExceptionOnCreateIfMongoExceptionErrorOccursAndLogItAsync()
         {
             //given
-            CategoryDto someCategoryDto = CreateRandomCategoryDto();
+            Category someCategory = CreateRandomCategory();
             MongoException mongoException = GetMongoException();
 
             var failedCategoryServiceException =
@@ -70,8 +69,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(mongoException);
 
             //when
-            ValueTask<CategoryDto> addCategoryTask =
-                this.categoryService.AddCategoryAsync(someCategoryDto);
+            ValueTask<Category> addCategoryTask =
+                this.categoryService.AddCategoryAsync(someCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
@@ -95,7 +94,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowServiceExceptionOnCreateIfExceptionOccursAndLogItAsync()
         {
             //given
-            CategoryDto someCategoryDto = CreateRandomCategoryDto();
+            Category someCategory = CreateRandomCategory();
             var serviceException = new Exception();
 
             var failedCategoryServiceException =
@@ -109,8 +108,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(serviceException);
 
             //when
-            ValueTask<CategoryDto> addCategoryTask =
-                this.categoryService.AddCategoryAsync(someCategoryDto);
+            ValueTask<Category> addCategoryTask =
+                this.categoryService.AddCategoryAsync(someCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryServiceException>(() =>

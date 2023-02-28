@@ -4,7 +4,7 @@ namespace Budgeting.Web.App.Brokers.Apis
 {
     public partial class ApiBroker
     {
-        private const string relativeUrl = "categories";
+        private const string relativeUrl = "Categories";
 
         public async ValueTask<List<Category>> SelectAllCategoriesAsync()
         => await this.GetAsync<List<Category>>(relativeUrl);
@@ -13,17 +13,14 @@ namespace Budgeting.Web.App.Brokers.Apis
         => await this.PostAsync(relativeUrl, category);
 
         public async ValueTask<Category> SelectCategoriesByIdAsync(Guid categoryId)
-        {
-            return await this.GetAsync<Category>(relativeUrl + $"/{categoryId}");
-        }
+        => await this.GetAsync<Category>(relativeUrl + $"/{categoryId}");
 
         public async ValueTask<Category> UpdateCategoryAsync(Category category)
         => await this.PutAsync(relativeUrl, category);
 
         public async ValueTask<Category> DeleteCategoryAsync(Guid categoryId)
-        {
-            return await this.DeleteAsync<Category>(relativeUrl + $"/{categoryId}");
-        }
+        => await this.DeleteAsync<Category>(relativeUrl + $"/{categoryId}");
+
 
     }
 }

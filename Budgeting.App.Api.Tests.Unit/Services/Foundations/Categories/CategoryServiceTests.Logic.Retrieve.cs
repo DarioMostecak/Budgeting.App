@@ -1,5 +1,4 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
+﻿using Budgeting.App.Api.Models.Categories;
 using FluentAssertions;
 using Moq;
 using System;
@@ -15,19 +14,20 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         {
             //given
             DateTime randomDate = GetRandomDateTime();
-            IQueryable<CategoryDto> randomCategories = CreateRandomCategoryDtos(randomDate);
-            IQueryable<Category> storageCategories = ProjectToCategory(randomCategories);
-            IQueryable<CategoryDto> expectedCategoryDtos = randomCategories;
+            IQueryable<Category> randomCategories = CreateRandomCategories(randomDate);
+            IQueryable<Category> storageCategories = randomCategories;
+            IQueryable<Category> expectedCategories = storageCategories;
 
             this.storageBrokerMock.Setup(broker =>
                broker.SelectAllCategories())
                 .Returns(storageCategories);
 
             //when
-            IQueryable<CategoryDto> actualCategoryDtos = this.categoryService.RetrieveAllCategories();
+            IQueryable<Category> actualCategoryDtos =
+                this.categoryService.RetrieveAllCategories();
 
             //then
-            actualCategoryDtos.Should().BeEquivalentTo(expectedCategoryDtos);
+            actualCategoryDtos.Should().BeEquivalentTo(expectedCategories);
 
             this.storageBrokerMock.Verify(broker =>
                broker.SelectAllCategories(),

@@ -6,45 +6,36 @@ namespace Budgeting.Web.App.Brokers.Apis
     {
         private readonly IConfiguration configuration;
         private HttpClient httpClient;
-        private IHttpClientFactory httpClientFactory { get; set; }
 
         public ApiBroker(IConfiguration configuration,
-            HttpClient httpClient, IHttpClientFactory httpClientFactory)
+            HttpClient httpClient)
         {
             this.configuration = configuration;
-            this.httpClientFactory = httpClientFactory;
             this.httpClient = GetHttpClient(httpClient);
-
         }
-
 
         private async ValueTask<T> GetAsync<T>(string relativeUrl)
             where T : class
         {
-            var client = this.httpClientFactory.CreateClient("BudgetApi");
-            using var response = await client.GetAsync(relativeUrl);
+            using var response = await this.httpClient.GetAsync(relativeUrl);
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<T>(result);
+            return await response.Content.ReadFromJsonAsync<T>();
         }
 
         private async ValueTask<T> PostAsync<T>(string relativeUrl, T entity)
         {
-            var client = this.httpClientFactory.CreateClient("BudgetApi");
-            using var response = await client.PostAsJsonAsync(relativeUrl, entity);
+            using var response = await this.httpClient.PostAsJsonAsync(relativeUrl, entity);
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<T>(result);
+            return await response.Content.ReadFromJsonAsync<T>();
 
         }
 
         private async ValueTask<T> PutAsync<T>(string relativeUrl, T entity)
             where T : class
         {
-            var client = this.httpClientFactory.CreateClient("BudgetApi");
-            using var response = await client.PutAsJsonAsync(relativeUrl, entity);
+            using var response = await this.httpClient.PutAsJsonAsync(relativeUrl, entity);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
 
@@ -54,8 +45,7 @@ namespace Budgeting.Web.App.Brokers.Apis
         private async ValueTask<T> DeleteAsync<T>(string relativeUrl)
             where T : class
         {
-            var client = this.httpClientFactory.CreateClient("BudgetApi");
-            using var response = await client.DeleteAsync(relativeUrl);
+            using var response = await this.httpClient.DeleteAsync(relativeUrl);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadAsStringAsync();
 
@@ -65,10 +55,9 @@ namespace Budgeting.Web.App.Brokers.Apis
         private HttpClient GetHttpClient(HttpClient client)
         {
             var baseAddress = this.configuration["ApiBaseUrl"];
-            client.BaseAddress = new Uri(baseAddress);
+            client.BaseAddress = new Uri("https://localhost:7149/api/v1/");
 
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-
 
             return client;
         }

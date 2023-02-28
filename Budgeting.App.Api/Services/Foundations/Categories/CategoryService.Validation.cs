@@ -1,5 +1,5 @@
-﻿using Budgeting.App.Api.Models;
-using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.Categories.Exceptions;
 
 namespace Budgeting.App.Api.Services.Foundations.Categories
 {
@@ -23,8 +23,16 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             Validate(
                 (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
                 (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
+                (rule: IsInvalidX(category.Type), parameter: nameof(Category.Type)),
                 (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
-                (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
+                (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)),
+
+                (rule: IsSame(
+                        firstDate: category.TimeCreated,
+                        secondDate: category.TimeModify,
+                        secondDateName: nameof(Category.TimeModify)),
+                parameter: nameof(Category.TimeModify))
+                );
         }
 
         private static void ValidateAgainstStorageCategoryOnModify(
@@ -62,14 +70,14 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
         private static dynamic IsInvalidX(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text) || (text.Length >= 20 || text.Length <= 3),
-            Message = "Category title isn't valid"
+            Message = "Category title isn't valid. Must be between 2 and 19 characters long."
 
         };
 
         private static dynamic IsInvalidX(DateTime date) => new
         {
             Condition = date == default,
-            Message = "Date is required"
+            Message = "Date is required."
         };
 
         private static dynamic IsNotSame(
@@ -99,7 +107,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
                 Message = $"Date is the same as {secondDateName}"
             };
 
-        private static bool IsInvalid(Guid input) => input == default;
+        private static bool IsInvalid(Guid input) => input == Guid.Empty;
 
         private static void ValidateCategoryIsNull(Category category)
         {
@@ -129,11 +137,13 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             {
                 if (rule.Condition)
                 {
-                    invalidCategorytException.ValidationErrors.Add((parameter, rule.Message));
+                    invalidCategorytException.UpsertDataList(
+                        key: parameter,
+                        value: rule.Message);
                 }
-            }
 
-            if (invalidCategorytException.ValidationErrors.Count > 0) throw invalidCategorytException;
+            }
+            invalidCategorytException.ThrowIfContainsErrors();
         }
 
     }

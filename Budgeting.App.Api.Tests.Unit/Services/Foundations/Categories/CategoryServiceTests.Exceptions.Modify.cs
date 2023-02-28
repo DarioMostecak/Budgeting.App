@@ -1,6 +1,5 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
-using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.Categories.Exceptions;
 using MongoDB.Driver;
 using Moq;
 using System;
@@ -15,7 +14,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowDependencyExceptionOnModifyIfMongoExceptionErrorOccursAndLogItAsync()
         {
             //given
-            CategoryDto someCategoryDto = CreateRandomCategoryDto();
+            Category someCategory = CreateRandomCategory();
             MongoException mongoException = GetMongoException();
 
             var failedCategoryServiceException =
@@ -29,8 +28,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(mongoException);
 
             //when
-            ValueTask<CategoryDto> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(someCategoryDto);
+            ValueTask<Category> modifyCategoryTask =
+                this.categoryService.ModifyCategoryAsync(someCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
@@ -58,7 +57,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowServiceExceptionOnModifyIfExceptionOccursAndLogItAsync()
         {
             //given
-            CategoryDto someCategoryDto = CreateRandomCategoryDto();
+            Category someCategory = CreateRandomCategory();
             var serviceException = new Exception();
 
             var failedCategoryServiceException =
@@ -72,8 +71,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(serviceException);
 
             //when
-            ValueTask<CategoryDto> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(someCategoryDto);
+            ValueTask<Category> modifyCategoryTask =
+                this.categoryService.ModifyCategoryAsync(someCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryServiceException>(() =>

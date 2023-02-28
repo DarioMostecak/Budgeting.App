@@ -1,4 +1,4 @@
-﻿using Budgeting.App.Api.Models;
+﻿using Budgeting.App.Api.Models.Categories;
 using MongoDB.Driver;
 
 namespace Budgeting.App.Api.Brokers.Storages
@@ -31,7 +31,9 @@ namespace Budgeting.App.Api.Brokers.Storages
             this.categoryCollection =
                 this.db.GetCollection<Category>(GetCollectionName<Category>());
 
-            var categroy = await this.categoryCollection.Find(obj => obj.CategoryId == categoryId).FirstOrDefaultAsync();
+            var categroy = await this.categoryCollection
+                .Find(obj => obj.CategoryId == categoryId)
+                  .FirstOrDefaultAsync();
 
             return categroy;
         }
@@ -41,7 +43,8 @@ namespace Budgeting.App.Api.Brokers.Storages
             this.categoryCollection =
                 this.db.GetCollection<Category>(GetCollectionName<Category>());
 
-            await this.categoryCollection.ReplaceOneAsync(obj => obj.CategoryId == category.CategoryId, category);
+            await this.categoryCollection
+                .ReplaceOneAsync(obj => obj.CategoryId == category.CategoryId, category);
 
             return category;
         }
@@ -51,7 +54,8 @@ namespace Budgeting.App.Api.Brokers.Storages
             this.categoryCollection =
                 this.db.GetCollection<Category>(GetCollectionName<Category>());
 
-            await this.categoryCollection.DeleteOneAsync(obj => obj.CategoryId == category.CategoryId);
+            await this.categoryCollection
+                .DeleteOneAsync(obj => obj.CategoryId == category.CategoryId);
 
             return category;
         }

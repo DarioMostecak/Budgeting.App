@@ -1,5 +1,5 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models.Exceptions;
+﻿using Budgeting.App.Api.Models.Categories;
+using Budgeting.App.Api.Models.Categories.Exceptions;
 using MongoDB.Driver;
 using Moq;
 using System;
@@ -28,7 +28,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(mongoException);
 
             //when
-            ValueTask<CategoryDto> retrieveCategoryByIdTask =
+            ValueTask<Category> retrieveCategoryByIdTask =
                 this.categoryService.RetriveCategoryByIdAsync(someId);
 
             //then
@@ -67,7 +67,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Throws(serviceException);
 
             //when
-            ValueTask<CategoryDto> retrieveCategoryByIdTask =
+            ValueTask<Category> retrieveCategoryByIdTask =
                 this.categoryService.RemoveCategoryByIdAsync(someId);
 
             //then

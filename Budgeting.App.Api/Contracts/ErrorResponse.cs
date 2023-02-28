@@ -4,7 +4,7 @@
     {
         public int StatusCode { get; set; }
         public string Message { get; set; }
-        public List<string> Errors { get; set; } = new List<string>();
+        public Dictionary<string, List<string>> Errors { get; set; } = new Dictionary<string, List<string>>();
         public DateTime Timestamp { get; set; }
     }
 }

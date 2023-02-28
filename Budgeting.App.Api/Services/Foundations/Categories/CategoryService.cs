@@ -1,8 +1,7 @@
 ﻿using Budgeting.App.Api.Brokers.DateTimes;
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.Storages;
-using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
+using Budgeting.App.Api.Models.Categories;
 
 namespace Budgeting.App.Api.Services.Foundations.Categories
 {
@@ -22,51 +21,42 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<CategoryDto> AddCategoryAsync(CategoryDto categoryDto) =>
+        public ValueTask<Category> AddCategoryAsync(Category category) =>
         TryCatch(async () =>
         {
-            Category newCategory = categoryDto;
-            ValidateCategoryOnCreate(newCategory);
-            await this.storageBroker.InsertCategoryAsync(newCategory);
+            ValidateCategoryOnCreate(category);
 
-            return (CategoryDto)newCategory;
-
+            return await this.storageBroker.InsertCategoryAsync(category);
         });
 
-        public IQueryable<CategoryDto> RetrieveAllCategories() =>
-        TryCatch(() =>
-        {
-            var listCategory = this.storageBroker.SelectAllCategories().ToList();
-            var listCategoryDto = listCategory.ConvertAll(category => (CategoryDto)category);
+        public IQueryable<Category> RetrieveAllCategories() =>
+        TryCatch(() => this.storageBroker.SelectAllCategories());
 
-            return listCategoryDto.AsQueryable();
-        });
-
-        public ValueTask<CategoryDto> RetriveCategoryByIdAsync(Guid categoryId) =>
+        public ValueTask<Category> RetriveCategoryByIdAsync(Guid categoryId) =>
         TryCatch(async () =>
         {
             ValidateCategoryIdIsNull(categoryId);
             Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(categoryId);
-            ValidateStorageCategory(maybeCategory, categoryId);
+            ValidateStorageCategory(storageCategory: maybeCategory, categoryId);
 
-            return (CategoryDto)maybeCategory;
+            return maybeCategory;
         });
 
-        public ValueTask<CategoryDto> ModifyCategoryAsync(CategoryDto categoryDto) =>
+        public ValueTask<Category> ModifyCategoryAsync(Category category) =>
         TryCatch(async () =>
         {
-            Category inputCategory = categoryDto;
-            ValidateCategoryOnModify(inputCategory);
+            ValidateCategoryOnModify(category);
 
-            Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(inputCategory.CategoryId);
-            ValidateStorageCategory(storageCategory: maybeCategory, inputCategory.CategoryId);
-            ValidateAgainstStorageCategoryOnModify(inputCategory: inputCategory, storageCategory: maybeCategory);
+            Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(category.CategoryId);
+            ValidateStorageCategory(storageCategory: maybeCategory, category.CategoryId);
+            ValidateAgainstStorageCategoryOnModify(inputCategory: category, storageCategory: maybeCategory);
 
-            var updateCategory = await this.storageBroker.UpdateCategoryAsync(inputCategory);
-            return (CategoryDto)updateCategory;
+            var updateCategory = await this.storageBroker.UpdateCategoryAsync(category);
+
+            return updateCategory;
         });
 
-        public ValueTask<CategoryDto> RemoveCategoryByIdAsync(Guid categoryId) =>
+        public ValueTask<Category> RemoveCategoryByIdAsync(Guid categoryId) =>
         TryCatch(async () =>
         {
             ValidateCategoryIdIsNull(categoryId);
@@ -74,7 +64,8 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             ValidateStorageCategory(maybeCategory, categoryId);
 
             var deletedCategory = await this.storageBroker.DeleteCategoryAsync(maybeCategory);
-            return (CategoryDto)deletedCategory;
+
+            return deletedCategory;
         });
     }
 }

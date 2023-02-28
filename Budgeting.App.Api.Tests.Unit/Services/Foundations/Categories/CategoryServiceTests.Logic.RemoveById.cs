@@ -1,7 +1,5 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
+﻿using Budgeting.App.Api.Models.Categories;
 using FluentAssertions;
-using Force.DeepCloner;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -15,11 +13,10 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldRemoveCategoryById()
         {
             //given
-            CategoryDto randomCategoryDto = CreateRandomCategoryDto();
-            Guid categoryId = randomCategoryDto.CategoryId;
-            Category storageCategory = randomCategoryDto;
+            Category randomCategory = CreateRandomCategory();
+            Guid categoryId = randomCategory.CategoryId;
+            Category storageCategory = randomCategory;
             Category expectedCategory = storageCategory;
-            CategoryDto expectedCategoryDto = (CategoryDto)storageCategory.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
                broker.SelectCategoriesByIdAsync(It.IsAny<Guid>()))
@@ -30,7 +27,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .ReturnsAsync(expectedCategory);
 
             //when
-            CategoryDto actualCategory = await this.categoryService.RemoveCategoryByIdAsync(categoryId);
+            Category actualCategory =
+                await this.categoryService.RemoveCategoryByIdAsync(categoryId);
 
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);

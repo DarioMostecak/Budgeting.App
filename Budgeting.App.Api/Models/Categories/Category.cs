@@ -2,10 +2,10 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Budgeting.App.Api.Models
+namespace Budgeting.App.Api.Models.Categories
 {
     [BsonCollection("categories")]
-    public class Category
+    public sealed class Category
     {
         [BsonId]
         [BsonElement("_categoryId")]
@@ -29,18 +29,5 @@ namespace Budgeting.App.Api.Models
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime TimeModify { get; set; }
 
-        public static Category CreateNewCategory(Guid CategoryId, string title,
-            string icon, string type, DateTime timeCreated, DateTime timeModify)
-        {
-            return new Category
-            {
-                CategoryId = CategoryId,
-                Title = title,
-                Icon = icon,
-                Type = type,
-                TimeCreated = timeCreated,
-                TimeModify = timeModify
-            };
-        }
     }
 }

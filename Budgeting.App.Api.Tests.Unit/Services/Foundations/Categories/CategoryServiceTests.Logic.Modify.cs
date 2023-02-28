@@ -1,5 +1,4 @@
-﻿using Budgeting.App.Api.Contracts;
-using Budgeting.App.Api.Models;
+﻿using Budgeting.App.Api.Models.Categories;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
@@ -16,14 +15,13 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         {
             //given
             DateTime randomDate = GetRandomDateTime();
-            CategoryDto randomCategoryDto = CreateRandomCategoryDto();
-            CategoryDto inputCategoryDto = randomCategoryDto;
-            Category inputCategory = inputCategoryDto;
+            Category randomCategory = CreateRandomCategory();
+            Category inputCategory = randomCategory;
             Category afterUpdateCategory = inputCategory;
-            Category beforeUpdateStorageCategory = randomCategoryDto.DeepClone();
-            CategoryDto expectedCategoryDto = (CategoryDto)afterUpdateCategory;
-            inputCategoryDto.TimeModify = randomDate;
-            Guid categoryId = inputCategoryDto.CategoryId;
+            Category expectedCategory = afterUpdateCategory;
+            Category beforeUpdateStorageCategory = randomCategory.DeepClone();
+            inputCategory.TimeModify = randomDate;
+            Guid categoryId = inputCategory.CategoryId;
 
             this.storageBrokerMock.Setup(broker =>
                broker.SelectCategoriesByIdAsync(categoryId))
@@ -34,10 +32,10 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .ReturnsAsync(afterUpdateCategory);
 
             //when
-            CategoryDto actualCategory = await this.categoryService.ModifyCategoryAsync(inputCategoryDto);
+            Category actualCategory = await this.categoryService.ModifyCategoryAsync(inputCategory);
 
             //then
-            actualCategory.Should().BeEquivalentTo(expectedCategoryDto);
+            actualCategory.Should().BeEquivalentTo(expectedCategory);
 
             this.storageBrokerMock.Verify(broker =>
                broker.SelectCategoriesByIdAsync(categoryId),

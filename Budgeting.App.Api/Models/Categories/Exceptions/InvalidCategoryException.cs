@@ -1,6 +1,8 @@
-﻿namespace Budgeting.App.Api.Models.Exceptions
+﻿using Budgeting.App.Api.Models.ExceptionModels;
+
+namespace Budgeting.App.Api.Models.Categories.Exceptions
 {
-    public class InvalidCategoryException : Exception
+    public class InvalidCategoryException : ExceptionModel
     {
         public InvalidCategoryException()
             : base(message: "Invalid category. Please fix the errors and try again.") { }
@@ -11,7 +13,5 @@
                 $"parameter value: {parameterValue}.")
         { }
 
-
-        public List<(string, string)> ValidationErrors = new List<(string, string)>();
     }
 }
