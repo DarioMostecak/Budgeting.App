@@ -28,7 +28,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             {
                 throw CreateAndLogValidationException(notFoundCategoryException);
             }
-            catch (MongoDuplicateKeyException mongoDuplicateKeyException)
+            catch (MongoWriteException mongoDuplicateKeyException)
             {
                 var alreadyExistsCategoryException =
                     new AlreadyExistsCategoryException(mongoDuplicateKeyException);
@@ -73,7 +73,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
 
         private CategoryValidationException CreateAndLogValidationException(Exception exception)
         {
-            var categoryValidationException = new CategoryValidationException(exception);
+            var categoryValidationException = new CategoryValidationException(exception, exception.Data);
             this.loggingBroker.LogError(categoryValidationException);
 
             return categoryValidationException;

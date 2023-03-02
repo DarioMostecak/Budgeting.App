@@ -43,14 +43,13 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         private static DateTime GetRandomDateTime() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
-        //private static string CreateRandomMessage() => new MnemonicString().GetValue();
         private static int GetRandomNumber() => new IntRange(min: 2, max: 10).GetValue();
 
         private static MongoException GetMongoException() =>
             (MongoException)FormatterServices.GetSafeUninitializedObject(typeof(MongoException));
 
-        private static MongoDuplicateKeyException GetMongoDuplicateKeyException() =>
-            (MongoDuplicateKeyException)FormatterServices.GetUninitializedObject(typeof(MongoDuplicateKeyException));
+        private static MongoWriteException GetMongoDuplicateKeyException() =>
+            (MongoWriteException)FormatterServices.GetUninitializedObject(typeof(MongoWriteException));
 
         private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
         {

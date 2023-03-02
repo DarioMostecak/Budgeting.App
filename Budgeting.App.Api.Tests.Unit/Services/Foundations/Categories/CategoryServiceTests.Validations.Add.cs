@@ -17,7 +17,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             var nullCategoryException = new NullCategoryException();
 
             var expectedCategoryException =
-                new CategoryValidationException(nullCategoryException);
+                new CategoryValidationException(nullCategoryException, nullCategoryException.Data);
 
 
             //when
@@ -67,7 +67,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             invalidCategoryException.AddData(
                 key: nameof(Category.Title),
-                values: "Category title isn't valid. Must be between 2 and 19 characters long.");
+                values: "Must be between 2 and 19 characters long and can't be null or white space.");
 
             invalidCategoryException.AddData(
                 key: nameof(Category.TimeCreated),
@@ -78,7 +78,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 values: "Date is required.");
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(invalidCategoryException);
+                new CategoryValidationException(invalidCategoryException, invalidCategoryException.Data);
 
             //when
             ValueTask<Category> addStudentTask =

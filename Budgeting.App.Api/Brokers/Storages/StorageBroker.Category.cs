@@ -14,7 +14,6 @@ namespace Budgeting.App.Api.Brokers.Storages
                 this.db.GetCollection<Category>(GetCollectionName<Category>());
 
             await this.categoryCollection.InsertOneAsync(category);
-
             return category;
         }
 

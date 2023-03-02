@@ -18,7 +18,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             var nullCategoryException = new NullCategoryException();
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(nullCategoryException);
+                new CategoryValidationException(nullCategoryException, nullCategoryException.Data);
 
             //when
             ValueTask<Category> modifyCategoryTask =
@@ -68,7 +68,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             invalidCategoryException.AddData(
                 key: nameof(Category.Title),
-                values: "Category title isn't valid. Must be between 2 and 19 characters long.");
+                values: "Must be between 2 and 19 characters long and can't be null or white space.");
 
             invalidCategoryException.AddData(
                 key: nameof(Category.TimeCreated),
@@ -79,7 +79,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 values: new string[] { "Date is required.", $"Date is the same as {nameof(Category.TimeModify)}" });
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(invalidCategoryException);
+                new CategoryValidationException(invalidCategoryException, invalidCategoryException.Data);
 
             //when
             ValueTask<Category> modifyCategoryTask =
@@ -116,7 +116,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 new NotFoundCategoryException(nonExistentCategory.CategoryId);
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(notFoundCategoryException);
+                new CategoryValidationException(notFoundCategoryException, notFoundCategoryException.Data);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectCategoriesByIdAsync(nonExistentCategory.CategoryId))
@@ -174,7 +174,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 values: $"Date is the same as {nameof(Category.TimeModify)}");
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(invalidCategoryException);
+                new CategoryValidationException(invalidCategoryException, invalidCategoryException.Data);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectCategoriesByIdAsync(invalidCategory.CategoryId))

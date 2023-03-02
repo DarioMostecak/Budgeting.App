@@ -6,6 +6,7 @@ namespace Budgeting.App.Api.Controllers.V1
 {
     public class BaseController : ControllerBase
     {
+
         [NonAction]
         public BadRequestObjectResult BadRequest(Exception exception)
         {
@@ -66,7 +67,6 @@ namespace Budgeting.App.Api.Controllers.V1
         {
             foreach (DictionaryEntry error in exception.Data)
             {
-
                 problemDetail.Errors.Add(
                     key: error.Key.ToString(),
                     value: ((List<string>)error.Value)?.ToArray());

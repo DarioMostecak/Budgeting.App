@@ -12,6 +12,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             Validate(
                 (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
                 (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
+                (rule: IsInvalidX(category.Type), parameter: nameof(Category.Type)),
                 (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
         }
@@ -70,7 +71,7 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
         private static dynamic IsInvalidX(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text) || (text.Length >= 20 || text.Length <= 3),
-            Message = "Category title isn't valid. Must be between 2 and 19 characters long."
+            Message = "Must be between 2 and 19 characters long and can't be null or white space."
 
         };
 

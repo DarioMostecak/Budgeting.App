@@ -3,7 +3,7 @@
     public class NotFoundCategoryException : Exception
     {
         public NotFoundCategoryException(Guid categoryId)
-            : base(message: string.Format($"Couldn't find assignment with id: {categoryId}.")) { }
+            : base(message: string.Format($"Couldn't find category with id: {categoryId}.")) { }
 
     }
 }

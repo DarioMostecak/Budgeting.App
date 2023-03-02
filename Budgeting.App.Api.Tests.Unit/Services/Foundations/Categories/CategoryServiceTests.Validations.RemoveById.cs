@@ -19,7 +19,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 new InvalidCategoryException(nameof(Category.CategoryId), invalidId);
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(invalidCategoryException);
+                new CategoryValidationException(invalidCategoryException, invalidCategoryException.Data);
 
             //when
             ValueTask<Category> removeCategoryTask =
@@ -55,7 +55,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 new NotFoundCategoryException(inputCategory.CategoryId);
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(notFoundCategoryException);
+                new CategoryValidationException(notFoundCategoryException, notFoundCategoryException.Data);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectCategoriesByIdAsync(inputCategory.CategoryId))

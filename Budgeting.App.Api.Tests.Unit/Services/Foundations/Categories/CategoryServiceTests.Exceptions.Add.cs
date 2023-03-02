@@ -11,18 +11,18 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
     public partial class CategoryServiceTests
     {
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnCreateWhenCategoryAlredyExistLogItAasync()
+        public async Task ShouldThrowDependencyValidationExceptionOnAddWhenCategoryAlredyExistLogItAasync()
         {
             //given
             Category someCategory = CreateRandomCategory();
-            MongoDuplicateKeyException mongoDuplicateKeyException =
+            MongoWriteException mongoDuplicateKeyException =
                 GetMongoDuplicateKeyException();
 
             var alreadyExistsCategoryException =
                 new AlreadyExistsCategoryException(mongoDuplicateKeyException);
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(alreadyExistsCategoryException);
+                new CategoryValidationException(alreadyExistsCategoryException, alreadyExistsCategoryException.Data);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertCategoryAsync(It.IsAny<Category>()))
@@ -52,7 +52,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyExceptionOnCreateIfMongoExceptionErrorOccursAndLogItAsync()
+        public async Task ShouldThrowDependencyExceptionOnAddIfMongoExceptionErrorOccursAndLogItAsync()
         {
             //given
             Category someCategory = CreateRandomCategory();
@@ -91,7 +91,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCreateIfExceptionOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnAddIfExceptionOccursAndLogItAsync()
         {
             //given
             Category someCategory = CreateRandomCategory();

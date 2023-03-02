@@ -27,9 +27,9 @@ namespace Budgeting.App.Api.Controllers.V1
 
                 return Ok(categories);
             }
-            catch (CategoryValidationException categoryValidationException)
+            catch (CategoryDependencyException categoryDependencyExceptionn)
             {
-                return InternalServerError(categoryValidationException);
+                return InternalServerError(categoryDependencyExceptionn);
             }
             catch (CategoryServiceException categoryServiceException)
             {
@@ -86,7 +86,6 @@ namespace Budgeting.App.Api.Controllers.V1
                 return Conflict(categoryValidationException.InnerException);
             }
             catch (CategoryValidationException categoryValidationException)
-              when (categoryValidationException.Data.Count > 0)
             {
                 return BadRequest(categoryValidationException);
             }
@@ -115,11 +114,6 @@ namespace Budgeting.App.Api.Controllers.V1
                when (categoryValidationException.InnerException is NotFoundCategoryException)
             {
                 return NotFound(categoryValidationException.InnerException);
-            }
-            catch (CategoryValidationException categoryValidationException)
-              when (categoryValidationException.Data.Count > 0)
-            {
-                return BadRequest(categoryValidationException);
             }
             catch (CategoryValidationException categoryValidationException)
             {
