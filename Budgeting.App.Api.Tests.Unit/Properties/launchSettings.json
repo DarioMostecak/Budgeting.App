@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Budgeting.App.Api.Tests.Unit": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:63613;http://localhost:63614"
+    }
+  }
+}

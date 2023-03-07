@@ -1,5 +1,6 @@
 ﻿using Budgeting.App.Api.Tests.Acceptance.Models.Categories;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Budgeting.App.Api.Tests.Acceptance.Brokers
@@ -7,6 +8,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.Brokers
     public partial class BudgetingAppApiBroker
     {
         private const string CategoryiesRelativeUrl = "api/v1/Categories";
+
+        public async ValueTask<List<Category>> GetAllCategoriesAsync() =>
+            await this.GetContentAsync<List<Category>>(CategoryiesRelativeUrl);
 
         public async ValueTask<Category> PostCategoryAsync(Category category) =>
             await this.PostContentAsync<Category>(CategoryiesRelativeUrl, category);

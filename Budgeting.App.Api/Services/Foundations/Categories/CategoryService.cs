@@ -45,9 +45,10 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
         public ValueTask<Category> ModifyCategoryAsync(Category category) =>
         TryCatch(async () =>
         {
-            ValidateCategoryOnModify(category);
 
+            ValidateCategoryOnModify(category);
             Category maybeCategory = await this.storageBroker.SelectCategoriesByIdAsync(category.CategoryId);
+
             ValidateStorageCategory(storageCategory: maybeCategory, category.CategoryId);
             ValidateAgainstStorageCategoryOnModify(inputCategory: category, storageCategory: maybeCategory);
 
