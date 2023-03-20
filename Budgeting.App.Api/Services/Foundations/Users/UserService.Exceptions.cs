@@ -1,4 +1,6 @@
 ﻿using Budgeting.App.Api.Models.Users;
+using Budgeting.App.Api.Models.Users.Exceptions;
+using MongoDB.Driver;
 
 namespace Budgeting.App.Api.Services.Foundations.Users
 {
@@ -13,6 +15,13 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             try
             {
                 return await returningUserFunctions();
+            }
+            catch (MongoWriteException mongoWriteException)
+            {
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(mongoWriteException);
+
+                throw CreateAndLogValidationException(alreadyExistsUserException);
             }
             catch (Exception exception)
             {
@@ -31,6 +40,16 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             {
                 throw;
             }
+        }
+
+        private UserValidationException CreateAndLogValidationException(Exception exception)
+        {
+            var userValidationException =
+                new UserValidationException(exception, exception.Data);
+
+            this.loggingBroker.LogError(userValidationException);
+
+            return userValidationException;
         }
     }
 }
