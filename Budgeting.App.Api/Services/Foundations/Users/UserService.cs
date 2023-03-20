@@ -1,6 +1,7 @@
 ﻿using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.UserManagment;
 using Budgeting.App.Api.Models.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace Budgeting.App.Api.Services.Foundations.Users
 {
@@ -20,7 +21,14 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         public ValueTask<User> AddUserAsync(User user, string password) =>
             TryCatch(async () =>
             {
-                return user;
+
+                User checkUserEmail =
+                    await this.userManagerBroker.SelectUserByEmailAsync(user.Email);
+
+                IdentityResult result =
+                    await this.userManagerBroker.InsertUserAsync(user, password);
+
+                return await this.userManagerBroker.SelectUserByIdAsync(user.Id);
             });
     }
 }

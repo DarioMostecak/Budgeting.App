@@ -28,8 +28,4 @@
     <ProjectReference Include="..\Budgeting.App.Api\Budgeting.App.Api.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Foundations\Users\" />
-  </ItemGroup>
-
 </Project>
