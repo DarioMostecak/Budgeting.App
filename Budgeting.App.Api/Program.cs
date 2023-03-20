@@ -1,11 +1,16 @@
 using Budgeting.App.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+{
+    builder.RegisterServices(typeof(Program));
+}
 
-builder.RegisterServices(typeof(Program));
 
 var app = builder.Build();
+{
+    app.RegisterPiplineComponents(typeof(Program));
 
-app.RegisterPiplineComponents(typeof(Program));
+    app.Run();
+}
 
-app.Run();
+

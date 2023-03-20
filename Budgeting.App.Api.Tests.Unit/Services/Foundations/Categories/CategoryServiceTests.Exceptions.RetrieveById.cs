@@ -25,7 +25,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             this.storageBrokerMock.Setup(broker =>
                broker.SelectCategoriesByIdAsync(It.IsAny<Guid>()))
-                .Throws(mongoException);
+                .ThrowsAsync(mongoException);
 
             //when
             ValueTask<Category> retrieveCategoryByIdTask =
@@ -64,7 +64,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             this.storageBrokerMock.Setup(broker =>
                broker.SelectCategoriesByIdAsync(It.IsAny<Guid>()))
-                .Throws(serviceException);
+                .ThrowsAsync(serviceException);
 
             //when
             ValueTask<Category> retrieveCategoryByIdTask =

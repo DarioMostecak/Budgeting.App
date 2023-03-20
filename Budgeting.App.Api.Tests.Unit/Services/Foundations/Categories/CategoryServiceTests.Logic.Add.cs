@@ -10,7 +10,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
     public partial class CategoryServiceTests
     {
         [Fact]
-        public async Task ShoudCreateCategoryAsync()
+        public async Task ShoudAddCategoryAsync()
         {
             //given
             Category randomCategory = CreateRandomCategory();

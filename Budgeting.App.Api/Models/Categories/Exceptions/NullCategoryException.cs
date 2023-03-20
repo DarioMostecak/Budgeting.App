@@ -3,6 +3,6 @@
     public class NullCategoryException : Exception
     {
         public NullCategoryException()
-            : base(message: "The categpry is null.") { }
+            : base(message: "The category is null.") { }
     }
 }

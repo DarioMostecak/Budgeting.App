@@ -11,7 +11,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
     public partial class CategoryServiceTests
     {
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnAddWhenCategoryAlredyExistLogItAasync()
+        public async Task ShouldThrowValidationExceptionOnAddWhenCategoryAlredyExistLogItAasync()
         {
             //given
             Category someCategory = CreateRandomCategory();
@@ -26,7 +26,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertCategoryAsync(It.IsAny<Category>()))
-                  .Throws(mongoDuplicateKeyException);
+                  .ThrowsAsync(mongoDuplicateKeyException);
 
 
             //when
@@ -66,7 +66,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             this.storageBrokerMock.Setup(broker =>
                broker.InsertCategoryAsync(It.IsAny<Category>()))
-                .Throws(mongoException);
+                .ThrowsAsync(mongoException);
 
             //when
             ValueTask<Category> addCategoryTask =
@@ -105,7 +105,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             this.storageBrokerMock.Setup(broker =>
                broker.InsertCategoryAsync(It.IsAny<Category>()))
-                .Throws(serviceException);
+                .ThrowsAsync(serviceException);
 
             //when
             ValueTask<Category> addCategoryTask =

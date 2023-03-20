@@ -7,7 +7,6 @@ namespace Budgeting.App.Api.Brokers.Storages
     {
         private IMongoCollection<Category> categoryCollection;
 
-
         public async ValueTask<Category> InsertCategoryAsync(Category category)
         {
             this.categoryCollection =
@@ -31,8 +30,8 @@ namespace Budgeting.App.Api.Brokers.Storages
                 this.db.GetCollection<Category>(GetCollectionName<Category>());
 
             var categroy = await this.categoryCollection
-                .Find(obj => obj.CategoryId == categoryId)
-                  .FirstOrDefaultAsync();
+                                      .Find(obj => obj.CategoryId == categoryId)
+                                       .FirstOrDefaultAsync();
 
             return categroy;
         }

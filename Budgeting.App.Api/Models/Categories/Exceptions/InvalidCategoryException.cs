@@ -8,7 +8,7 @@ namespace Budgeting.App.Api.Models.Categories.Exceptions
             : base(message: "Invalid category. Please fix the errors and try again.") { }
 
         public InvalidCategoryException(string parameterName, object parameterValue)
-          : base(message: $"Invalid assignment, " +
+          : base(message: $"Invalid category, " +
                 $"parameter name: {parameterName}, " +
                 $"parameter value: {parameterValue}.")
         { }
