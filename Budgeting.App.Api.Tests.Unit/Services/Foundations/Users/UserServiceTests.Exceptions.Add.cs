@@ -54,5 +54,45 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnAddIfMongoExceptionOccursAndLogItAsync()
+        {
+            //given
+            User someUser = CreateUser();
+            string somePassword = GetRandomPassword();
+
+            MongoException mongoException = GetMongoException();
+
+            var failedUserServiceException =
+                new FailedUserServiceException(mongoException);
+
+            var expectedUserDependencyException =
+                new UserDependencyException(failedUserServiceException);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                manager.SelectUserByEmailAsync(It.IsAny<string>()))
+                         .ThrowsAsync(mongoException);
+
+            //when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someUser, somePassword);
+
+            //then
+            await Assert.ThrowsAsync<UserDependencyException>(() =>
+                addUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyException))),
+                      Times.Once);
+
+            this.userManagerBrokerMock.Verify(manger =>
+                manger.SelectUserByEmailAsync(It.IsAny<string>()),
+                  Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
