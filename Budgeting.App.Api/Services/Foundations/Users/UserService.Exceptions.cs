@@ -32,7 +32,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             }
             catch (Exception exception)
             {
-                throw;
+                var failedUserServiceException =
+                    new FailedUserServiceException(exception);
+
+                throw CreateAndLogServiceException(failedUserServiceException);
             }
         }
 
@@ -67,6 +70,16 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userDependencyException);
 
             return userDependencyException;
+        }
+
+        private UserServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var userServiceException =
+                new UserServiceException(exception);
+
+            this.loggingBroker.LogError(userServiceException);
+
+            return userServiceException;
         }
     }
 }
