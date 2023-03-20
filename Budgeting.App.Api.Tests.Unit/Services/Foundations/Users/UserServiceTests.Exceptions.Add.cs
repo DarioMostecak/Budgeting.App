@@ -2,6 +2,7 @@
 using Budgeting.App.Api.Models.Users.Exceptions;
 using MongoDB.Driver;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -89,6 +90,46 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             this.userManagerBrokerMock.Verify(manger =>
                 manger.SelectUserByEmailAsync(It.IsAny<string>()),
+                  Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfExceptionOccursAndLogItAsync()
+        {
+            //given
+            User someUser = CreateUser();
+            string somePassword = GetRandomPassword();
+
+            var serviceException = new Exception();
+
+            var failedUserServiceException =
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException =
+                new UserServiceException(failedUserServiceException);
+
+            this.userManagerBrokerMock.Setup(manager =>
+               manager.SelectUserByEmailAsync(It.IsAny<string>()))
+                        .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someUser, somePassword);
+
+            //then
+            await Assert.ThrowsAsync<UserServiceException>(() =>
+                addUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                     expectedUserServiceException))),
+                       Times.Once);
+
+            this.userManagerBrokerMock.Verify(manager =>
+                manager.SelectUserByEmailAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
