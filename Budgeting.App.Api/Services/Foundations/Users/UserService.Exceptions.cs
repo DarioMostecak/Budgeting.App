@@ -23,6 +23,13 @@ namespace Budgeting.App.Api.Services.Foundations.Users
 
                 throw CreateAndLogValidationException(alreadyExistsUserException);
             }
+            catch (MongoException mongoException)
+            {
+                var failedUserServiceException =
+                    new FailedUserServiceException(mongoException);
+
+                throw CreateAndLogDependencyException(failedUserServiceException);
+            }
             catch (Exception exception)
             {
                 throw;
@@ -50,6 +57,16 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userValidationException);
 
             return userValidationException;
+        }
+
+        private UserDependencyException CreateAndLogDependencyException(Exception exception)
+        {
+            var userDependencyException =
+                new UserDependencyException(exception);
+
+            this.loggingBroker.LogError(userDependencyException);
+
+            return userDependencyException;
         }
     }
 }
