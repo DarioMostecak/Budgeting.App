@@ -31,6 +31,8 @@ namespace Budgeting.App.Api.Services.Foundations.Users
                 IdentityResult identityResult =
                     await this.userManagerBroker.InsertUserAsync(user, password);
 
+                ValidateIdentityResultIsFalse(identityResult);
+
                 return await this.userManagerBroker.SelectUserByIdAsync(user.Id);
             });
     }

@@ -1,5 +1,6 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Budgeting.App.Api.Models.Users.Exceptions;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -197,6 +198,61 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationErrorOnAddIfIdentityResultSuccessIsFalseAndLogItAsync()
+        {
+            //given
+            User someApplicationUser = CreateUser();
+            string somePassword = GetRandomPassword();
+
+            IdentityError identityError =
+                new IdentityError
+                {
+                    Code = "InvalidUserName",
+                    Description = "Fail to Execute."
+                };
+
+            var invalidUserException =
+                new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: "InvalidUserName",
+                values: "Fail to Execute.");
+
+            var expectedApplicationValidationException =
+                new UserValidationException(
+                    invalidUserException,
+                    invalidUserException.Data);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                manager.InsertUserAsync(It.IsAny<User>(), It.IsAny<string>()))
+                   .ReturnsAsync(IdentityResult.Failed(identityError));
+
+            //when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someApplicationUser, somePassword);
+
+            //then
+            await Assert.ThrowsAsync<UserValidationException>(() =>
+                addUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameValidationExceptionAs(
+                    expectedApplicationValidationException))),
+                      Times.Once());
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByEmailAsync(It.IsAny<string>()),
+                  Times.Once());
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>(), It.IsAny<string>()),
+                  Times.Once());
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

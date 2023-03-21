@@ -1,5 +1,6 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Budgeting.App.Api.Models.Users.Exceptions;
+using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
 
 namespace Budgeting.App.Api.Services.Foundations.Users
@@ -71,6 +72,23 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         private static void ValidateUserIsNotNull(User user)
         {
             if (user != null) throw new AlreadyExistsUserException();
+        }
+
+        private static void ValidateIdentityResultIsFalse(IdentityResult identityResult)
+        {
+            if (identityResult.Succeeded == false)
+            {
+                var invalidUserException = new InvalidUserException();
+
+                foreach (var error in identityResult.Errors)
+                {
+                    invalidUserException.UpsertDataList(
+                        key: error.Code,
+                        value: error.Description);
+                }
+
+                throw invalidUserException;
+            }
         }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
