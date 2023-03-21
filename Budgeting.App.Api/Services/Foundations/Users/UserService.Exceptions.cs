@@ -16,6 +16,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             {
                 return await returningUserFunctions();
             }
+            catch (NullUserException nullUserException)
+            {
+                throw CreateAndLogValidationException(nullUserException);
+            }
             catch (MongoWriteException mongoWriteException)
             {
                 var alreadyExistsUserException =

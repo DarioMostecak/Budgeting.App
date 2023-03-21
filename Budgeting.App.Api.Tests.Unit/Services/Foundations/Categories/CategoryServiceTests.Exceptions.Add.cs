@@ -22,7 +22,9 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 new AlreadyExistsCategoryException(mongoDuplicateKeyException);
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(alreadyExistsCategoryException, alreadyExistsCategoryException.Data);
+                new CategoryValidationException(
+                    alreadyExistsCategoryException,
+                    alreadyExistsCategoryException.Data);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertCategoryAsync(It.IsAny<Category>()))

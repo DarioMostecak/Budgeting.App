@@ -16,10 +16,14 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             Guid invalidId = Guid.Empty;
 
             var invalidCategoryException =
-                new InvalidCategoryException(nameof(Category.CategoryId), invalidId);
+                new InvalidCategoryException(
+                    nameof(Category.CategoryId),
+                    invalidId);
 
             var expectedCategoryValidationException =
-                new CategoryValidationException(invalidCategoryException, invalidCategoryException.Data);
+                new CategoryValidationException(
+                    invalidCategoryException,
+                    invalidCategoryException.Data);
 
             //then
             ValueTask<Category> retriveCategoryTask =
@@ -54,7 +58,9 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 new NotFoundCategoryException(randomGuid);
 
             var expectedValidationException =
-                new CategoryValidationException(notFoundCategoryException, notFoundCategoryException.Data);
+                new CategoryValidationException(
+                    notFoundCategoryException,
+                    notFoundCategoryException.Data);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectCategoriesByIdAsync(randomGuid))

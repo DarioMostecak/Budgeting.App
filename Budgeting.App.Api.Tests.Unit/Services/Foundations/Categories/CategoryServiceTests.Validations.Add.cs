@@ -17,8 +17,9 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             var nullCategoryException = new NullCategoryException();
 
             var expectedCategoryException =
-                new CategoryValidationException(nullCategoryException, nullCategoryException.Data);
-
+                new CategoryValidationException(
+                    nullCategoryException,
+                    nullCategoryException.Data);
 
             //when
             ValueTask<Category> addCategoryTask =
