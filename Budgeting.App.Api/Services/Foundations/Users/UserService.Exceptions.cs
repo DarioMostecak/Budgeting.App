@@ -20,6 +20,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(nullUserException);
             }
+            catch (NullUserPasswordException nullUserPasswordException)
+            {
+                throw CreateAndLogValidationException(nullUserPasswordException);
+            }
             catch (MongoWriteException mongoWriteException)
             {
                 var alreadyExistsUserException =

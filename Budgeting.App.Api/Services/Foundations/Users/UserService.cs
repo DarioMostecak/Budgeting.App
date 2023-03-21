@@ -21,7 +21,7 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         public ValueTask<User> AddUserAsync(User user, string password) =>
             TryCatch(async () =>
             {
-                ValidateUserIsNull(user);
+                ValidateUserOnCreate(user, password);
 
                 User checkUserEmail =
                     await this.userManagerBroker.SelectUserByEmailAsync(user.Email);

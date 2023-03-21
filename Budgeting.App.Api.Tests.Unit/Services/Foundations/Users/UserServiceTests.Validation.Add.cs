@@ -39,5 +39,38 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddWhenPasswordIsNullAndLogItAsync()
+        {
+            //given
+            User someUser = CreateUser();
+            string invalidPassword = null;
+
+            var nullUserPasswordException =
+                new NullUserPasswordException();
+
+            var expectedUserValidationException =
+                new UserValidationException(
+                    nullUserPasswordException,
+                    nullUserPasswordException.Data);
+
+            //when
+            ValueTask<User> addApplicationUserTask =
+                this.userService.AddUserAsync(someUser, invalidPassword);
+
+            //then
+            await Assert.ThrowsAsync<UserValidationException>(() =>
+                addApplicationUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))),
+                      Times.Once());
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+
+        }
     }
 }
