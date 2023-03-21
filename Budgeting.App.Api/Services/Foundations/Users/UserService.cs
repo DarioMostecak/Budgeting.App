@@ -44,6 +44,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             User maybeUser =
                 await this.userManagerBroker.SelectUserByIdAsync(userId);
 
+            ValidateStorageUser(
+                userId: userId,
+                user: maybeUser);
+
             return maybeUser;
         });
     }

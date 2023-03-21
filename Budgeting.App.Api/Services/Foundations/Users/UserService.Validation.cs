@@ -74,6 +74,12 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             if (user != null) throw new AlreadyExistsUserException();
         }
 
+        private static void ValidateStorageUser(Guid userId, User user)
+        {
+            if (user is null)
+                throw new NotFoundUserException(userId);
+        }
+
         private static bool IsValid(Guid id) => id == Guid.Empty;
 
         private static void ValidateUserIdIsNull(Guid Id)
