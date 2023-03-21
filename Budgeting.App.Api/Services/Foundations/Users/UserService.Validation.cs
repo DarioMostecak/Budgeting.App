@@ -74,6 +74,21 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             if (user != null) throw new AlreadyExistsUserException();
         }
 
+        private static bool IsValid(Guid id) => id == Guid.Empty;
+
+        private static void ValidateUserIdIsNull(Guid Id)
+        {
+            if (IsValid(Id))
+            {
+                var invalidUserException =
+                    new InvalidUserException(
+                       parameterName: nameof(Id),
+                       parameterValue: Id);
+
+                throw invalidUserException;
+            }
+        }
+
         private static void ValidateIdentityResultIsFalse(IdentityResult identityResult)
         {
             if (identityResult.Succeeded == false)

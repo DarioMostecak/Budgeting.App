@@ -39,6 +39,8 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         public ValueTask<User> RetrieveUserById(Guid userId) =>
         TryCatch(async () =>
         {
+            ValidateUserIdIsNull(userId);
+
             User maybeUser =
                 await this.userManagerBroker.SelectUserByIdAsync(userId);
 

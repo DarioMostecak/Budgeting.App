@@ -47,5 +47,43 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetreiveIfExceptionOccursAndLogItAsync()
+        {
+            //given
+            Guid someGuid = Guid.NewGuid();
+            Exception exception = new Exception();
+
+            var failUserDependencyException =
+                new FailedUserServiceException(exception);
+
+            var expectedUserServiveException =
+                new UserServiceException(failUserDependencyException);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                manager.SelectUserByIdAsync(It.IsAny<Guid>()))
+                  .ThrowsAsync(exception);
+
+            //when
+            ValueTask<User> retreiveUserByIdTask =
+                this.userService.RetrieveUserById(someGuid);
+
+            //then
+            await Assert.ThrowsAsync<UserServiceException>(() =>
+                retreiveUserByIdTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserServiveException))),
+                      Times.Once);
+
+            this.userManagerBrokerMock.Verify(manager =>
+                manager.SelectUserByIdAsync(It.IsAny<Guid>()),
+                  Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
