@@ -68,6 +68,11 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             if (password is null) throw new NullUserPasswordException();
         }
 
+        private static void ValidateUserIsNotNull(User user)
+        {
+            if (user != null) throw new AlreadyExistsUserException();
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidUserException = new InvalidUserException();

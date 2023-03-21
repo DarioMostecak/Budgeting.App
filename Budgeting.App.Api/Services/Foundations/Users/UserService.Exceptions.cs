@@ -28,6 +28,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            catch (AlreadyExistsUserException alreadyExsistUserException)
+            {
+                throw CreateAndLogValidationException(alreadyExsistUserException);
+            }
             catch (MongoWriteException mongoWriteException)
             {
                 var alreadyExistsUserException =

@@ -26,7 +26,9 @@ namespace Budgeting.App.Api.Services.Foundations.Users
                 User checkUserEmail =
                     await this.userManagerBroker.SelectUserByEmailAsync(user.Email);
 
-                IdentityResult result =
+                ValidateUserIsNotNull(checkUserEmail);
+
+                IdentityResult identityResult =
                     await this.userManagerBroker.InsertUserAsync(user, password);
 
                 return await this.userManagerBroker.SelectUserByIdAsync(user.Id);
