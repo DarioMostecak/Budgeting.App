@@ -19,21 +19,30 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         }
 
         public ValueTask<User> AddUserAsync(User user, string password) =>
-            TryCatch(async () =>
-            {
-                ValidateUserOnCreate(user, password);
+        TryCatch(async () =>
+        {
+            ValidateUserOnCreate(user, password);
 
-                User checkUserEmail =
-                    await this.userManagerBroker.SelectUserByEmailAsync(user.Email);
+            User checkUserEmail =
+                await this.userManagerBroker.SelectUserByEmailAsync(user.Email);
 
-                ValidateUserIsNotNull(checkUserEmail);
+            ValidateUserIsNotNull(checkUserEmail);
 
-                IdentityResult identityResult =
-                    await this.userManagerBroker.InsertUserAsync(user, password);
+            IdentityResult identityResult =
+                await this.userManagerBroker.InsertUserAsync(user, password);
 
-                ValidateIdentityResultIsFalse(identityResult);
+            ValidateIdentityResultIsFalse(identityResult);
 
-                return await this.userManagerBroker.SelectUserByIdAsync(user.Id);
-            });
+            return await this.userManagerBroker.SelectUserByIdAsync(user.Id);
+        });
+
+        public ValueTask<User> RetrieveUserById(Guid userId) =>
+        TryCatch(async () =>
+        {
+            User maybeUser =
+                await this.userManagerBroker.SelectUserByIdAsync(userId);
+
+            return maybeUser;
+        });
     }
 }
