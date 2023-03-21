@@ -36,7 +36,7 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             return await this.userManagerBroker.SelectUserByIdAsync(user.Id);
         });
 
-        public ValueTask<User> RetrieveUserById(Guid userId) =>
+        public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
         TryCatch(async () =>
         {
             ValidateUserIdIsNull(userId);

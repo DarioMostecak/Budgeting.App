@@ -29,7 +29,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             //when
             ValueTask<User> retreiveByIdUserTask =
-                this.userService.RetrieveUserById(someGuid);
+                this.userService.RetrieveUserByIdAsync(someGuid);
 
             //then
             await Assert.ThrowsAsync<UserDependencyException>(() =>
@@ -67,7 +67,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             //when
             ValueTask<User> retreiveUserByIdTask =
-                this.userService.RetrieveUserById(someGuid);
+                this.userService.RetrieveUserByIdAsync(someGuid);
 
             //then
             await Assert.ThrowsAsync<UserServiceException>(() =>
