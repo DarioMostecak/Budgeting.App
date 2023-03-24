@@ -26,6 +26,21 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         private static void ValidateUserOnModify(User user)
         {
             ValidateUserIsNull(user);
+
+            Validate(
+                (Rule: IsInvalidX(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalidX(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalidX(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalidEmail(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalidX(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalidX(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: user.CreatedDate,
+                    secondDate: user.UpdatedDate,
+                    secondDateName: nameof(User.UpdatedDate)),
+                Parameter: nameof(User.UpdatedDate))
+               );
         }
 
         private static dynamic IsInvalidX(Guid applicationUserId) => new
@@ -63,6 +78,33 @@ namespace Budgeting.App.Api.Services.Foundations.Users
 
             Message = "Email can't be white space or null and must be type of email format."
         };
+
+        private static dynamic IsNotSame(
+            Guid firstId,
+            Guid secondId,
+            string secondIdName) => new
+            {
+                Condition = firstId != secondId,
+                Message = $"Id is not the same as {secondIdName}"
+            };
+
+        private static dynamic IsSame(
+            DateTime firstDate,
+            DateTime secondDate,
+            string secondDateName) => new
+            {
+                Condition = Math.Abs((firstDate - secondDate).TotalSeconds) <= 1,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            DateTime firstDate,
+            DateTime secondDate,
+            string secondDateName) => new
+            {
+                Condition = Math.Abs((firstDate - secondDate).TotalSeconds) >= 1,
+                Message = $"Date is not the same as {secondDateName}"
+            };
 
         private static void ValidateUserIsNull(User user)
         {
