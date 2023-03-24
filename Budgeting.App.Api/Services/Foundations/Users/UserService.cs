@@ -54,7 +54,7 @@ namespace Budgeting.App.Api.Services.Foundations.Users
         public ValueTask<User> ModifyUserAsync(User user) =>
         TryCatch(async () =>
         {
-            //Validae user on modify
+            ValidateUserOnModify(user);
 
             User maybeUser =
                 await this.userManagerBroker.SelectUserByIdAsync(user.Id);

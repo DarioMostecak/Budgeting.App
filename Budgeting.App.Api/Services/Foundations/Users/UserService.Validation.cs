@@ -23,6 +23,11 @@ namespace Budgeting.App.Api.Services.Foundations.Users
                 );
         }
 
+        private static void ValidateUserOnModify(User user)
+        {
+            ValidateUserIsNull(user);
+        }
+
         private static dynamic IsInvalidX(Guid applicationUserId) => new
         {
             Condition = applicationUserId == Guid.Empty,
