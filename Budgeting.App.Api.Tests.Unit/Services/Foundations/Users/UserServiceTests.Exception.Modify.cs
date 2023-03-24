@@ -47,5 +47,43 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrovServiceExceptionOnModifyIfExceptionOccursAndLogItAsync()
+        {
+            //given
+            User someUser = CreateUser();
+            Exception exception = new Exception();
+
+            var failUserServiceException =
+                new FailedUserServiceException(exception);
+
+            var exceptedUserServiceException =
+                new UserServiceException(failUserServiceException);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                 manager.SelectUserByIdAsync(It.IsAny<Guid>()))
+                   .ThrowsAsync(exception);
+
+            //when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(someUser);
+
+            //then
+            await Assert.ThrowsAsync<UserServiceException>(() =>
+                modifyUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                 broker.LogError(It.Is(SameExceptionAs(
+                     exceptedUserServiceException))),
+                       Times.Once);
+
+            this.userManagerBrokerMock.Verify(manager =>
+                manager.SelectUserByIdAsync(It.IsAny<Guid>()),
+                  Times.Once);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
