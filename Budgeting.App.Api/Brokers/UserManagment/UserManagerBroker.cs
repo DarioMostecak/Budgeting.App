@@ -1,6 +1,5 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace Budgeting.App.Api.Brokers.UserManagment
 {
@@ -22,7 +21,7 @@ namespace Budgeting.App.Api.Brokers.UserManagment
         public async ValueTask<User> SelectUserByIdAsync(Guid userId) =>
             await this.userManager.FindByIdAsync(userId.ToString());
 
-        public async ValueTask<IdentityResult> InsertClaimsAsync(User user, IEnumerable<Claim> claims) =>
-            await this.userManager.AddClaimsAsync(user, claims);
+        public async ValueTask<IdentityResult> UpdateUserAsync(User user) =>
+            await this.userManager.UpdateAsync(user);
     }
 }

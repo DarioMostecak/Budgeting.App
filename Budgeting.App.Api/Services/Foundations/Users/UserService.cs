@@ -50,5 +50,25 @@ namespace Budgeting.App.Api.Services.Foundations.Users
 
             return maybeUser;
         });
+
+        public ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
+        {
+            //Validae user on modify
+
+            User maybeUser =
+                await this.userManagerBroker.SelectUserByIdAsync(user.Id);
+
+            //Validate storage user
+
+            //Validate user aginst storage user
+
+            IdentityResult identityResult =
+                await this.userManagerBroker.UpdateUserAsync(user);
+
+            //Validate identityResult
+
+            return user;
+        });
     }
 }
