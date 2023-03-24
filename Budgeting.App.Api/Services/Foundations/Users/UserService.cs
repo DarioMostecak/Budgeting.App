@@ -45,8 +45,8 @@ namespace Budgeting.App.Api.Services.Foundations.Users
                 await this.userManagerBroker.SelectUserByIdAsync(userId);
 
             ValidateStorageUser(
-                userId: userId,
-                user: maybeUser);
+                inputUserId: userId,
+                storageUser: maybeUser);
 
             return maybeUser;
         });
@@ -59,7 +59,9 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             User maybeUser =
                 await this.userManagerBroker.SelectUserByIdAsync(user.Id);
 
-            //Validate storage user
+            ValidateStorageUser(
+                inputUserId: user.Id,
+                storageUser: maybeUser);
 
             //Validate user aginst storage user
 

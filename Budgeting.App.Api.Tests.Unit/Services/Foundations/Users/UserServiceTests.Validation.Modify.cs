@@ -10,7 +10,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyIfApplicationUserIsNullAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUserIsNullAndLogItAsync()
         {
             //given
             User nullUser = null;
@@ -42,7 +42,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
         [Theory]
         [MemberData(nameof(InvalidDataUser))]
-        public async Task ShouldThrowValidationExceptionOnModifyIfApplicationUserIsInvalidAndLogItAsync(
+        public async Task ShouldThrowValidationExceptionOnModifyIfUserIsInvalidAndLogItAsync(
             Guid invalidId,
             string invalidFirstName,
             string invalidLastName,
@@ -111,6 +111,46 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.userManagerBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUserIsNullAndLogItAsync()
+        {
+            //given 
+            User randomUser = CreateUser();
+            User nonExsistentUser = randomUser;
+            User noUser = null;
+
+            var notFoundUserException =
+                new NotFoundUserException(nonExsistentUser.Id);
+
+            var expectedUserValidationException =
+                new UserValidationException(
+                    notFoundUserException,
+                    notFoundUserException.Data);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                 manager.SelectUserByIdAsync(nonExsistentUser.Id))
+                   .ReturnsAsync(noUser);
+
+            //when
+            ValueTask<User> modifyUserTask =
+                 this.userService.ModifyUserAsync(randomUser);
+            //then
+            await Assert.ThrowsAsync<UserValidationException>(() =>
+                 modifyUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                 broker.LogError(It.Is(SameExceptionAs(
+                     expectedUserValidationException))),
+                       Times.Once);
+
+            this.userManagerBrokerMock.Verify(broker =>
+                 broker.SelectUserByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

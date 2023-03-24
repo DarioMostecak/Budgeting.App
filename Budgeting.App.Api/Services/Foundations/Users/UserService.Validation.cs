@@ -43,6 +43,31 @@ namespace Budgeting.App.Api.Services.Foundations.Users
                );
         }
 
+        private static void ValidateAgainstStorageUserOnModify(
+            User inputUser,
+            User storageUser)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                        firstId: inputUser.Id,
+                        secondId: storageUser.Id,
+                        secondIdName: nameof(User.Id)),
+                Parameter: nameof(User.Id)),
+
+                (Rule: IsNotSame(
+                        firstDate: inputUser.CreatedDate,
+                        secondDate: storageUser.CreatedDate,
+                        secondDateName: nameof(User.CreatedDate)),
+                Parameter: nameof(User.CreatedDate)),
+
+                (Rule: IsSame(
+                        firstDate: inputUser.UpdatedDate,
+                        secondDate: storageUser.UpdatedDate,
+                        secondDateName: nameof(User.UpdatedDate)),
+                 Parameter: nameof(User.UpdatedDate))
+                );
+        }
+
         private static dynamic IsInvalidX(Guid applicationUserId) => new
         {
             Condition = applicationUserId == Guid.Empty,
@@ -121,10 +146,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             if (user != null) throw new AlreadyExistsUserException();
         }
 
-        private static void ValidateStorageUser(Guid userId, User user)
+        private static void ValidateStorageUser(Guid inputUserId, User storageUser)
         {
-            if (user is null)
-                throw new NotFoundUserException(userId);
+            if (storageUser is null)
+                throw new NotFoundUserException(inputUserId);
         }
 
         private static bool IsValid(Guid id) => id == Guid.Empty;
