@@ -1,5 +1,6 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Budgeting.App.Api.Models.Users.Exceptions;
+using Force.DeepCloner;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -148,6 +149,64 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.Verify(broker =>
                  broker.SelectUserByIdAsync(It.IsAny<Guid>()),
                     Times.Once);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfIdAndCratedDatesAreNotSameAndUpdateDateIsSameAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateUser();
+            DateTime sameDate = randomUser.UpdatedDate;
+            DateTime differentDate = GetRandomDateTime();
+            Guid differentId = Guid.NewGuid();
+            User invalidUser = randomUser;
+            User storageUser = randomUser.DeepClone();
+            storageUser.Id = differentId;
+            storageUser.UpdatedDate = sameDate;
+            storageUser.CreatedDate = differentDate;
+
+            var invalidUserException = new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: nameof(User.Id),
+                values: $"Id is not the same as {nameof(User.Id)}");
+
+            invalidUserException.AddData(
+                key: nameof(User.CreatedDate),
+                values: $"Date is not the same as {nameof(User.CreatedDate)}");
+
+            invalidUserException.AddData(
+                key: nameof(User.UpdatedDate),
+                values: $"Date is the same as {nameof(User.UpdatedDate)}");
+
+            var expectedUserValidationException =
+                new UserValidationException(
+                    invalidUserException,
+                    invalidUserException.Data);
+
+            this.userManagerBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(invalidUser.Id))
+                 .ReturnsAsync(storageUser);
+
+            //when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(invalidUser);
+
+            //then
+            await Assert.ThrowsAsync<UserValidationException>(() =>
+                 modifyUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                 broker.LogError(It.Is(SameValidationExceptionAs(
+                     expectedUserValidationException))),
+                        Times.Once);
+
+            this.userManagerBrokerMock.Verify(manager =>
+                 manager.SelectUserByIdAsync(It.IsAny<Guid>()),
+                   Times.Once);
 
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

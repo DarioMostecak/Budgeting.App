@@ -63,7 +63,9 @@ namespace Budgeting.App.Api.Services.Foundations.Users
                 inputUserId: user.Id,
                 storageUser: maybeUser);
 
-            //Validate user aginst storage user
+            ValidateAgainstStorageUserOnModify(
+                inputUser: user,
+                storageUser: maybeUser);
 
             IdentityResult identityResult =
                 await this.userManagerBroker.UpdateUserAsync(user);
