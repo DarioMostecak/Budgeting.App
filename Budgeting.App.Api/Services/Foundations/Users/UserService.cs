@@ -70,9 +70,29 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             IdentityResult identityResult =
                 await this.userManagerBroker.UpdateUserAsync(user);
 
-            //Validate identityResult
+            ValidateIdentityResultIsFalse(identityResult);
 
             return user;
+        });
+
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
+        {
+            ValidateUserIdIsNull(userId);
+
+            User maybeUser = await this.userManagerBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(
+                inputUserId: userId,
+                storageUser: maybeUser);
+
+            IdentityResult identityResult =
+                 await this.userManagerBroker.DeleteUserAsync(maybeUser);
+
+            ValidateIdentityResultIsFalse(identityResult);
+
+            return maybeUser;
+
         });
     }
 }

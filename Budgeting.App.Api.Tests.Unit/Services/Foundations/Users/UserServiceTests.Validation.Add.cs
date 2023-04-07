@@ -204,7 +204,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
         public async Task ShouldThrowValidationErrorOnAddIfIdentityResultSuccessIsFalseAndLogItAsync()
         {
             //given
-            User someApplicationUser = CreateUser();
+            User someUser = CreateUser();
             string somePassword = GetRandomPassword();
 
             IdentityError identityError =
@@ -221,7 +221,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
                 key: "InvalidUserName",
                 values: "Fail to Execute.");
 
-            var expectedApplicationValidationException =
+            var expectedUserValidationException =
                 new UserValidationException(
                     invalidUserException,
                     invalidUserException.Data);
@@ -232,7 +232,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             //when
             ValueTask<User> addUserTask =
-                this.userService.AddUserAsync(someApplicationUser, somePassword);
+                this.userService.AddUserAsync(someUser, somePassword);
 
             //then
             await Assert.ThrowsAsync<UserValidationException>(() =>
@@ -240,7 +240,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameValidationExceptionAs(
-                    expectedApplicationValidationException))),
+                    expectedUserValidationException))),
                       Times.Once());
 
             this.userManagerBrokerMock.Verify(broker =>

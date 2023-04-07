@@ -9,5 +9,6 @@ namespace Budgeting.App.Api.Brokers.UserManagment
         ValueTask<IdentityResult> InsertUserAsync(User user, string password);
         ValueTask<User> SelectUserByIdAsync(Guid userId);
         ValueTask<IdentityResult> UpdateUserAsync(User user);
+        ValueTask<IdentityResult> DeleteUserAsync(User user);
     }
 }

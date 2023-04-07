@@ -12,7 +12,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async Task ShoudAddApplicationUserAsync()
+        public async Task ShouldAddUserAsync()
         {
             //given
             User nullUser = null;

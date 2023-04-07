@@ -32,7 +32,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .ReturnsAsync(afterUpdateCategory);
 
             //when
-            Category actualCategory = await this.categoryService.ModifyCategoryAsync(inputCategory);
+            Category actualCategory =
+                await this.categoryService.ModifyCategoryAsync(inputCategory);
 
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);

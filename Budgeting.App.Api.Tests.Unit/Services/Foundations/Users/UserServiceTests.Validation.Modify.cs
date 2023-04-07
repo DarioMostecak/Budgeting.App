@@ -1,6 +1,7 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Budgeting.App.Api.Models.Users.Exceptions;
 using Force.DeepCloner;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -207,6 +208,67 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             this.userManagerBrokerMock.Verify(manager =>
                  manager.SelectUserByIdAsync(It.IsAny<Guid>()),
                    Times.Once);
+
+            this.userManagerBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationErrorOnModifyIfIdentityResultSucessIsFalseAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateUser();
+            User inputUser = randomUser;
+            User storageUser = inputUser.DeepClone();
+            storageUser.UpdatedDate = GetRandomDateTime();
+
+            IdentityError identityError =
+                new IdentityError
+                {
+                    Code = "InvalidUserName",
+                    Description = "Fail to Execute."
+                };
+
+            var invalidUserException =
+                new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: "InvalidUserName",
+                values: "Fail to Execute.");
+
+            var expectedUserValidationException =
+                new UserValidationException(
+                    invalidUserException,
+                    invalidUserException.Data);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                manager.SelectUserByIdAsync(It.IsAny<Guid>()))
+                   .ReturnsAsync(storageUser);
+
+            this.userManagerBrokerMock.Setup(manager =>
+                manager.UpdateUserAsync(It.IsAny<User>()))
+                   .ReturnsAsync(IdentityResult.Failed(identityError));
+
+            //when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(inputUser);
+
+            //then
+            await Assert.ThrowsAnyAsync<UserValidationException>(() =>
+                modifyUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameValidationExceptionAs(
+                    expectedUserValidationException))),
+                      Times.Once());
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
+                  Times.Once());
+
+            this.userManagerBrokerMock.Verify(broker =>
+                broker.UpdateUserAsync(It.IsAny<User>()),
+                  Times.Once());
 
             this.userManagerBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
