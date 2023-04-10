@@ -8,6 +8,21 @@ namespace Budgeting.App.Api.Controllers.V1
     {
 
         [NonAction]
+        public UnauthorizedObjectResult Unauthorized(Exception exception)
+        {
+            var problemDetail = new ValidationProblemDetails
+            {
+                Status = StatusCodes.Status401Unauthorized,
+                Type = "https://tools.ietf.org/html/rfc7235#section-3.1",
+                Title = exception.Message
+            };
+
+            MapExceptionDataToProblemDetail(exception, problemDetail);
+
+            return new UnauthorizedObjectResult(problemDetail);
+        }
+
+        [NonAction]
         public BadRequestObjectResult BadRequest(Exception exception)
         {
             var problemDetail = new ValidationProblemDetails
