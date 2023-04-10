@@ -59,19 +59,6 @@ namespace Budgeting.App.Api.Services.Foundations.Users
             }
         }
 
-        private IQueryable<User> TryCatch(
-            ReturningUsersFunctions returningUsersFunctions)
-        {
-            try
-            {
-                return returningUsersFunctions();
-            }
-            catch (Exception exception)
-            {
-                throw;
-            }
-        }
-
         private UserValidationException CreateAndLogValidationException(Exception exception)
         {
             var userValidationException =
