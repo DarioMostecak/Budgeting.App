@@ -26,5 +26,8 @@ namespace Budgeting.App.Api.Brokers.UserManagment
 
         public async ValueTask<IdentityResult> DeleteUserAsync(User user) =>
             await this.userManager.DeleteAsync(user);
+
+        public async ValueTask<bool> ConfirmUserByPasswordAsync(User user, string password) =>
+            await this.userManager.CheckPasswordAsync(user, password);
     }
 }

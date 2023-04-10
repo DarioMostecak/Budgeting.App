@@ -4,6 +4,7 @@ using Budgeting.App.Api.Brokers.Storages;
 using Budgeting.App.Api.Brokers.UserManagment;
 using Budgeting.App.Api.Services.Foundations.Categories;
 using Budgeting.App.Api.Services.Foundations.Users;
+using Budgeting.App.Api.Services.Identity;
 
 namespace Budgeting.App.Api.Registrars
 {
@@ -21,6 +22,10 @@ namespace Budgeting.App.Api.Registrars
             #region Add Foundations
             builder.Services.AddTransient<ICategoryService, CategoryService>();
             builder.Services.AddTransient<IUserService, UserService>();
+            #endregion
+
+            #region Add Identity
+            builder.Services.AddTransient<IIdentityService, IdentityService>();
             #endregion
         }
     }

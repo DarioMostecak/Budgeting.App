@@ -19,6 +19,8 @@ namespace Budgeting.App.Api.Registrars
 
             app.UseHttpsRedirection();
 
+            app.UseAuthorization();
+            app.UseAuthorization();
 
             app.MapControllers();
         }

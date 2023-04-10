@@ -10,5 +10,6 @@ namespace Budgeting.App.Api.Brokers.UserManagment
         ValueTask<User> SelectUserByIdAsync(Guid userId);
         ValueTask<IdentityResult> UpdateUserAsync(User user);
         ValueTask<IdentityResult> DeleteUserAsync(User user);
+        ValueTask<bool> ConfirmUserByPasswordAsync(User user, string password);
     }
 }

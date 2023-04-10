@@ -1,5 +1,6 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using FluentAssertions;
+using Force.DeepCloner;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using System;
@@ -17,7 +18,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             User randomUser = CreateUser();
             Guid userId = randomUser.Id;
             User storageUser = randomUser;
-            User expectedUser = storageUser;
+            User expectedUser = storageUser.DeepClone();
 
             this.userManagerBrokerMock.Setup(broker =>
                broker.SelectUserByIdAsync(It.IsAny<Guid>()))

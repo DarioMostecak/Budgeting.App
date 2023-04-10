@@ -23,11 +23,11 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .Returns(storageCategories);
 
             //when
-            IQueryable<Category> actualCategoryDtos =
+            IQueryable<Category> actualCategories =
                 this.categoryService.RetrieveAllCategories();
 
             //then
-            actualCategoryDtos.Should().BeEquivalentTo(expectedCategories);
+            actualCategories.Should().BeEquivalentTo(expectedCategories);
 
             this.storageBrokerMock.Verify(broker =>
                broker.SelectAllCategories(),
