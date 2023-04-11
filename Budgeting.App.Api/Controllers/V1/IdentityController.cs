@@ -47,9 +47,6 @@ namespace Budgeting.App.Api.Controllers.V1
             {
                 return InternalServerError(identityRequestServiceException);
             }
-
-
-
         }
     }
 }

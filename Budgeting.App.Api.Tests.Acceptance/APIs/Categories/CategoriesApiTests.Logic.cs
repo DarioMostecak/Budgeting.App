@@ -18,9 +18,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             Category inputCategory = randomCategory;
             Category expectedCategory = randomCategory.DeepClone();
 
-            //when
             await this.budgetingAppApiBroker.PostCategoryAsync(inputCategory);
 
+            //when
             Category actualCategory =
                 await this.budgetingAppApiBroker.GetCategoryByIdAsync(inputCategory.CategoryId);
 
@@ -80,18 +80,37 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
         {
             //given
             Category randomCategory = CreateRandomCategory();
-            Category inputCatategory = randomCategory;
-            Category expectedCategory = inputCatategory.DeepClone();
+            Category inputCategory = randomCategory;
+            Category expectedCategory = inputCategory.DeepClone();
 
             await this.budgetingAppApiBroker.PostCategoryAsync(randomCategory);
 
             //when
             Category actualCategory =
-                await this.budgetingAppApiBroker.DeleteCategoryAsync(inputCatategory.CategoryId);
+                await this.budgetingAppApiBroker.DeleteCategoryAsync(inputCategory.CategoryId);
 
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);
 
+        }
+
+        [Fact]
+        public async Task ShouldGetCategoryByIdAsync()
+        {
+            //given
+            Category randomCategory = CreateRandomCategory();
+            Category inputCategory = randomCategory;
+            Category expectedCategory = inputCategory.DeepClone();
+
+            await this.budgetingAppApiBroker.PostCategoryAsync(randomCategory);
+
+            //when
+            Category actualCategory =
+                await this.budgetingAppApiBroker.GetCategoryByIdAsync(inputCategory.CategoryId);
+
+            //then
+            actualCategory.Should().BeEquivalentTo(expectedCategory);
+            await this.budgetingAppApiBroker.DeleteUserAsync(actualCategory.CategoryId);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Budgeting.App.Api.Controllers.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CategoriesController : BaseController
     {
         private readonly ICategoryService categoryService;
@@ -39,7 +40,7 @@ namespace Budgeting.App.Api.Controllers.V1
 
         [HttpGet]
         [Route("{categoryId}")]
-        public async ValueTask<IActionResult> GetCategoryById(Guid categoryId)
+        public async ValueTask<IActionResult> GetCategoryByIdAsync(Guid categoryId)
         {
             try
             {
@@ -70,15 +71,14 @@ namespace Budgeting.App.Api.Controllers.V1
         }
 
         [HttpPost]
-        public async ValueTask<IActionResult> PostCategory([FromBody] Category category)
+        public async ValueTask<IActionResult> PostCategoryAsync([FromBody] Category category)
         {
             try
             {
                 Category createdCategory =
                 await this.categoryService.AddCategoryAsync(category);
 
-                return CreatedAtAction(nameof(GetCategoryById)
-                    , new { categoryId = category.CategoryId }, category);
+                return Created(createdCategory);
             }
             catch (CategoryValidationException categoryValidationException)
               when (categoryValidationException.InnerException is AlreadyExistsCategoryException)
@@ -101,7 +101,7 @@ namespace Budgeting.App.Api.Controllers.V1
         }
 
         [HttpPut]
-        public async ValueTask<IActionResult> PutCategory([FromBody] Category category)
+        public async ValueTask<IActionResult> PutCategoryAsync([FromBody] Category category)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace Budgeting.App.Api.Controllers.V1
 
         [HttpDelete]
         [Route("{categoryId}")]
-        public async ValueTask<IActionResult> DeleteCategory(Guid categoryId)
+        public async ValueTask<IActionResult> DeleteCategoryAsync(Guid categoryId)
         {
             try
             {

@@ -8,11 +8,11 @@ namespace Budgeting.App.Api.Controllers.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class UserController : BaseController
+    public class UsersController : BaseController
     {
         private readonly IUserService userService;
 
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             this.userService = userService;
         }
@@ -56,8 +56,7 @@ namespace Budgeting.App.Api.Controllers.V1
                 User createdUser =
                     await this.userService.AddUserAsync(user, password);
 
-                return CreatedAtAction(nameof(GetUserByIdAsync)
-                    , new { userId = user.Id }, user);
+                return Created(createdUser);
             }
             catch (UserValidationException userValidationException)
                when (userValidationException.InnerException is AlreadyExistsUserException)
@@ -109,7 +108,7 @@ namespace Budgeting.App.Api.Controllers.V1
 
         [HttpDelete]
         [Route("{userId}")]
-        public async ValueTask<IActionResult> DeleteUserAsync(Guid userId)
+        public async ValueTask<IActionResult> Async(Guid userId)
         {
             try
             {

@@ -23,6 +23,10 @@ namespace Budgeting.App.Api.Controllers.V1
         }
 
         [NonAction]
+        public CreatedObjectResult Created(object value) =>
+            new CreatedObjectResult(value);
+
+        [NonAction]
         public BadRequestObjectResult BadRequest(Exception exception)
         {
             var problemDetail = new ValidationProblemDetails

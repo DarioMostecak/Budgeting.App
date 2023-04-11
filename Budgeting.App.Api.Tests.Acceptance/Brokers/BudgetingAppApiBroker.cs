@@ -20,7 +20,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.Brokers
             this.httpClient = this.webApplicationFactory.CreateClient();
         }
 
-        public async ValueTask<T> GetContentAsync<T>(string relativeUrl)
+        private async ValueTask<T> GetContentAsync<T>(string relativeUrl)
         {
             HttpResponseMessage responseMessage =
                 await this.httpClient.GetAsync(relativeUrl);
@@ -28,7 +28,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.Brokers
             return await DeserializeResponseContent<T>(responseMessage);
         }
 
-        public async ValueTask<T> PostContentAsync<T>(
+        private async ValueTask<T> PostContentAsync<T>(
             string relativeUrl,
             T content,
             string mediaType = "text/json")
@@ -41,7 +41,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.Brokers
             return await DeserializeResponseContent<T>(responseMessage);
         }
 
-        public async ValueTask<T> PutContentAsync<T>(string relativeUrl,
+        private async ValueTask<T> PutContentAsync<T>(string relativeUrl,
             T content,
             string mediaType = "text/json")
         {
@@ -53,7 +53,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.Brokers
             return await DeserializeResponseContent<T>(responseMessage);
         }
 
-        public async ValueTask<T> DeleteContentAsync<T>(string relativeUrl)
+        private async ValueTask<T> DeleteContentAsync<T>(string relativeUrl)
         {
             HttpResponseMessage responseMessage = await
                 this.httpClient.DeleteAsync(relativeUrl);
