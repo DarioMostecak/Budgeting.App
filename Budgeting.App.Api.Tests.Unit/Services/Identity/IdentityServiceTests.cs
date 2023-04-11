@@ -115,7 +115,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Identity
             var newUser = new User
             {
                 Id = Guid.NewGuid(),
-                Email = "Travis@mail.com",
+                Email = "travis@mail.com",
                 FirstName = "Travis",
                 LastName = "Kongo",
                 CreatedDate = DateTime.UtcNow,

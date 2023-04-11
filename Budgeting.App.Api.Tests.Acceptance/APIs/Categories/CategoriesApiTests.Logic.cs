@@ -1,4 +1,5 @@
 ﻿using Budgeting.App.Api.Tests.Acceptance.Models.Categories;
+using Budgeting.App.Api.Tests.Acceptance.Models.Users;
 using FluentAssertions;
 using Force.DeepCloner;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             Category inputCategory = randomCategory;
             Category expectedCategory = randomCategory.DeepClone();
 
+            User someUser =
+                await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync();
+
             await this.budgetingAppApiBroker.PostCategoryAsync(inputCategory);
 
             //when
@@ -27,6 +31,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);
             await this.budgetingAppApiBroker.DeleteCategoryAsync(actualCategory.CategoryId);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync(someUser);
         }
 
         [Fact]
@@ -35,6 +40,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             //given
             Category randomCategory = CreateRandomCategory();
             Category modifyCategory = UpdateCategoryRandom(randomCategory);
+
+            User someUser =
+               await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync();
 
             await this.budgetingAppApiBroker.PostCategoryAsync(randomCategory);
 
@@ -47,6 +55,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             //then
             actualCategory.Should().BeEquivalentTo(modifyCategory);
             await this.budgetingAppApiBroker.DeleteCategoryAsync(actualCategory.CategoryId);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync(someUser);
         }
 
         [Fact]
@@ -55,6 +64,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             //given
             IEnumerable<Category> randomCategories = GetRandomCategories();
             IEnumerable<Category> inputCategories = randomCategories;
+
+            User someUser =
+               await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync();
 
             foreach (var category in inputCategories)
             {
@@ -73,6 +85,8 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
                 actualCategory.Should().BeEquivalentTo(expectedCategory);
                 await this.budgetingAppApiBroker.DeleteCategoryAsync(actualCategory.CategoryId);
             }
+
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync(someUser);
         }
 
         [Fact]
@@ -83,6 +97,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             Category inputCategory = randomCategory;
             Category expectedCategory = inputCategory.DeepClone();
 
+            User someUser =
+               await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync();
+
             await this.budgetingAppApiBroker.PostCategoryAsync(randomCategory);
 
             //when
@@ -91,7 +108,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
 
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);
-
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync(someUser);
         }
 
         [Fact]
@@ -102,6 +119,9 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
             Category inputCategory = randomCategory;
             Category expectedCategory = inputCategory.DeepClone();
 
+            User someUser =
+               await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync();
+
             await this.budgetingAppApiBroker.PostCategoryAsync(randomCategory);
 
             //when
@@ -110,7 +130,8 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
 
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);
-            await this.budgetingAppApiBroker.DeleteUserAsync(actualCategory.CategoryId);
+            await this.budgetingAppApiBroker.DeleteCategoryAsync(actualCategory.CategoryId);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync(someUser);
         }
     }
 }

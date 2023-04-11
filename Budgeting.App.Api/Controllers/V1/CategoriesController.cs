@@ -1,6 +1,8 @@
 ﻿using Budgeting.App.Api.Models.Categories;
 using Budgeting.App.Api.Models.Categories.Exceptions;
 using Budgeting.App.Api.Services.Foundations.Categories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Budgeting.App.Api.Controllers.V1
@@ -8,7 +10,7 @@ namespace Budgeting.App.Api.Controllers.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CategoriesController : BaseController
     {
         private readonly ICategoryService categoryService;

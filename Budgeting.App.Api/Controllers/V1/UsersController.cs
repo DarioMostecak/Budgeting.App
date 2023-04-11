@@ -1,6 +1,8 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Budgeting.App.Api.Models.Users.Exceptions;
 using Budgeting.App.Api.Services.Foundations.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Budgeting.App.Api.Controllers.V1
@@ -8,6 +10,7 @@ namespace Budgeting.App.Api.Controllers.V1
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : BaseController
     {
         private readonly IUserService userService;
@@ -49,6 +52,7 @@ namespace Budgeting.App.Api.Controllers.V1
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async ValueTask<IActionResult> PostUserAsync([FromBody] User user, string password)
         {
             try
@@ -108,7 +112,7 @@ namespace Budgeting.App.Api.Controllers.V1
 
         [HttpDelete]
         [Route("{userId}")]
-        public async ValueTask<IActionResult> Async(Guid userId)
+        public async ValueTask<IActionResult> DeleteUserAsync(Guid userId)
         {
             try
             {

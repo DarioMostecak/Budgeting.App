@@ -11,11 +11,11 @@ namespace Budgeting.App.Api.Controllers.V1
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [AllowAnonymous]
-    public class IdentityController : BaseController
+    public class IdentitiesController : BaseController
     {
         private readonly IIdentityService identityService;
 
-        public IdentityController(IIdentityService identityService)
+        public IdentitiesController(IIdentityService identityService)
         {
             this.identityService = identityService;
         }

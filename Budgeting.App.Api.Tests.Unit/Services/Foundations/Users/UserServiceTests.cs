@@ -60,7 +60,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Users
             var newUser = new User
             {
                 Id = Guid.NewGuid(),
-                Email = "Travis@mail.com",
+                Email = "travis@mail.com",
                 FirstName = "Travis",
                 LastName = "Kongo",
                 CreatedDate = DateTime.UtcNow,

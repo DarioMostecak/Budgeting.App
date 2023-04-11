@@ -23,7 +23,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             new User
             {
                 Id = Guid.NewGuid(),
-                Email = "Travis@mail.com",
+                Email = "travis@mail.com",
                 FirstName = "Travis",
                 LastName = "Kongo",
                 CreatedDate = DateTime.UtcNow.Round(new TimeSpan(0, 0, 0, 1)),

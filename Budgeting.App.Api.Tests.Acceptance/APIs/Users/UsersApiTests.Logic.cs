@@ -19,6 +19,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
 
             //when
             await this.budgetingAppApiBroker.PostUserAsync(inputUser, randomPassword);
+            await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync(randomUser, randomPassword);
 
             User actualUser =
                 await this.budgetingAppApiBroker.GetUserByIdAsync(inputUser.Id);
@@ -26,6 +27,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
             await this.budgetingAppApiBroker.DeleteUserAsync(inputUser.Id);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync();
         }
 
         [Fact]
@@ -37,6 +39,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             string randomPassword = GetRandomPassword();
 
             await this.budgetingAppApiBroker.PostUserAsync(randomUser, randomPassword);
+            await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync(randomUser, randomPassword);
 
             //when
             await this.budgetingAppApiBroker.PutUserAsync(modifyUser);
@@ -47,6 +50,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             //then
             actualUser.Should().BeEquivalentTo(modifyUser);
             await this.budgetingAppApiBroker.DeleteUserAsync(actualUser.Id);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync();
         }
 
         [Fact]
@@ -59,6 +63,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             string randomPassword = GetRandomPassword();
 
             await this.budgetingAppApiBroker.PostUserAsync(randomUser, randomPassword);
+            await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync(randomUser, randomPassword);
 
             //when
             User actualUser =
@@ -67,6 +72,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
             await this.budgetingAppApiBroker.DeleteUserAsync(actualUser.Id);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync();
         }
 
         [Fact]
@@ -79,13 +85,15 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Users
             string randomPassword = GetRandomPassword();
 
             await this.budgetingAppApiBroker.PostUserAsync(randomUser, randomPassword);
+            await this.budgetingAppApiBroker.AddAuthenticationHeaderAsync(randomUser, randomPassword);
 
             //when
             User actualUser =
-                await this.budgetingAppApiBroker.GetUserByIdAsync(inputCategory.Id);
+                await this.budgetingAppApiBroker.DeleteUserAsync(inputCategory.Id);
 
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
+            await this.budgetingAppApiBroker.RemoveAuthenticationHeaderAsync();
         }
     }
 }
