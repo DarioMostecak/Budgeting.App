@@ -1,30 +1,40 @@
-using Budgeting.Web.App.Extensions;
+using Blazored.LocalStorage;
+using Budgeting.Web.App;
+using Budgeting.Web.App.AuthenticationProviders;
+using Budgeting.Web.App.Brokers.Apis;
+using Budgeting.Web.App.Brokers.DateTimes;
+using Budgeting.Web.App.Brokers.Loggings;
+using Budgeting.Web.App.Services.Foundations;
+using Budgeting.Web.App.Services.Foundations.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
 
-builder.RegisterServices(typeof(Program));
+builder.Services.AddMudServices();
+
+builder.Services.AddBlazoredLocalStorage();
 
 
-var app = builder.Build();
+builder.Services.AddAuthorizationCore();
+
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationProvider>();
 
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
+builder.Services.AddTransient<IIdentityService, IdentityService>();
+builder.Services.AddTransient<IApiBroker, ApiBroker>();
+builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
 
-    app.UseHsts();
-}
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+builder.Services.AddHttpClient<IApiBroker, ApiBroker>();
 
-app.UseAuthentication();
-app.UseRouting();
-app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+
+await builder.Build().RunAsync();

@@ -1,67 +1,82 @@
-﻿using Newtonsoft.Json;
-
-namespace Budgeting.Web.App.Brokers.Apis
+﻿namespace Budgeting.Web.App.Brokers.Apis
 {
     public partial class ApiBroker : IApiBroker
     {
-        private readonly IConfiguration configuration;
-        private HttpClient httpClient;
+        private readonly HttpClient httpClient;
 
-        public ApiBroker(IConfiguration configuration,
-            HttpClient httpClient)
+        public ApiBroker(HttpClient httpClient)
         {
-            this.configuration = configuration;
             this.httpClient = GetHttpClient(httpClient);
         }
 
-        private async ValueTask<T> GetAsync<T>(string relativeUrl)
-            where T : class
+        private async ValueTask<T> GetContentAsync<T>(string relativeUrl)
         {
-            using var response = await this.httpClient.GetAsync(relativeUrl);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage responseMessage =
+                await this.httpClient.GetAsync(relativeUrl);
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await DeserializeResponseContent<T>(responseMessage);
         }
 
-        private async ValueTask<T> PostAsync<T>(string relativeUrl, T entity)
+        private async ValueTask<T> PostContentAsync<T>(
+            string relativeUrl,
+            T content,
+            string mediaType = "text/json")
         {
-            using var response = await this.httpClient.PostAsJsonAsync(relativeUrl, entity);
-            response.EnsureSuccessStatusCode();
+            HttpContent contentString = ConvertToHttpContent(content, mediaType);
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            HttpResponseMessage responseMessage =
+               await this.httpClient.PostAsync(relativeUrl, contentString);
 
+            await ValidateHttpResponseAsync(responseMessage);
+
+            return await DeserializeResponseContent<T>(responseMessage);
         }
 
-        private async ValueTask<T> PutAsync<T>(string relativeUrl, T entity)
-            where T : class
+        public async ValueTask<TResult> PostContentAsync<TContent, TResult>(
+            string relativeUrl,
+            TContent content,
+            string mediaType = "text/json")
         {
-            using var response = await this.httpClient.PutAsJsonAsync(relativeUrl, entity);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            HttpContent contentString = ConvertToHttpContent(content, mediaType);
 
-            return JsonConvert.DeserializeObject<T>(result);
+            HttpResponseMessage responseMessage =
+               await this.httpClient.PostAsync(relativeUrl, contentString);
+
+            await ValidateHttpResponseAsync(responseMessage);
+
+            return await DeserializeResponseContent<TResult>(responseMessage);
         }
 
-        private async ValueTask<T> DeleteAsync<T>(string relativeUrl)
-            where T : class
+        private async ValueTask<T> PutContentAsync<T>(string relativeUrl,
+            T content,
+            string mediaType = "text/json")
         {
-            using var response = await this.httpClient.DeleteAsync(relativeUrl);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
+            HttpContent contentString = ConvertToHttpContent(content, mediaType);
 
-            return JsonConvert.DeserializeObject<T>(result);
+            HttpResponseMessage responseMessage =
+               await this.httpClient.PutAsync(relativeUrl, contentString);
+
+            await ValidateHttpResponseAsync(responseMessage);
+
+            return await DeserializeResponseContent<T>(responseMessage);
         }
 
-        private HttpClient GetHttpClient(HttpClient client)
+        private async ValueTask<T> DeleteContentAsync<T>(string relativeUrl)
         {
-            var baseAddress = this.configuration["ApiBaseUrl"];
-            client.BaseAddress = new Uri("https://localhost:7149/api/v1/");
+            HttpResponseMessage responseMessage = await
+                this.httpClient.DeleteAsync(relativeUrl);
 
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            await ValidateHttpResponseAsync(responseMessage);
 
-            return client;
+            return await DeserializeResponseContent<T>(responseMessage);
         }
 
+        private HttpClient GetHttpClient(HttpClient httpClient)
+        {
+            httpClient.BaseAddress = new Uri("https://localhost:7149/api/v1");
+            //add header data
 
+            return httpClient;
+        }
     }
 }

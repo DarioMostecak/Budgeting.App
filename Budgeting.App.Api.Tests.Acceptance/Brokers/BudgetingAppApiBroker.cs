@@ -184,7 +184,7 @@ namespace Budgeting.App.Api.Tests.Acceptance.Brokers
         }
         #endregion
 
-        #region Utilites
+        #region Utilities
         private static HttpContent ConvertToHttpContent<T>(T content, string mediaType)
         {
             return mediaType switch

@@ -1,0 +1,8 @@
+﻿@inject NavigationManager navidatonManager
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        navidatonManager.NavigateTo("/", true);
+    }
+}

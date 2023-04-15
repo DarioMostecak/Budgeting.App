@@ -1,0 +1,57 @@
+﻿<MudAppBar Bottom="true" Fixed="false" Style="@("height:300px; display:flex; justify-content:center; aling-content:center;")">
+    <div id="container">
+        <div id="left">
+            <MudText>
+                Company Info
+                <br /><br />
+                Websis is a technology company based in Zagreb,Croatia.<br />
+                We are dedicated to developing innovative software solutions that help <br />
+                businesses and individuals simplify and streamline their daily tasks. <br />
+            </MudText>
+
+        </div>
+        <div id="right">
+            <MudText Align="Align.Center">
+                Folow Us <br />
+
+                <MudIconButton Icon="@Icons.Custom.Brands.Facebook" Color="Color.Inherit" />
+                <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Inherit" />
+                <MudIconButton Icon="@Icons.Custom.Brands.Instagram" Color="Color.Inherit" />
+                <MudIconButton Icon="@Icons.Custom.Brands.Google" Color="Color.Inherit" />
+                <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+            </MudText>
+        </div>
+        <div id="center">
+            <MudText>
+                Contact Us: <br /><br />
+                Address: Rudeska 162, 10000 Zagreb, Croatia <br />
+                Email: info@websis.com <br />
+                Phone: +385-1-234-5678
+
+            </MudText>
+        </div>
+    </div>
+</MudAppBar>
+
+<style>
+    #container {
+        width: 100%;
+        margin-left: 90px;
+        margin-right: 90px;
+    }
+
+    #left {
+        float: left;
+        width: 300px;
+    }
+
+    #right {
+        float: right;
+        width: 300px;
+    }
+
+    #center {
+        margin: 0 auto;
+        width: 300px;
+    }
+</style>

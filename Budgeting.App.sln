@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.Web.App", "Budgeting.Web.App\Budgeting.Web.App.csproj", "{2C77C496-D0DB-4F67-B2E8-BA495733A163}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{9EDA2FB4-1E76-4EE3-8CBD-94023913E4E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.App.Api", "Budgeting.App.Api\Budgeting.App.Api.csproj", "{A758DB86-A2E3-4410-8B61-DE0546508F18}"
@@ -13,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{58
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.App.Api.Tests.Unit", "Budgeting.App.Api.Tests.Unit\Budgeting.App.Api.Tests.Unit.csproj", "{263595E9-A029-4416-B4B2-7382FB8490DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.App.Api.Tests.Acceptance", "Budgeting.App.Api.Tests.Acceptance\Budgeting.App.Api.Tests.Acceptance.csproj", "{FC4D6AC8-FAD5-474E-B878-5437DB79D088}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.App.Api.Tests.Acceptance", "Budgeting.App.Api.Tests.Acceptance\Budgeting.App.Api.Tests.Acceptance.csproj", "{FC4D6AC8-FAD5-474E-B878-5437DB79D088}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.Web.App", "Budgeting.Web.App\Budgeting.Web.App.csproj", "{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2C77C496-D0DB-4F67-B2E8-BA495733A163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C77C496-D0DB-4F67-B2E8-BA495733A163}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C77C496-D0DB-4F67-B2E8-BA495733A163}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C77C496-D0DB-4F67-B2E8-BA495733A163}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A758DB86-A2E3-4410-8B61-DE0546508F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A758DB86-A2E3-4410-8B61-DE0546508F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A758DB86-A2E3-4410-8B61-DE0546508F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,15 +33,19 @@ Global
 		{FC4D6AC8-FAD5-474E-B878-5437DB79D088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC4D6AC8-FAD5-474E-B878-5437DB79D088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC4D6AC8-FAD5-474E-B878-5437DB79D088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2C77C496-D0DB-4F67-B2E8-BA495733A163} = {582E119E-E46A-409B-829D-C793EC399D54}
 		{A758DB86-A2E3-4410-8B61-DE0546508F18} = {9EDA2FB4-1E76-4EE3-8CBD-94023913E4E2}
 		{263595E9-A029-4416-B4B2-7382FB8490DD} = {9EDA2FB4-1E76-4EE3-8CBD-94023913E4E2}
 		{FC4D6AC8-FAD5-474E-B878-5437DB79D088} = {9EDA2FB4-1E76-4EE3-8CBD-94023913E4E2}
+		{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F} = {582E119E-E46A-409B-829D-C793EC399D54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4C71612-CF29-4DEC-91EC-3307AC4916C1}

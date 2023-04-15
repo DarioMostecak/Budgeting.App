@@ -1,0 +1,30 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="mudTheme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudMainContent>
+        <NavMenu />
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+            @Body
+        </MudContainer>
+        <Footer />
+    </MudMainContent>
+</MudLayout>
+
+
+@code {
+    MudTheme mudTheme = new MudTheme
+        {
+            Palette = new Palette
+            {
+                AppbarBackground = Colors.BlueGrey.Darken4,
+                Primary = "#ffff",
+                DrawerBackground = Colors.BlueGrey.Darken4,
+                DrawerText = "#ffff",
+            }
+        };
+
+}
