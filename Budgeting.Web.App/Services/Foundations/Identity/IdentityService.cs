@@ -1,5 +1,4 @@
 ﻿using Budgeting.Web.App.Brokers.Apis;
-using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
 using Budgeting.Web.App.Models.AuthenticationRequests;
 using Budgeting.Web.App.Models.AuthenticationResults;
@@ -14,8 +13,7 @@ namespace Budgeting.Web.App.Services.Foundations
 
         public IdentityService(
             IApiBroker apiBroker,
-            ILoggingBroker loggingBroker,
-            IDateTimeBroker dateTimeBroker)
+            ILoggingBroker loggingBroker)
         {
             this.apiBroker = apiBroker;
             this.loggingBroker = loggingBroker;
@@ -24,7 +22,12 @@ namespace Budgeting.Web.App.Services.Foundations
         public ValueTask<AuthenticationResult> AuthenticateIdentity(AuthenticationRequest authenticationRequest) =>
         TryCatch(async () =>
         {
-            return new AuthenticationResult();
+            ValidateAuthenticationRequest(authenticationRequest);
+
+            var authenticationResult =
+                 await this.apiBroker.PostLoginAsync(authenticationRequest);
+
+            return authenticationResult;
         });
     }
 }

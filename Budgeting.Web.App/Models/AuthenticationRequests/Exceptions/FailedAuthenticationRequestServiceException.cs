@@ -2,9 +2,9 @@
 
 namespace Budgeting.Web.App.Models.AuthenticationRequests.Exceptions
 {
-    public class AuthenticationRequestServiceException : ExceptionModel
+    public class FailedAuthenticationRequestServiceException : ExceptionModel
     {
-        public AuthenticationRequestServiceException(Exception innerException)
+        public FailedAuthenticationRequestServiceException(Exception innerException)
             : base(message: "Authentication request service error occured, contact support.", innerException)
         { }
     }

@@ -35,9 +35,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Identity
             IdentityResponse actualIdentityResponse =
                 await this.identityService.AuthenticateUserAsync(identityRequest);
 
-            //test clamis
             var actualIdentityResponseClaims = ParseClaimsFromJwt(actualIdentityResponse.Token);
-
 
             //then
             actualIdentityResponseClaims.Should().BeEquivalentTo(expectedIdentityResponseClaims);
