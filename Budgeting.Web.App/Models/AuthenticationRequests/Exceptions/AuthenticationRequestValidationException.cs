@@ -6,7 +6,7 @@ namespace Budgeting.Web.App.Models.AuthenticationRequests.Exceptions
     public class AuthenticationRequestValidationException : ExceptionModel
     {
         public AuthenticationRequestValidationException(Exception innerException, IDictionary data)
-            : base(message: innerException.Message, innerException: innerException)
+            : base(message: innerException.Message, innerException: innerException, data)
         { }
     }
 }

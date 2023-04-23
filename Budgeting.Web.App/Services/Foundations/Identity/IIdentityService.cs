@@ -5,6 +5,6 @@ namespace Budgeting.Web.App.Services.Foundations.Identity
 {
     public interface IIdentityService
     {
-        ValueTask<AuthenticationResult> AuthenticateIdentity(AuthenticationRequest authenticationRequest);
+        ValueTask<AuthenticationResult> AuthenticateIdentityAsync(AuthenticationRequest authenticationRequest);
     }
 }

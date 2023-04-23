@@ -30,7 +30,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
 
             //when
             ValueTask<AuthenticationResult> authenticateIdentityTask =
-                this.identityService.AuthenticateIdentity(someRequest);
+                this.identityService.AuthenticateIdentityAsync(someRequest);
 
             //then
             await Assert.ThrowsAsync<AuthenticationRequestDependencyException>(() =>
@@ -44,6 +44,47 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
             this.apiBrokerMock.Verify(broker =>
                 broker.PostLoginAsync(It.IsAny<AuthenticationRequest>()),
                    Times.Once);
+
+            this.apiBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnAuthenticateIfAuthenticationResultIsNullAndLogItAsync()
+        {
+            //given
+            AuthenticationRequest someAuthenticationRequest = CreateAuthenticationRequest();
+            AuthenticationResult nullAuthenticationResult = null;
+
+            var nullAuthenticationResultException =
+                new NullAuthenticationRequestException();
+
+            var failAuthenticationRequestDependencyException =
+                new FailedAuthenticationRequestDependencyException(nullAuthenticationResultException);
+
+            var expectedAuthenticationResultDependencyException =
+                new AuthenticationRequestDependencyException(failAuthenticationRequestDependencyException);
+
+            this.apiBrokerMock.Setup(broker =>
+                 broker.PostLoginAsync(someAuthenticationRequest))
+                         .ReturnsAsync(nullAuthenticationResult);
+
+            //when
+            ValueTask<AuthenticationResult> authenticateIdentityTask =
+                this.identityService.AuthenticateIdentityAsync(someAuthenticationRequest);
+
+            //then
+            await Assert.ThrowsAsync<AuthenticationRequestDependencyException>(() =>
+                 authenticateIdentityTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                 broker.LogError(It.Is(SameExceptionAs(
+                     expectedAuthenticationResultDependencyException))),
+                        Times.Once);
+
+            this.apiBrokerMock.Verify(broker =>
+                 broker.PostLoginAsync(It.IsAny<AuthenticationRequest>()),
+                        Times.Once);
 
             this.apiBrokerMock.VerifyNoOtherCalls();
             this.apiBrokerMock.VerifyNoOtherCalls();
@@ -68,7 +109,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
 
             //when
             ValueTask<AuthenticationResult> authenticateIdentityTask =
-                this.identityService.AuthenticateIdentity(someRequest);
+                this.identityService.AuthenticateIdentityAsync(someRequest);
 
             //then
             await Assert.ThrowsAsync<AuthenticationRequestServiceException>(() =>

@@ -25,7 +25,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
 
             //when
             ValueTask<AuthenticationResult> authenticateIdentityAsTask =
-                this.identityService.AuthenticateIdentity(invalidRequest);
+                this.identityService.AuthenticateIdentityAsync(invalidRequest);
 
             //then
             await Assert.ThrowsAsync<AuthenticationRequestValidationException>(() =>
@@ -72,7 +72,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
 
             //when
             ValueTask<AuthenticationResult> authenticateIdentityAsTask =
-                this.identityService.AuthenticateIdentity(invalidAuthenticationRequest);
+                this.identityService.AuthenticateIdentityAsync(invalidAuthenticationRequest);
 
             //then
             await Assert.ThrowsAsync<AuthenticationRequestValidationException>(() =>

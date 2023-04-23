@@ -19,13 +19,15 @@ namespace Budgeting.Web.App.Services.Foundations
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<AuthenticationResult> AuthenticateIdentity(AuthenticationRequest authenticationRequest) =>
+        public ValueTask<AuthenticationResult> AuthenticateIdentityAsync(AuthenticationRequest authenticationRequest) =>
         TryCatch(async () =>
         {
             ValidateAuthenticationRequest(authenticationRequest);
 
             var authenticationResult =
                  await this.apiBroker.PostLoginAsync(authenticationRequest);
+
+            ValidateAuthenticationResultIsNull(authenticationResult);
 
             return authenticationResult;
         });

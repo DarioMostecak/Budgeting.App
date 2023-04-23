@@ -1,5 +1,7 @@
 ﻿using Budgeting.Web.App.Models.AuthenticationRequests;
 using Budgeting.Web.App.Models.AuthenticationRequests.Exceptions;
+using Budgeting.Web.App.Models.AuthenticationResults;
+using Budgeting.Web.App.Models.AuthenticationResults.Exceptions;
 
 namespace Budgeting.Web.App.Services.Foundations
 {
@@ -26,6 +28,12 @@ namespace Budgeting.Web.App.Services.Foundations
             Condition = string.IsNullOrWhiteSpace(text),
             Message = "Password is required.",
         };
+
+        private static void ValidateAuthenticationResultIsNull(AuthenticationResult authenticationResult)
+        {
+            if (authenticationResult is null)
+                throw new NullAuthenticationResultException();
+        }
 
         private static void ValidateAuthenticationRequestIsNull(AuthenticationRequest authenticationRequest)
         {

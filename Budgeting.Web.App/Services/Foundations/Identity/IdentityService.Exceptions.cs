@@ -1,5 +1,6 @@
 ﻿using Budgeting.Web.App.Models.AuthenticationRequests.Exceptions;
 using Budgeting.Web.App.Models.AuthenticationResults;
+using Budgeting.Web.App.Models.AuthenticationResults.Exceptions;
 using Budgeting.Web.App.Models.ExceptionModels;
 
 namespace Budgeting.Web.App.Services.Foundations
@@ -22,6 +23,17 @@ namespace Budgeting.Web.App.Services.Foundations
             catch (InvalidAuthenticationRequestException invalidAuthenticationRequestException)
             {
                 throw CreateAndLogValidationException(invalidAuthenticationRequestException);
+            }
+            catch (HttpResponseUnauthorizedException httpResponseUnauthorizeException)
+            {
+                throw CreateAndLogUnauthorizedException(httpResponseUnauthorizeException);
+            }
+            catch (NullAuthenticationResultException nullAuthenticationResultException)
+            {
+                var failedAuthenticationRequestDependencyException =
+                    new FailedAuthenticationRequestDependencyException(nullAuthenticationResultException);
+
+                throw CreateAndLogDependencyException(failedAuthenticationRequestDependencyException);
             }
             catch (HttpResponseBadRequestException httpResponseBadRequestException)
             {
@@ -83,6 +95,14 @@ namespace Budgeting.Web.App.Services.Foundations
             this.loggingBroker.LogError(authenticationRequestServiceException);
 
             return authenticationRequestServiceException;
+        }
+
+        private AuthenticationRequestUnauthorizedException CreateAndLogUnauthorizedException(Exception exception)
+        {
+            var authenticationRequestUnauthorizedException = new AuthenticationRequestUnauthorizedException(exception);
+            this.loggingBroker.LogError(authenticationRequestUnauthorizedException);
+
+            return authenticationRequestUnauthorizedException;
         }
     }
 }

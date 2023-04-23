@@ -1,7 +1,7 @@
-﻿@using Budgeting.Web.App.AuthenticationProviders;
+﻿@using Budgeting.Web.App.Brokers.AuthenticationProviders;
 @using System.Security.Claims;
 
-@inject AuthenticationStateProvider authStateProvider
+@inject IAuthenticationProviderBroker authStateProvider
 
 <AuthorizeView>
 
@@ -59,9 +59,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var provider = (CustomAuthenticationProvider)authStateProvider;
 
-        var authenticationState = await provider.GetAuthenticationStateAsync();
+        var authenticationState = await authStateProvider.GetAuthenticationStateAsync();
 
         if (authenticationState.User.Identity.IsAuthenticated)
         {

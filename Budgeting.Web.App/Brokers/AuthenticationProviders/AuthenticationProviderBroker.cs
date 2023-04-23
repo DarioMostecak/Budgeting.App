@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Budgeting.Web.App.AuthenticationProviders
+namespace Budgeting.Web.App.Brokers.AuthenticationProviders
 {
-    public class CustomAuthenticationProvider : AuthenticationStateProvider
+    public class AuthenticationProviderBroker : AuthenticationStateProvider, IAuthenticationProviderBroker
     {
         private readonly ILocalStorageService localStorageService;
 
-        public CustomAuthenticationProvider(ILocalStorageService localStorageService)
+        public AuthenticationProviderBroker(ILocalStorageService localStorageService)
         {
             this.localStorageService = localStorageService;
         }
@@ -18,7 +18,7 @@ namespace Budgeting.Web.App.AuthenticationProviders
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var userLocalStorageResult =
-                await this.localStorageService.GetItemAsync<IEnumerable<Claim>>("UserClaims");
+                await localStorageService.GetItemAsync<IEnumerable<Claim>>("UserClaims");
 
             if (userLocalStorageResult == null)
                 return await Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
@@ -31,17 +31,21 @@ namespace Budgeting.Web.App.AuthenticationProviders
 
         public async Task RegisterAuthenticationState(AuthenticationResult authenticationResult)
         {
-            await this.localStorageService
-                        .SetItemAsync<AuthenticationResult>("AuthenticationToken", authenticationResult);
+            await localStorageService
+                        .SetItemAsync("AuthenticationToken", authenticationResult);
 
             var claims = ParseClaimsFromJwt(authenticationResult.Token);
 
-            await this.localStorageService.SetItemAsync<IEnumerable<Claim>>("UserClaims", claims);
+            await localStorageService.SetItemAsync("UserClaims", claims);
+
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
         public async Task ClearAuthenticationState()
         {
-            await this.localStorageService.ClearAsync();
+            await localStorageService.ClearAsync();
+
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
@@ -50,6 +54,7 @@ namespace Budgeting.Web.App.AuthenticationProviders
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
 
             return claims;
         }

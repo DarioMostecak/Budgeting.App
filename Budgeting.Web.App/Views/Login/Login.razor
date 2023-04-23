@@ -1,63 +1,30 @@
 ﻿@page "/login"
-@using Budgeting.Web.App.AuthenticationProviders;
 @using Budgeting.Web.App.Models.LoginViews;
 @using Budgeting.Web.App.Services.Foundations;
 @using Microsoft.AspNetCore.Authorization;
 @using Budgeting.Web.App.Services.Foundations.Identity;
-
-@inject IIdentityService identityService
-@inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider authenticationStates
+@using System.ComponentModel.DataAnnotations;
 
 @attribute [AllowAnonymous]
 
 <br />
 <MudPaper Class="mx-auto pa-6" Style="width:50%;">
-    <MudText  Align="Align.Center" Typo="Typo.h4">Log in</MudText>
-    <EditForm Model=@loginModel OnValidSubmit="OnValidSubmit">
-        <MudTextField T="string" @bind-Value="@loginModel.Email" HelperText="Enter email." Immediate="true" Label="Email" Variant="Variant.Text" />
-        <br />
-        
-        <MudInputLabel>Password</MudInputLabel>
-        <MudTextField @bind-Value="@loginModel.Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowPassword" AdornmentAriaLabel="Show Password" />
+    <MudText Align="Align.Center" Typo="Typo.h4">LOG IN</MudText>
+    <EditForm Model=@loginModel OnValidSubmit="LoginUserAsync">
 
-        <MudCardActions>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Dark" Class="ml-auto">Log In</MudButton>
+        <MudTextField T="string" HelperText="Enter email" @bind-Value="@loginModel.Email" RequiredError="Email is requierd!"
+                       Validation="@(new EmailAddressAttribute() {ErrorMessage ="Email address is invalid!"})" Immediate="true" Label="Email" Variant="Variant.Text" />
+        <br />
+      
+        <MudTextField T="string" @bind-Value="@loginModel.Password" Label="Password"
+                      Validation="@(new MinLengthAttribute(8) {ErrorMessage = "Password must be at least 8 charachters long!"})" Required="true" RequiredError="Password is required!" Variant="Variant.Outlined" InputType="InputType.Password" />
+       
+                      <MudCardActions>
+            <MudButton  ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Dark" Class="ml-auto">SUBMIT</MudButton>
         </MudCardActions>
     </EditForm>
 </MudPaper>
 
 @code {
-    public LoginView loginModel = new LoginView();
-
-    bool isShow;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-
-    void ShowPassword()
-    {
-        @if (isShow)
-        {
-            isShow = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
-        }
-        else
-        {
-            isShow = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
-        }
-    }
-
-    private async void OnValidSubmit()
-    {
-        //var authResult = await this.identityService.AuthenticateIdentity(loginModel);
-
-        //var provider = (CustomAuthenticationProvider)authenticationStates;
-
-        //await provider.RegisterAuthenticationState(authResult);
-
-        //NavigationManager.NavigateTo("/user", true);
-    }
+  
 }

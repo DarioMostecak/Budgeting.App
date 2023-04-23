@@ -24,7 +24,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
 
             //when
             AuthenticationResult actualAuthenticationResult =
-                await this.identityService.AuthenticateIdentity(inputAuthenticationRequest);
+                await this.identityService.AuthenticateIdentityAsync(inputAuthenticationRequest);
 
             //then
             actualAuthenticationResult.Should().BeEquivalentTo(expectedAuthenticationResult);

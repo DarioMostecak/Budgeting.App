@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.App.Api.Tests.Acc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.Web.App", "Budgeting.Web.App\Budgeting.Web.App.csproj", "{2194A12C-BD61-4B7E-AB07-B27C23CE1D2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Budgeting.Web.App.Tests.Unit", "Budgeting.Web.App.Tests.Unit\Budgeting.Web.App.Tests.Unit.csproj", "{5D676B4F-3354-401A-83F3-19C0ABDBB133}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Budgeting.Web.App.Tests.Unit", "Budgeting.Web.App.Tests.Unit\Budgeting.Web.App.Tests.Unit.csproj", "{5D676B4F-3354-401A-83F3-19C0ABDBB133}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,7 +19,7 @@ namespace Budgeting.App.Api.Services.Identity
 
         private static dynamic IsInvalidPassword(string password) => new
         {
-            Condition = string.IsNullOrWhiteSpace(password),
+            Condition = string.IsNullOrWhiteSpace(password) || password.Count() < 8,
             Message = "Password is required."
         };
 
