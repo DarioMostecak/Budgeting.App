@@ -1,8 +1,10 @@
 ﻿using Budgeting.Web.App.Models.AuthenticationRequests;
 using Budgeting.Web.App.Models.AuthenticationRequests.Exceptions;
 using Budgeting.Web.App.Models.AuthenticationResults;
+using Budgeting.Web.App.Models.ExceptionModels;
 using Moq;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -118,6 +120,49 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Identity
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedAuthenticationRequestServiceException))),
+                       Times.Once);
+
+            this.apiBrokerMock.Verify(broker =>
+                broker.PostLoginAsync(It.IsAny<AuthenticationRequest>()),
+                   Times.Once);
+
+            this.apiBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowUnauthorizedExceptionOnAuthenticateIfErrorOccuresAndLogItAsync()
+        {
+            //given
+            AuthenticationRequest someRequest = CreateAuthenticationRequest();
+
+            string exceptionMessage = "Authentication fail";
+            var responseMessage = new HttpResponseMessage();
+
+            var httpResponseUnauthorizedException =
+                new HttpResponseUnauthorizedException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            var expectedAuthenticationRequestUnauthorizedException =
+                new AuthenticationRequestUnauthorizedException(httpResponseUnauthorizedException);
+
+
+            this.apiBrokerMock.Setup(broker =>
+                broker.PostLoginAsync(It.IsAny<AuthenticationRequest>()))
+                        .ThrowsAsync(httpResponseUnauthorizedException);
+
+            //when
+            ValueTask<AuthenticationResult> authenticateIdentityTask =
+                this.identityService.AuthenticateIdentityAsync(someRequest);
+
+            //then
+            await Assert.ThrowsAsync<AuthenticationRequestUnauthorizedException>(() =>
+                authenticateIdentityTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAuthenticationRequestUnauthorizedException))),
                        Times.Once);
 
             this.apiBrokerMock.Verify(broker =>

@@ -1,57 +1,88 @@
 ﻿@page "/"
-@using Budgeting.Web.App.Views.Welcome.Components
+@using Budgeting.Web.App.Views.Components.WelcomeComponents
+@using Microsoft.AspNetCore.Authorization;
 
+@attribute [AllowAnonymous]
 
 <PageTitle>Welcome</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Small">
-    <MudText Align="Align.Center" Typo="Typo.h2">WebSis budgeting App </MudText>
+
+    <MudText 
+        Align="Align.Center"
+        Typo="Typo.h2">
+
+           WebSis budgeting App 
+    </MudText>
+    
     <br />
     <br />
+
 <MudText>
     We know that managing your finances can be tough,
     but with our budgeting app,
     you can easily stay on top of your expenses and achieve your financial goals.
 </MudText>
 </MudContainer>
+
 <br />
 <br />
-<MudCarousel Class="mud-width-full" Style="height:300px;" ShowArrows="true" ShowBullets="true" AutoCycle="true" TData="object">
+
+<MudCarousel 
+    Class="mud-width-full" 
+    Style="height:300px;" 
+    ShowArrows="true" 
+    ShowBullets="true" 
+    AutoCycle="true" 
+    TData="object">
+
     <MudCarouselItem Transition="Transition.Slide">
+        
         <MudText Align="Align.Center">Track your spending in real-time</MudText>
+
         <MudContainer Style="@("display:flex; align-items:center; justify-content:center")">
            <img src="\Images\analytics-g913fd8f61_1280.png" width="200" height="200">
            <img src="\Images\pie_chart-g0e7df94c9_1280.png" width="100" height="150">
            <img src="\Images\browser-3614768.png" width="200" height="150"> 
         </MudContainer>
+
     </MudCarouselItem>
+
     <MudCarouselItem Transition="Transition.Slide">
+        
         <MudText Align="Align.Center">Set spending limits, alerts and tasks</MudText>
+        
         <MudContainer Style="@("display:flex; align-items:center; justify-content:center")">
             <img src="\Images\1.png" width="200" height="200">&nbsp;
             <img src="\Images\2.png" width="100" height="150">
             <img src="\Images\4.png" width="150" height="150"> 
         </MudContainer>
+    
     </MudCarouselItem>
+
     <MudCarouselItem Transition="Transition.Slide">
+    
         <MudText Align="Align.Center">Generate reports and visualize your spending patterns</MudText>
+        
         <MudContainer Style="@("display:flex; align-items:center; justify-content:center")">
             <img src="\Images\5.png" width="100" height="120">
             <img src="\Images\6.png" width="200" height="150">
             <img src="\Images\7.png" width="100" height="120">
         </MudContainer>
+    
     </MudCarouselItem>
+
 </MudCarousel>
 
 <MudContainer Class="pa-16" MaxWidth="MaxWidth.Medium">
+
     <MudText>
         Don't let financial stress hold you back from achieving your dreams.
         Sign up now to start using our budgeting app and take control of your finances today!
     </MudText>
+
 </MudContainer>
 
 <WelcomeFooterComponent />
 
-@code {
 
-}

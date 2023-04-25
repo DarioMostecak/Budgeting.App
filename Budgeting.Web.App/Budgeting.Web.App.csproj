@@ -16,6 +16,13 @@
 		<PackageReference Include="MudBlazor" Version="6.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Views\Components\ContainerComponents\" />
+	  <Folder Include="Views\Components\LoginComponents\" />
+	  <Folder Include="Views\Components\UserComponents\" />
+	  <Folder Include="Views\Logins\LoginComponents\" />
+	</ItemGroup>
 	
 	
 </Project>

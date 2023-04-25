@@ -24,6 +24,10 @@ namespace Budgeting.Web.App.Services.Views.LoginViews
             {
                 throw CreateAndLogValidationException(invalidLoginViewException);
             }
+            catch (AuthenticationRequestUnauthorizedException authenticationRequestUnauthorizeException)
+            {
+                throw CreateAndLogUnauthorizedException(authenticationRequestUnauthorizeException);
+            }
             catch (AuthenticationRequestValidationException authenticationRequestValidationException)
             {
                 throw CreateAndLogValidationException(authenticationRequestValidationException);
@@ -89,6 +93,14 @@ namespace Budgeting.Web.App.Services.Views.LoginViews
             this.loggingBroker.LogError(loginViewServiceException);
 
             return loginViewServiceException;
+        }
+
+        private LoginViewUnauthorizeException CreateAndLogUnauthorizedException(Exception exception)
+        {
+            var loginViewUnauthorizeException = new LoginViewUnauthorizeException(exception);
+            this.loggingBroker.LogError(loginViewUnauthorizeException);
+
+            return loginViewUnauthorizeException;
         }
     }
 }

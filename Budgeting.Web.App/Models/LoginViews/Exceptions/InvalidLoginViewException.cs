@@ -5,7 +5,7 @@ namespace Budgeting.Web.App.Models.LoginViews.Exceptions
     public class InvalidLoginViewException : ExceptionModel
     {
         public InvalidLoginViewException()
-            : base(message: "Invalid login view request error occurred, please fix errors and try again.")
+            : base(message: "Invalid request, validation error occurred, please fix errors and try again.")
         { }
 
         public InvalidLoginViewException(string parameterName, object parameterValue)

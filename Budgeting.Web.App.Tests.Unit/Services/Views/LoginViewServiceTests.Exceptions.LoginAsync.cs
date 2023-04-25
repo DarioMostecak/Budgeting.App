@@ -96,5 +96,46 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Views
             this.navigationBrokerMock.VerifyNoOtherCalls();
             this.authenticationProviderBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowUnauthorizedExceptionOnAuthenticateIfErrorOccureAndLogItAsync()
+        {
+            //given
+            LoginView someLoginView = CreateLoginView();
+
+            var exception = new Exception();
+
+            var authenticationRequestUnauthorizeException =
+                new AuthenticationRequestUnauthorizedException(exception);
+
+            var expectedLoginViewUnauthorizeException =
+                new LoginViewUnauthorizeException(authenticationRequestUnauthorizeException);
+
+            this.identityServiceMock.Setup(service =>
+                 service.AuthenticateIdentityAsync(It.IsAny<AuthenticationRequest>()))
+                          .ThrowsAsync(authenticationRequestUnauthorizeException);
+
+            //when
+            ValueTask<AuthenticationResult> loginAsyncTask =
+                this.loginViewService.LoginAsync(someLoginView);
+
+            //then
+            await Assert.ThrowsAsync<LoginViewUnauthorizeException>(() =>
+                 loginAsyncTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                 broker.LogError(It.Is(SameExceptionAs(
+                     expectedLoginViewUnauthorizeException))),
+                        Times.Once);
+
+            this.identityServiceMock.Verify(service =>
+                 service.AuthenticateIdentityAsync(It.IsAny<AuthenticationRequest>()),
+                    Times.Once);
+
+            this.identityServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.navigationBrokerMock.VerifyNoOtherCalls();
+            this.authenticationProviderBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
