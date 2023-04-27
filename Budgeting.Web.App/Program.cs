@@ -4,7 +4,8 @@ using Budgeting.Web.App.Brokers.Apis;
 using Budgeting.Web.App.Brokers.AuthenticationProviders;
 using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
-using Budgeting.Web.App.Brokers.NavigationBroker;
+using Budgeting.Web.App.Brokers.Navigations;
+using Budgeting.Web.App.Brokers.Toasts;
 using Budgeting.Web.App.Services.Foundations;
 using Budgeting.Web.App.Services.Foundations.Identity;
 using Budgeting.Web.App.Services.Views.LoginViews;
@@ -33,9 +34,8 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 #endregion
+
 builder.Services.AddBlazoredLocalStorage();
-
-
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthenticationProviderBroker>();
@@ -47,6 +47,7 @@ builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
 builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
 builder.Services.AddTransient<INavigationBroker, NavigationBroker>();
 builder.Services.AddScoped<IAuthenticationProviderBroker, AuthenticationProviderBroker>();
+builder.Services.AddTransient<IToastBroker, ToastBroker>();
 #endregion
 
 #region Services
@@ -55,8 +56,6 @@ builder.Services.AddTransient<ILoginViewService, LoginViewService>();
 #endregion
 
 builder.Services.AddHttpClient<IApiBroker, ApiBroker>();
-
-
 
 
 await builder.Build().RunAsync();

@@ -1,4 +1,5 @@
-﻿using Budgeting.Web.App.Models.ContainerComponents;
+﻿using Budgeting.Web.App.Brokers.Toasts;
+using Budgeting.Web.App.Models.ContainerComponents;
 using Budgeting.Web.App.Models.LoginViews;
 using Budgeting.Web.App.Models.LoginViews.Exceptions;
 using Budgeting.Web.App.Services.Views.LoginViews;
@@ -14,19 +15,19 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
         private ILoginViewService LoginViewService { get; set; }
 
         [Inject]
-        private ISnackbar SnackbarService { get; set; }
+        private IToastBroker toastBroker { get; set; }
 
         public ComponentState State { get; set; }
         public TextBoxBase? EmailTextBox { get; set; }
         public TextBoxBase? PasswordTextBox { get; set; }
         public ButtonBase? SubmitButton { get; set; }
-        public LoginView? loginModel { get; set; }
+        public LoginView? LoginView { get; set; }
 
 
         protected override void OnInitialized()
         {
             this.State = ComponentState.Content;
-            this.loginModel = new LoginView();
+            this.LoginView = new LoginView();
         }
 
         public async void LoginUserAsync()
@@ -34,7 +35,7 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
             try
             {
                 ApplySubmitingStatus();
-                await this.LoginViewService.LoginAsync(loginModel);
+                await this.LoginViewService.LoginAsync(this.LoginView);
                 NavigateToUserMenuPage();
             }
             catch (LoginViewValidationException loginViewValidationException)
@@ -72,10 +73,10 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
 
         private void ApplySubmitingStatus()
         {
-            this.loginModel.Email =
+            this.LoginView.Email =
                 this.EmailTextBox.Value;
 
-            this.loginModel.Password =
+            this.LoginView.Password =
                 this.PasswordTextBox.Value;
 
 
@@ -86,9 +87,9 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
 
         private void ApplySubmisionFailed(string message, Severity severity)
         {
-            this.SnackbarService.Add(
-                    message: message,
-                    severity: severity);
+            this.toastBroker.AddToast(
+                message: message,
+                severity: severity);
 
             this.EmailTextBox.Enable();
             this.PasswordTextBox.Enable();

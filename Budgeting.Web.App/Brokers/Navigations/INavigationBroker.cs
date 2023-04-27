@@ -1,4 +1,4 @@
-﻿namespace Budgeting.Web.App.Brokers.NavigationBroker
+﻿namespace Budgeting.Web.App.Brokers.Navigations
 {
     public interface INavigationBroker
     {

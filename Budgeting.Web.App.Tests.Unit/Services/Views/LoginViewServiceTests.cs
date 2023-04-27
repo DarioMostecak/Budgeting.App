@@ -1,6 +1,6 @@
 ﻿using Budgeting.Web.App.Brokers.AuthenticationProviders;
 using Budgeting.Web.App.Brokers.Loggings;
-using Budgeting.Web.App.Brokers.NavigationBroker;
+using Budgeting.Web.App.Brokers.Navigations;
 using Budgeting.Web.App.Models.AuthenticationRequests.Exceptions;
 using Budgeting.Web.App.Models.AuthenticationResults;
 using Budgeting.Web.App.Models.ExceptionModels;

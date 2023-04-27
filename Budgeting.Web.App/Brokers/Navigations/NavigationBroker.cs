@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Budgeting.Web.App.Brokers.NavigationBroker
+namespace Budgeting.Web.App.Brokers.Navigations
 {
     public class NavigationBroker : INavigationBroker
     {
