@@ -18,10 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\Components\ContainerComponents\" />
-	  <Folder Include="Views\Components\LoginComponents\" />
 	  <Folder Include="Views\Components\UserComponents\" />
-	  <Folder Include="Views\Logins\LoginComponents\" />
 	</ItemGroup>
 	
 	

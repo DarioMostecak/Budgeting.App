@@ -1,0 +1,60 @@
+﻿@using Budgeting.Web.App.Services.Foundations;
+@using Budgeting.Web.App.Views.Bases
+@using Budgeting.Web.App.Views.Components.ContainerComponents
+@using Microsoft.AspNetCore.Authorization;
+@using Budgeting.Web.App.Services.Foundations.Identity;
+@using System.ComponentModel.DataAnnotations;
+
+<br />
+
+<CardBase AlignTitle="Align.Center"
+          Title="LOG IN"
+          Class="mx-auto pa-6 login-card"
+          Style="@("width:50%;")">
+     
+    <CardContent>
+
+        <ContainerComponent State=@State>
+            <Content>
+
+                <TextBoxBase @ref=@EmailTextBox
+                             HelperText="Enter mail"
+                             Label="Email"
+                             ValidationAttribute=@(new EmailAddressAttribute() {ErrorMessage ="Email address is invalid!"})
+                             IsRequired=@true
+                             RequiredError="Mail is requierd."
+                             Immediate=@true
+                             Variant=Variant.Text />
+
+                <br />
+
+                <TextBoxBase @ref=@PasswordTextBox
+                             HelperText="Enter password"
+                             Label="Password"
+                             ValidationAttribute=@(new MinLengthAttribute(8) {ErrorMessage = "Password must be at least 8 charachters long!"})
+                             IsRequired=@true
+                             RequiredError="Password is required!"
+                             Variant=@Variant.Text
+                             Immediate=@true
+                             InputType=@InputType.Password />
+
+            </Content>
+        </ContainerComponent>
+
+    </CardContent>
+
+    <CardAction>
+        <ButtonBase @ref=@SubmitButton
+                    ButtonType="ButtonType.Submit"
+                    Label="SUBMIT"
+                    OnClick=@LoginUserAsync
+                    Color="Color.Dark"
+                    Variant=@Variant.Filled
+                    Class="ml-auto" />
+    </CardAction>
+
+</CardBase>
+
+<style >
+
+</style>
