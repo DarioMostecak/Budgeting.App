@@ -1,0 +1,117 @@
+﻿@using Budgeting.Web.App.Views.Bases
+
+
+<ContainerBase MaxWidth="MaxWidth.Small">
+
+   <TextBase @ref="@TitleText" 
+             Aling="Align.Center"
+             Value="Websis budgeting App"
+             Typo="Typo.h3" />
+   
+   <br />
+   <br />
+
+   <TextBase @ref="@ParagraphText" 
+             Aling="Align.Center"
+             Value="We know that managing your 
+                    finances can be tough,
+                    but with our budgeting app,
+                    you can easily stay on top of
+                    your expenses and achieve your
+                    financial goals." />
+     
+</ContainerBase>
+
+<br />
+<br />
+
+<CardSliderBase @ref=@ImageSlider
+                Class="mud-width-full" 
+                Style="height:300px;" 
+                ShowArrows="true" 
+                ShowBullets="true" 
+                AutoCycle="true">
+
+    <CardSliderItemBase Title="Track your spending in real-time"
+                        TransitionType="Transition.Slide"
+                        AlignTitle="Align.Center">
+
+        <ContainerBase Style="@("display:flex; align-items:center; justify-content:center;")">
+
+              <ImageBase Src="\Images\analytics-g913fd8f61_1280.png" 
+                         Width="200" 
+                         Height="200" />
+
+              <ImageBase Src="\Images\pie_chart-g0e7df94c9_1280.png" 
+                         Width="100" 
+                         Height="150" />
+
+              <ImageBase Src="\Images\browser-3614768.png"
+                         Width="200" 
+                         Height="150" />
+                         
+          </ContainerBase>
+
+     </CardSliderItemBase>
+
+    <CardSliderItemBase Title="Set spending limits, alerts and tasks" 
+                        TransitionType="Transition.Slide"
+                        AlignTitle="Align.Center">
+
+        <ContainerBase Style="@("display:flex; align-items:center; justify-content:center;")">
+
+            <ImageBase Src="\Images\1.png" 
+                       Width="200" 
+                       Height="200" />
+
+                       &nbsp;
+
+            <ImageBase Src="\Images\2.png"
+                       Width="100" 
+                       Height="150" />
+
+            <ImageBase Src="\Images\4.png" 
+                       Width="150" 
+                       Height="150" />
+
+         </ContainerBase>
+
+     </CardSliderItemBase>
+
+    <CardSliderItemBase Title="Generate reports and visualize your spending patterns"
+                        TransitionType="Transition.Slide"
+                        AlignTitle="Align.Center">
+        
+
+        <ContainerBase Style="@("display:flex; align-items:center; justify-content:center;")">
+
+             <ImageBase Src="\Images\5.png" 
+                        Width="100"
+                        Height="120" />
+
+             <ImageBase Src="\Images\6.png" 
+                        Width="200" 
+                        Height="150"/>
+
+             <ImageBase Src="\Images\7.png" 
+                        Width="100" 
+                        Height="120"/>
+
+         </ContainerBase>
+
+     </CardSliderItemBase>
+
+</CardSliderBase>
+
+<ContainerBase Class="pa-16" MaxWidth="MaxWidth.Medium">
+
+    <TextBase Aling="Align.Center" 
+              Value="Don't let financial stress hold you 
+                     back from achieving your dreams.
+                     Sign up now to start using our budgeting
+                     app and take control of your finances today" />
+   
+
+</ContainerBase>
+                
+

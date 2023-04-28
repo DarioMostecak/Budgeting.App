@@ -28,6 +28,9 @@ namespace Budgeting.Web.App.Views.Bases
 
         public void Click() => OnClick.Invoke();
 
+        public void SetLabel(string label) =>
+            this.Label = label;
+
         public void Disable()
         {
             this.IsDisabled = true;
