@@ -69,7 +69,7 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
         }
 
         private void NavigateToUserMenuPage() =>
-            this.LoginViewService.NavigateTo("/usermenu");
+            this.LoginViewService.NavigateTo("/userwelcome");
 
         private void ApplySubmitingStatus()
         {

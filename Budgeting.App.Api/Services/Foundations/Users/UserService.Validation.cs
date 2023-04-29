@@ -76,7 +76,10 @@ namespace Budgeting.App.Api.Services.Foundations.Users
 
         private static dynamic IsInvalidX(string text) => new
         {
-            Condition = string.IsNullOrWhiteSpace(text) || (text.Length < 3 || text.Length > 20),
+            Condition = string.IsNullOrWhiteSpace(text)
+                          || (text.Length < 3
+                              || text.Length > 20),
+
             Message = "Must be between 3 and 20 charachters long and can't be null or white space."
         };
 
@@ -98,8 +101,8 @@ namespace Budgeting.App.Api.Services.Foundations.Users
 
         private static dynamic IsInvalidEmail(string email) => new
         {
-            Condition = string.IsNullOrWhiteSpace(email) ||
-               !Regex.IsMatch(email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"),
+            Condition = string.IsNullOrWhiteSpace(email)
+                        || !Regex.IsMatch(email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"),
 
             Message = "Email can't be white space or null and must be type of email format."
         };

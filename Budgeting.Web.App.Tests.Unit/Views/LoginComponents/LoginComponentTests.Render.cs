@@ -3,6 +3,7 @@ using Budgeting.Web.App.Models.ContainerComponents;
 using Budgeting.Web.App.Models.LoginViews;
 using Budgeting.Web.App.Views.Components.LoginComponents;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using System;
 using Xunit;
@@ -144,6 +145,45 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
             this.loginViewServiceMock.Verify(service =>
                  service.LoginAsync(It.IsAny<LoginView>()),
                     Times.Once);
+
+            this.loginViewServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ShouldSubmitLoginView()
+        {
+            //given
+            LoginView randomloginView = CreateRandomLoginView();
+            LoginView inputLoginView = randomloginView;
+            LoginView expectedLoginView = inputLoginView.DeepClone();
+            string expectedOnSubmitRoute = "/userwelcome";
+
+            //when
+            this.renderLoginComponent =
+                RenderComponent<LoginComponent>();
+
+            this.renderLoginComponent.Instance.EmailTextBox
+                .SetValue(inputLoginView.Email);
+
+            this.renderLoginComponent.Instance.PasswordTextBox
+                .SetValue(inputLoginView.Password);
+
+            this.renderLoginComponent.Instance.SubmitButton.Click();
+
+            //then
+
+            this.renderLoginComponent.Instance.LoginView
+                .Should()
+                  .BeEquivalentTo(expectedLoginView);
+
+            this.loginViewServiceMock.Verify(services =>
+                 services.LoginAsync(
+                     this.renderLoginComponent.Instance.LoginView),
+                       Times.Once);
+
+            this.loginViewServiceMock.Verify(service =>
+                 service.NavigateTo(expectedOnSubmitRoute),
+                   Times.Once);
 
             this.loginViewServiceMock.VerifyNoOtherCalls();
         }
