@@ -7,7 +7,7 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Budgeting.Web.App.Tests.Unit.Services.Views
+namespace Budgeting.Web.App.Tests.Unit.Services.Views.LoginViews
 {
     public partial class LoginViewServiceTests
     {

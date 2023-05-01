@@ -1,5 +1,6 @@
 ﻿using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
+using Budgeting.Web.App.Brokers.Navigations;
 using Budgeting.Web.App.Brokers.UniqueIDGenerators;
 using Budgeting.Web.App.Models.Users;
 using Budgeting.Web.App.Models.UserViews;
@@ -13,20 +14,23 @@ namespace Budgeting.Web.App.Services.Views.UserViews
         private readonly ILoggingBroker loggingBroker;
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly IUniqueIDGeneratorBroker uniqueIDGeneratorBroker;
+        private readonly INavigationBroker navigationBroker;
 
         public UserViewService(
             IUserService userService,
             ILoggingBroker loggingBroker,
             IDateTimeBroker dateTimeBroker,
-            IUniqueIDGeneratorBroker uniqueIDGeneratorBroker)
+            IUniqueIDGeneratorBroker uniqueIDGeneratorBroker,
+            INavigationBroker navigationBroker)
         {
             this.userService = userService;
             this.loggingBroker = loggingBroker;
             this.dateTimeBroker = dateTimeBroker;
             this.uniqueIDGeneratorBroker = uniqueIDGeneratorBroker;
+            this.navigationBroker = navigationBroker;
         }
 
-        public ValueTask<UserView> AddUserAsync(UserView userView) =>
+        public ValueTask<UserView> AddUserViewAsync(UserView userView) =>
         TryCatch(async () =>
         {
             //validate user view
@@ -40,16 +44,22 @@ namespace Budgeting.Web.App.Services.Views.UserViews
             return userView;
         });
 
-        private User MapToUserOnAdd(UserView userView) =>
-            new User
+        private User MapToUserOnAdd(UserView userView)
+        {
+            var id = this.uniqueIDGeneratorBroker.GenerateUniqueID();
+            var currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+
+            return new User
             {
-                Id = this.uniqueIDGeneratorBroker.GenerateUniqueID(),
+                Id = id,
                 FirstName = userView.FirstName,
                 LastName = userView.LastName,
                 Email = userView.Email,
-                CreatedDate = this.dateTimeBroker.GetCurrentDateTime(),
-                UpdatedDate = this.dateTimeBroker.GetCurrentDateTime()
+                CreatedDate = currentDateTime,
+                UpdatedDate = currentDateTime
             };
+        }
+
 
         private User MapToUserOnModify(UserView userView) =>
             new User

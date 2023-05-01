@@ -20,7 +20,6 @@ namespace Budgeting.Web.App.Services.Foundations.Users
         public ValueTask<User> AddUserAsync(User user, string password) =>
         TryCatch(async () =>
         {
-
             ValidateUserAndPasswordOnCreate(user, password);
 
             return await this.apiBroker.PostUserAsync(user, password);

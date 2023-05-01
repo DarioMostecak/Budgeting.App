@@ -21,31 +21,31 @@ namespace Budgeting.Web.App.Services.Foundations.Users
                 );
         }
 
-        private dynamic IsInvalidX(Guid id) => new
+        private static dynamic IsInvalidX(Guid id) => new
         {
             Condition = id == default,
             Message = "Id is required."
         };
 
-        private dynamic IsInvalidX(string text) => new
+        private static dynamic IsInvalidX(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),
             Message = "Value can't be null, white space or empty."
         };
 
-        private dynamic IsInvalidX(DateTime dateTime) => new
+        private static dynamic IsInvalidX(DateTime dateTime) => new
         {
             Condition = dateTime == default,
             Message = "Date is required."
         };
 
-        private void ValidateUserIsNull(User user)
+        private static void ValidateUserIsNull(User user)
         {
             if (user is null)
                 throw new NullUserException();
         }
 
-        private void ValidatePasswordIsNullOrEmpty(string password)
+        private static void ValidatePasswordIsNullOrEmpty(string password)
         {
             if (string.IsNullOrEmpty(password))
                 throw new NullUserPasswordException();

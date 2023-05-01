@@ -6,14 +6,14 @@ namespace Budgeting.Web.App.Services.Views.UserViews
 {
     public partial class UserViewService
     {
-        private delegate ValueTask<UserView> UserReturningFunctions();
+        private delegate ValueTask<UserView> UserViewReturningFunctions();
 
         private async ValueTask<UserView> TryCatch(
-            UserReturningFunctions userReturningFunctions)
+            UserViewReturningFunctions userViewReturningFunctions)
         {
             try
             {
-                return await userReturningFunctions();
+                return await userViewReturningFunctions();
             }
             catch (NullUserViewException nullUserViewException)
             {
@@ -27,9 +27,30 @@ namespace Budgeting.Web.App.Services.Views.UserViews
             {
                 throw CreateAndLogDependencyValidationException(userDependencyValidationException);
             }
+            catch (UserUnauthorizedException userUnauthorizedException)
+            {
+                throw CreateAndLogUnauthorizedException(userUnauthorizedException);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                var failedUserViewDependencyException =
+                    new UserViewDependencyException(userDependencyException);
+
+                throw CreateAndLogDependencyException(failedUserViewDependencyException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                var failedUserViewServiceException =
+                    new FailedUserViewServiceException(userServiceException);
+
+                throw CreateAndLogServiceException(failedUserViewServiceException);
+            }
             catch (Exception exception)
             {
-                throw exception;
+                var failedViewServiceException =
+                    new FailedUserViewServiceException(exception);
+
+                throw CreateAndLogServiceException(failedViewServiceException);
             }
         }
 
@@ -53,6 +74,34 @@ namespace Budgeting.Web.App.Services.Views.UserViews
             return userViewDependencyValidationException;
         }
 
+        private UserViewDependencyException CreateAndLogDependencyException(Exception exception)
+        {
+            var userDependencyException =
+                new UserViewDependencyException(exception);
 
+            this.loggingBroker.LogError(userDependencyException);
+
+            return userDependencyException;
+        }
+
+        private UserViewServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var userViewServiceException =
+                new UserViewServiceException(exception);
+
+            this.loggingBroker.LogError(userViewServiceException);
+
+            return userViewServiceException;
+        }
+
+        private UserViewUnauthorizedException CreateAndLogUnauthorizedException(Exception exception)
+        {
+            var userViewUnauthorizedException =
+                new UserViewUnauthorizedException(exception);
+
+            this.loggingBroker.LogError(userViewUnauthorizedException);
+
+            return userViewUnauthorizedException;
+        }
     }
 }
