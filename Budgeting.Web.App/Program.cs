@@ -50,8 +50,11 @@ builder.Services.AddScoped<IAuthenticationProviderBroker, AuthenticationProvider
 builder.Services.AddTransient<IToastBroker, ToastBroker>();
 #endregion
 
-#region Services
+#region Foudations
 builder.Services.AddTransient<IIdentityService, IdentityService>();
+#endregion
+
+#region Views
 builder.Services.AddTransient<ILoginViewService, LoginViewService>();
 #endregion
 

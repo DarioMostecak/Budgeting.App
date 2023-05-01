@@ -1,5 +1,4 @@
 ﻿using Budgeting.Web.App.Brokers.Apis;
-using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
 using Budgeting.Web.App.Models.Users;
 
@@ -9,29 +8,22 @@ namespace Budgeting.Web.App.Services.Foundations.Users
     {
         private readonly IApiBroker apiBroker;
         private readonly ILoggingBroker loggingBroker;
-        private readonly IDateTimeBroker dateTimeBroker;
 
         public UserService(
             IApiBroker apiBroker,
-            ILoggingBroker loggingBroker,
-            IDateTimeBroker dateTimeBroker)
+            ILoggingBroker loggingBroker)
         {
             this.apiBroker = apiBroker;
             this.loggingBroker = loggingBroker;
-            this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<User> AddUserAsync(User user, string passwor) =>
+        public ValueTask<User> AddUserAsync(User user, string password) =>
         TryCatch(async () =>
         {
-            //Validate user and password (ValidateUserIsNull , ValidateUserOnCreate)
 
-            User newUser =
-                 await this.apiBroker.PostUserAsync(user, passwor);
+            ValidateUserAndPasswordOnCreate(user, password);
 
-            //validate user created
-
-            return newUser;
+            return await this.apiBroker.PostUserAsync(user, password);
         });
 
 

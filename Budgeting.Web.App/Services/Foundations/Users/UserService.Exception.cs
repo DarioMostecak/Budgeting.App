@@ -23,6 +23,10 @@ namespace Budgeting.Web.App.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            catch (NullUserPasswordException nullUserPasswordException)
+            {
+                throw CreateAndLogValidationException(nullUserPasswordException);
+            }
             catch (HttpResponseUnauthorizedException httpResponseUnauthorizeException)
             {
                 var failedUserUnauthorizedException =
@@ -35,14 +39,21 @@ namespace Budgeting.Web.App.Services.Foundations.Users
                 var failUserDependencyError =
                     new FailedUserDependencyException(httpResponseNotFoundException);
 
-                throw CreateAndLogDependencyException(failUserDependencyError);
+                throw CreateAndLogDependencyValidationException(failUserDependencyError);
             }
             catch (HttpResponseBadRequestException httpResponseBadRequestException)
             {
-                var failedUserDependencyException =
-                    new FailedUserDependencyException(httpResponseBadRequestException);
+                var invalidUserException =
+                    new InvalidUserException(httpResponseBadRequestException);
 
-                throw CreateAndLogDependencyException(failedUserDependencyException);
+                throw CreateAndLogDependencyValidationException(invalidUserException);
+            }
+            catch (HttpResponseConflictException HttpResponseConflictException)
+            {
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(HttpResponseConflictException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
             }
             catch (HttpResponseInternalServerErrorException httpResponseInternalServerErrorException)
             {
@@ -69,6 +80,7 @@ namespace Budgeting.Web.App.Services.Foundations.Users
             {
                 var failedUserServiceException =
                     new FailedUserServiceException(exception);
+
                 throw CreateAndLogServiceException(failedUserServiceException);
             }
         }
@@ -103,6 +115,14 @@ namespace Budgeting.Web.App.Services.Foundations.Users
             this.loggingBroker.LogError(userUnauthorizedException);
 
             return userUnauthorizedException;
+        }
+
+        private UserDependencyValidationException CreateAndLogDependencyValidationException(Exception exception)
+        {
+            var userDependencyValidationException = new UserDependencyValidationException(exception);
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
     }
 }

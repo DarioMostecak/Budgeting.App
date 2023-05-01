@@ -1,11 +1,11 @@
 ﻿using Budgeting.Web.App.Brokers.Apis;
-using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
 using Budgeting.Web.App.Models.ExceptionModels;
 using Budgeting.Web.App.Models.Users;
 using Budgeting.Web.App.Services.Foundations.Users;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
 using Xunit;
@@ -16,19 +16,16 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Users
     {
         private readonly Mock<IApiBroker> apiBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly IUserService userService;
 
         public UserServiceTests()
         {
             this.apiBrokerMock = new Mock<IApiBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
-            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
             this.userService = new UserService(
                 apiBroker: this.apiBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object,
-                dateTimeBroker: this.dateTimeBrokerMock.Object);
+                loggingBroker: this.loggingBrokerMock.Object);
         }
 
         private static Expression<Func<ExceptionModel, bool>> SameExceptionAs(ExceptionModel expectedException)
@@ -40,21 +37,11 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Users
 
         private static TheoryData DependencyApiExceptions()
         {
-            string exceptionMessage = "Request fail";
+            string exceptionMessage = "Request fail.";
             var responseMessage = new HttpResponseMessage();
 
             var httpRequestException =
                 new HttpRequestException();
-
-            var httpRequestNotFound =
-                new HttpResponseNotFoundException(
-                    responseMessage: responseMessage,
-                    message: exceptionMessage);
-
-            var httpResponseBadRequestException =
-                new HttpResponseBadRequestException(
-                    responseMessage: responseMessage,
-                    message: exceptionMessage);
 
             var httpResponseInternalServerErrorException =
                 new HttpResponseInternalServerErrorException(
@@ -69,8 +56,6 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Users
             return new TheoryData<Exception>
             {
                 httpRequestException,
-                httpRequestNotFound,
-                httpResponseBadRequestException,
                 httpResponseInternalServerErrorException,
                 httpResponseException
             };
@@ -89,6 +74,14 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Users
                 Email = "Test@mail.com",
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now.AddDays(10),
+            };
+
+        private static IEnumerable<object[]> InvalidUserData() =>
+            new List<object[]>
+            {
+                new object[]{ Guid.Empty ,null, null, null, DateTime.MinValue, DateTime.MinValue, " " },
+                new object[]{ Guid.Empty ,string.Empty, string.Empty, string.Empty, DateTime.MinValue, DateTime.MinValue, "  " },
+                new object[]{ Guid.Empty ,"   ", "   ", "   ", DateTime.MinValue, DateTime.MinValue, "  " }
             };
     }
 }
