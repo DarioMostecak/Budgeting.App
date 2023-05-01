@@ -6,9 +6,12 @@ using Budgeting.Web.App.Brokers.DateTimes;
 using Budgeting.Web.App.Brokers.Loggings;
 using Budgeting.Web.App.Brokers.Navigations;
 using Budgeting.Web.App.Brokers.Toasts;
+using Budgeting.Web.App.Brokers.UniqueIDGenerators;
 using Budgeting.Web.App.Services.Foundations;
 using Budgeting.Web.App.Services.Foundations.Identity;
+using Budgeting.Web.App.Services.Foundations.Users;
 using Budgeting.Web.App.Services.Views.LoginViews;
+using Budgeting.Web.App.Services.Views.UserViews;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -48,14 +51,17 @@ builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
 builder.Services.AddTransient<INavigationBroker, NavigationBroker>();
 builder.Services.AddScoped<IAuthenticationProviderBroker, AuthenticationProviderBroker>();
 builder.Services.AddTransient<IToastBroker, ToastBroker>();
+builder.Services.AddTransient<IUniqueIDGeneratorBroker, UniqueIDGeneratorBroker>();
 #endregion
 
 #region Foudations
 builder.Services.AddTransient<IIdentityService, IdentityService>();
+builder.Services.AddTransient<IUserService, UserService>();
 #endregion
 
 #region Views
 builder.Services.AddTransient<ILoginViewService, LoginViewService>();
+builder.Services.AddTransient<IUserViewService, UserViewService>();
 #endregion
 
 builder.Services.AddHttpClient<IApiBroker, ApiBroker>();
