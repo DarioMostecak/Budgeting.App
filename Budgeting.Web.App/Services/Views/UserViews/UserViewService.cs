@@ -33,7 +33,7 @@ namespace Budgeting.Web.App.Services.Views.UserViews
         public ValueTask<UserView> AddUserViewAsync(UserView userView) =>
         TryCatch(async () =>
         {
-            //validate user view
+            ValidateUserViewOnAdd(userView);
 
             User user = MapToUserOnAdd(userView);
 
@@ -46,8 +46,11 @@ namespace Budgeting.Web.App.Services.Views.UserViews
 
         private User MapToUserOnAdd(UserView userView)
         {
-            var id = this.uniqueIDGeneratorBroker.GenerateUniqueID();
-            var currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            Guid id =
+                this.uniqueIDGeneratorBroker.GenerateUniqueID();
+
+            DateTime currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTime();
 
             return new User
             {
@@ -61,16 +64,22 @@ namespace Budgeting.Web.App.Services.Views.UserViews
         }
 
 
-        private User MapToUserOnModify(UserView userView) =>
-            new User
+        private User MapToUserOnModify(UserView userView)
+        {
+            DateTime currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTime();
+
+            return new User
             {
                 Id = userView.Id,
                 FirstName = userView.FirstName,
                 LastName = userView.LastName,
                 Email = userView.Email,
                 CreatedDate = userView.CreatedDate,
-                UpdatedDate = this.dateTimeBroker.GetCurrentDateTime()
+                UpdatedDate = currentDateTime
             };
+        }
+
 
 
 

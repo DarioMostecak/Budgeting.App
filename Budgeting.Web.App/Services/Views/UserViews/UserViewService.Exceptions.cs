@@ -34,7 +34,7 @@ namespace Budgeting.Web.App.Services.Views.UserViews
             catch (UserDependencyException userDependencyException)
             {
                 var failedUserViewDependencyException =
-                    new UserViewDependencyException(userDependencyException);
+                    new FailedUserViewDependencyException(userDependencyException);
 
                 throw CreateAndLogDependencyException(failedUserViewDependencyException);
             }

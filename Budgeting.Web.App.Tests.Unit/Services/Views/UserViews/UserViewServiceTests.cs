@@ -8,7 +8,9 @@ using Budgeting.Web.App.Services.Foundations.Users;
 using Budgeting.Web.App.Services.Views.UserViews;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Tynamix.ObjectFiller;
 
 namespace Budgeting.Web.App.Tests.Unit.Services.Views.UserViews
 {
@@ -55,6 +57,31 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Views.UserViews
                 ConfirmPassword = "password",
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now.AddDays(10),
+            };
+
+        private static IEnumerable<object[]> InvalidDataUserView() =>
+            new List<object[]> {
+
+                new object[] { null, null, null, null, "11111111"},
+                new object[] { string.Empty, string.Empty, string.Empty, string.Empty, "11111111"},
+
+                new object[] {
+                    new MnemonicString(1, 1, 2).GetValue(),
+                    new MnemonicString(1, 1, 2).GetValue(),
+                    "ddddd@",
+                    new MnemonicString(1, 1, 7).GetValue(),
+                    "11111111"
+                },
+
+                new object[]
+                {
+                     new MnemonicString(1, 21, 30).GetValue(),
+                     new MnemonicString(1, 21, 30).GetValue(),
+                     "ddddd@",
+                     new MnemonicString(1, 26, 30).GetValue(),
+                     "11111111"
+                }
+
             };
     }
 }

@@ -9,7 +9,7 @@ using MudBlazor;
 
 namespace Budgeting.Web.App.Views.Components.LoginComponents
 {
-    public partial class LoginComponent
+    public partial class LoginComponent : ComponentBase
     {
         [Inject]
         private ILoginViewService LoginViewService { get; set; }
