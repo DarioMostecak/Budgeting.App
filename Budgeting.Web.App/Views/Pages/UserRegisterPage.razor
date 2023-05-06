@@ -1,5 +1,7 @@
-﻿ž<h3>UserRegisterPage</h3>
+﻿@page "/userregistration"
+@using Budgeting.Web.App.Views.Components.UserComponents
+@using Microsoft.AspNetCore.Authorization;
 
-@code {
+@attribute [AllowAnonymous]
 
-}
+<UserRegisterComponent />

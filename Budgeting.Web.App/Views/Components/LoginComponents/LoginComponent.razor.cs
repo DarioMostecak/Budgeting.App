@@ -15,7 +15,7 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
         private ILoginViewService LoginViewService { get; set; }
 
         [Inject]
-        private IToastBroker toastBroker { get; set; }
+        private IToastBroker ToastBroker { get; set; }
 
         public ComponentState State { get; set; }
         public TextBoxBase? EmailTextBox { get; set; }
@@ -87,7 +87,7 @@ namespace Budgeting.Web.App.Views.Components.LoginComponents
 
         private void ApplySubmisionFailed(string message, Severity severity)
         {
-            this.toastBroker.AddToast(
+            this.ToastBroker.AddToast(
                 message: message,
                 severity: severity);
 
