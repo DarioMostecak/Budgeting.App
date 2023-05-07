@@ -124,8 +124,7 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
                         delay: TimeSpan.FromMilliseconds(500));
 
             //when
-            this.renderLoginComponent =
-                RenderComponent<LoginComponent>();
+            this.renderLoginComponent = RenderComponent<LoginComponent>();
 
             this.renderLoginComponent.Instance.SubmitButton.Click();
 
@@ -186,6 +185,7 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
                    Times.Once);
 
             this.loginViewServiceMock.VerifyNoOtherCalls();
+            this.toastBroker.VerifyNoOtherCalls();
         }
     }
 }

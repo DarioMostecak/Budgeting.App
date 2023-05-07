@@ -1,5 +1,4 @@
 ﻿using Budgeting.Web.App.Brokers.Toasts;
-using Budgeting.Web.App.Models.AuthenticationResults;
 using Budgeting.Web.App.Models.LoginViews;
 using Budgeting.Web.App.Services.Views.LoginViews;
 using Budgeting.Web.App.Views.Components.LoginComponents;
@@ -7,6 +6,7 @@ using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MudBlazor.Services;
+using Tynamix.ObjectFiller;
 
 namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
 {
@@ -26,17 +26,13 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
             this.Services.AddMudServices();
         }
 
+        private static string GetRandomString() => new MnemonicString().GetValue();
+
         private static LoginView CreateRandomLoginView() =>
             new LoginView
             {
                 Email = "john@gmail.com",
                 Password = "12345678"
-            };
-
-        private static AuthenticationResult CreateRandomAuthenticationResult() =>
-            new AuthenticationResult
-            {
-                Token = "dlkdjnjskkskld"
             };
     }
 }
