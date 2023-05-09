@@ -24,25 +24,11 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
                 new LoginComponent();
 
             //then
-            initialLoginComponent.State
-                .Should()
-                  .Be(expectedComponentState);
-
-            initialLoginComponent.EmailTextBox
-                .Should()
-                  .BeNull();
-
-            initialLoginComponent.PasswordTextBox
-                .Should()
-                  .BeNull();
-
-            initialLoginComponent.SubmitButton
-                .Should()
-                  .BeNull();
-
-            initialLoginComponent.LoginView
-                .Should()
-                  .BeNull();
+            initialLoginComponent.State.Should().Be(expectedComponentState);
+            initialLoginComponent.EmailTextBox.Should().BeNull();
+            initialLoginComponent.PasswordTextBox.Should().BeNull();
+            initialLoginComponent.SubmitButton.Should().BeNull();
+            initialLoginComponent.LoginView.Should().BeNull();
         }
 
         [Fact]
@@ -146,6 +132,7 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
                     Times.Once);
 
             this.loginViewServiceMock.VerifyNoOtherCalls();
+            this.toastBroker.VerifyNoOtherCalls();
         }
 
         [Fact]

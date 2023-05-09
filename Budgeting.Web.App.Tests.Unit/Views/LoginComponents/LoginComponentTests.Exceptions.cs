@@ -12,7 +12,7 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
     public partial class LoginComponentTests
     {
         [Fact]
-        public void ShouldRenderInnerValidationExcetionMessageIfErrorOccures()
+        public void ShouldRenderInnerValidationExceptionMessageIfErrorOccures()
         {
             //given
             var someLoginView = CreateRandomLoginView();
@@ -50,7 +50,47 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
                     It.IsAny<string>(),
                     It.IsAny<Severity>()),
                        Times.Once,
-                         innerValidationException.Message);
+                         expectedLoginViewValidationException.InnerException.Message);
+
+            this.loginViewServiceMock.VerifyNoOtherCalls();
+            this.toastBroker.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(LoginViewDependencyServiceException))]
+        public void ShouldRenderOuterExceptionMessageIfDependencyOrServiceErrorOccured(
+            Exception loginVewDependencyServiceException)
+        {
+            //given
+            string expectedErrorMessage =
+                loginVewDependencyServiceException.Message;
+
+            this.loginViewServiceMock.Setup(service =>
+                service.LoginAsync(It.IsAny<LoginView>()))
+                   .ThrowsAsync(loginVewDependencyServiceException);
+
+            //when
+            this.renderLoginComponent = RenderComponent<LoginComponent>();
+
+            this.renderLoginComponent.Instance.SubmitButton.Click();
+
+            //then
+            renderLoginComponent.Instance.EmailTextBox.IsDisabled
+             .Should().BeFalse();
+
+            renderLoginComponent.Instance.PasswordTextBox.IsDisabled
+                .Should().BeFalse();
+
+            this.loginViewServiceMock.Verify(service =>
+                 service.LoginAsync(It.IsAny<LoginView>()),
+                   Times.Once);
+
+            this.toastBroker.Verify(broker =>
+                broker.AddToast(
+                    It.IsAny<string>(),
+                    It.IsAny<Severity>()),
+                       Times.Once,
+                         expectedErrorMessage);
 
             this.loginViewServiceMock.VerifyNoOtherCalls();
             this.toastBroker.VerifyNoOtherCalls();
