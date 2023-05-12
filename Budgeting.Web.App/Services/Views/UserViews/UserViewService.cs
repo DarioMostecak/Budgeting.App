@@ -44,6 +44,12 @@ namespace Budgeting.Web.App.Services.Views.UserViews
             return userView;
         });
 
+        public void NavigateTo(string route) =>
+        TryCatch(() =>
+        {
+            this.navigationBroker.NavigateTo(route);
+        });
+
         private User MapToUserOnAdd(UserView userView)
         {
             Guid id =

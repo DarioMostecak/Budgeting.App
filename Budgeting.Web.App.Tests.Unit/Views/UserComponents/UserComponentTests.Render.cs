@@ -2,6 +2,7 @@
 using Budgeting.Web.App.Models.UserViews;
 using Budgeting.Web.App.Views.Components.UserComponents;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using System;
 using Xunit;
@@ -120,6 +121,52 @@ namespace Budgeting.Web.App.Tests.Unit.Views.UserComponents
 
             this.userViewServiceMock.Verify(service =>
                 service.AddUserViewAsync(It.IsAny<UserView>()),
+                   Times.Once);
+
+            this.userViewServiceMock.VerifyNoOtherCalls();
+            this.toastBroker.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ShouldSubmitUserView()
+        {
+            //given
+            UserView someUserView = CreateRandomUserView();
+            UserView inputUserView = someUserView;
+            UserView expectedUser = inputUserView.DeepClone();
+            string expectedOnSubmitRoute = "/login";
+
+            //when
+            this.renderUserRegisterComponent =
+                RenderComponent<UserRegisterComponent>();
+
+            this.renderUserRegisterComponent.Instance.FirstNameTextBox
+                .SetValue(inputUserView.FirstName);
+
+            this.renderUserRegisterComponent.Instance.LastNameTextBox
+                .SetValue(inputUserView.LastName);
+
+            this.renderUserRegisterComponent.Instance.EmailTextBox
+                .SetValue(inputUserView.Email);
+
+            this.renderUserRegisterComponent.Instance.PasswordTextBox
+                .SetValue(inputUserView.Password);
+
+            this.renderUserRegisterComponent.Instance.ConfirmPasswordTextBox
+                .SetValue(inputUserView.ConfirmPassword);
+
+            this.renderUserRegisterComponent.Instance.SubmitButton.Click();
+
+            //then
+            this.renderUserRegisterComponent.Instance.UserView
+                .Should().BeEquivalentTo(inputUserView);
+
+            this.userViewServiceMock.Verify(service =>
+                service.AddUserViewAsync(this.renderUserRegisterComponent.Instance.UserView),
+                   Times.Once);
+
+            this.userViewServiceMock.Verify(service =>
+                service.NavigateTo(expectedOnSubmitRoute),
                    Times.Once);
 
             this.userViewServiceMock.VerifyNoOtherCalls();

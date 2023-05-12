@@ -4,7 +4,7 @@ using Budgeting.Web.App.Models.UserViews;
 using Budgeting.Web.App.Services.Views.UserViews;
 using Budgeting.Web.App.Views.Bases;
 using Microsoft.AspNetCore.Components;
-
+using MudBlazor;
 
 namespace Budgeting.Web.App.Views.Components.UserComponents
 {
@@ -40,12 +40,17 @@ namespace Budgeting.Web.App.Views.Components.UserComponents
                 MapToUserView();
 
                 await this.UserViewService.AddUserViewAsync(this.UserView);
+
+                NavigateToLoginPage();
             }
             catch (Exception exception)
             {
 
             }
         }
+
+        private void NavigateToLoginPage() =>
+            this.UserViewService.NavigateTo("/login");
 
         private void ApplySubmitingStatus()
         {
@@ -58,13 +63,37 @@ namespace Budgeting.Web.App.Views.Components.UserComponents
             this.SubmitButton.Disable();
         }
 
+        private void ApplySubmisionFailed(string message, Severity severity)
+        {
+            this.ToastBroker.AddToast(
+                message: message,
+                severity: severity);
+
+            this.FirstNameTextBox.Enable();
+            this.LastNameTextBox.Enable();
+            this.EmailTextBox.Enable();
+            this.PasswordTextBox.Enable();
+            this.PasswordTextBox.Enable();
+            this.ConfirmPasswordTextBox.Enable();
+            this.SubmitButton.Enable();
+        }
+
         private void MapToUserView()
         {
-            this.UserView.FirstName = this.FirstNameTextBox.Value;
-            this.UserView.LastName = this.LastNameTextBox.Value;
-            this.UserView.Email = this.EmailTextBox.Value;
-            this.UserView.Password = this.PasswordTextBox.Value;
-            this.UserView.ConfirmPassword = this.ConfirmPasswordTextBox.Value;
+            this.UserView.FirstName =
+                this.FirstNameTextBox.Value;
+
+            this.UserView.LastName =
+                this.LastNameTextBox.Value;
+
+            this.UserView.Email =
+                this.EmailTextBox.Value;
+
+            this.UserView.Password =
+                this.PasswordTextBox.Value;
+
+            this.UserView.ConfirmPassword =
+                this.ConfirmPasswordTextBox.Value;
         }
     }
 }

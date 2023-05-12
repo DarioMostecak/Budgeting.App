@@ -157,10 +157,8 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
             this.renderLoginComponent.Instance.SubmitButton.Click();
 
             //then
-
             this.renderLoginComponent.Instance.LoginView
-                .Should()
-                  .BeEquivalentTo(expectedLoginView);
+                .Should().BeEquivalentTo(expectedLoginView);
 
             this.loginViewServiceMock.Verify(services =>
                  services.LoginAsync(

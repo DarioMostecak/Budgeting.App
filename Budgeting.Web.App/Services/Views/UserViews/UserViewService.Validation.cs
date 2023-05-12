@@ -58,6 +58,18 @@ namespace Budgeting.Web.App.Services.Views.UserViews
             Message = "Must be between 3 and 20 charachters long and can't be null or white space."
         };
 
+        private static void ValidateRoute(string route)
+        {
+            if (IsInvalid(route))
+            {
+                throw new InvalidUserViewException(
+                    parameterName: "Route",
+                    parameterValue: route);
+            }
+        }
+
+        private static bool IsInvalid(string text) => String.IsNullOrWhiteSpace(text);
+
         private static void ValidateUserViewIsNull(UserView userView)
         {
             if (userView is null)

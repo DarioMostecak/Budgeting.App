@@ -6,14 +6,15 @@ namespace Budgeting.Web.App.Services.Views.UserViews
 {
     public partial class UserViewService
     {
-        private delegate ValueTask<UserView> UserViewReturningFunctions();
+        private delegate ValueTask<UserView> ReturningUserViewFunctions();
+        private delegate void ReturnigNothingFunction();
 
         private async ValueTask<UserView> TryCatch(
-            UserViewReturningFunctions userViewReturningFunctions)
+            ReturningUserViewFunctions returningUserViewFunctions)
         {
             try
             {
-                return await userViewReturningFunctions();
+                return await returningUserViewFunctions();
             }
             catch (NullUserViewException nullUserViewException)
             {
@@ -51,6 +52,22 @@ namespace Budgeting.Web.App.Services.Views.UserViews
                     new FailedUserViewServiceException(exception);
 
                 throw CreateAndLogServiceException(failedViewServiceException);
+            }
+        }
+
+        private void TryCatch(ReturnigNothingFunction returnigNothingFunction)
+        {
+            try
+            {
+                returnigNothingFunction();
+            }
+            catch (InvalidUserViewException invalidUserViewException)
+            {
+                throw CreateAndLogValidationException(invalidUserViewException);
+            }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
             }
         }
 
