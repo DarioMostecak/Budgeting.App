@@ -1,6 +1,7 @@
 ﻿using Budgeting.Web.App.Brokers.Toasts;
 using Budgeting.Web.App.Models.ContainerComponents;
 using Budgeting.Web.App.Models.UserViews;
+using Budgeting.Web.App.Models.UserViews.Exceptions;
 using Budgeting.Web.App.Services.Views.UserViews;
 using Budgeting.Web.App.Views.Bases;
 using Microsoft.AspNetCore.Components;
@@ -43,6 +44,18 @@ namespace Budgeting.Web.App.Views.Components.UserComponents
 
                 NavigateToLoginPage();
             }
+            catch (UserViewValidationException userViewValidationException)
+            {
+                ApplySubmisionFailed(
+                    message: userViewValidationException.Message,
+                    severity: Severity.Warning);
+            }
+            catch (UserViewDependencyValidationException userViewDependencyValidationException)
+            {
+                ApplySubmisionFailed(
+                   message: userViewDependencyValidationException.Message,
+                   severity: Severity.Warning);
+            }
             catch (Exception exception)
             {
 
@@ -58,8 +71,8 @@ namespace Budgeting.Web.App.Views.Components.UserComponents
             this.LastNameTextBox.Disable();
             this.EmailTextBox.Disable();
             this.PasswordTextBox.Disable();
-            this.PasswordTextBox?.Disable();
-            this.ConfirmPasswordTextBox?.Disable();
+            this.PasswordTextBox.Disable();
+            this.ConfirmPasswordTextBox.Disable();
             this.SubmitButton.Disable();
         }
 

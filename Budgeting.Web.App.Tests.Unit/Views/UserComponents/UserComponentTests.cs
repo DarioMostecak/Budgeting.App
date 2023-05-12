@@ -30,7 +30,7 @@ namespace Budgeting.Web.App.Tests.Unit.Views.UserComponents
 
         private static string GetRandomString() => new MnemonicString().GetValue();
 
-        public TheoryData UserViewValidationExceptions()
+        public static TheoryData UserViewValidationExceptions()
         {
             string randomMessage = GetRandomString();
             string validationMesage = randomMessage;
@@ -39,11 +39,11 @@ namespace Budgeting.Web.App.Tests.Unit.Views.UserComponents
             return new TheoryData<Exception>
             {
                 new UserViewValidationException(innerValidationException, innerValidationException.Data),
-                new UserViewDependencyException(innerValidationException)
+                new UserViewDependencyValidationException(innerValidationException)
             };
         }
 
-        public TheoryData UserViewDependencyServiceExceptions()
+        public static TheoryData UserViewDependencyServiceExceptions()
         {
             var innerInvalidException = new Exception();
 
