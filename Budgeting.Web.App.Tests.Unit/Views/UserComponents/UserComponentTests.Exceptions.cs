@@ -59,5 +59,56 @@ namespace Budgeting.Web.App.Tests.Unit.Views.UserComponents
             this.userViewServiceMock.VerifyNoOtherCalls();
             this.toastBroker.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(UserViewDependencyServiceExceptions))]
+        public void ShouldRenderOuterExceptionMessageIfDependencyOrServiceErrorOccured(
+            Exception userViewDependencyServiceException)
+        {
+            //given
+            string expectedErrorMessage =
+                userViewDependencyServiceException.Message;
+
+            this.userViewServiceMock.Setup(service =>
+                service.AddUserViewAsync(It.IsAny<UserView>()))
+                         .ThrowsAsync(userViewDependencyServiceException);
+
+            //when
+            this.renderUserRegisterComponent =
+                RenderComponent<UserRegisterComponent>();
+
+            this.renderUserRegisterComponent.Instance.SubmitButton.Click();
+
+            //then
+            renderUserRegisterComponent.Instance.FirstNameTextBox.IsDisabled
+                .Should().BeFalse();
+
+            renderUserRegisterComponent.Instance.LastNameTextBox.IsDisabled
+                .Should().BeFalse();
+
+            renderUserRegisterComponent.Instance.EmailTextBox.IsDisabled
+                .Should().BeFalse();
+
+            renderUserRegisterComponent.Instance.PasswordTextBox.IsDisabled
+                .Should().BeFalse();
+
+            renderUserRegisterComponent.Instance.ConfirmPasswordTextBox.IsDisabled
+                .Should().BeFalse();
+
+            this.userViewServiceMock.Verify(service =>
+                 service.AddUserViewAsync(It.IsAny<UserView>()),
+                   Times.Once);
+
+            this.toastBroker.Verify(broker =>
+                broker.AddToast(
+                    It.IsAny<string>(),
+                    It.IsAny<Severity>()),
+                       Times.Once,
+                         expectedErrorMessage);
+
+            this.userViewServiceMock.VerifyNoOtherCalls();
+            this.toastBroker.VerifyNoOtherCalls();
+        }
+
     }
 }

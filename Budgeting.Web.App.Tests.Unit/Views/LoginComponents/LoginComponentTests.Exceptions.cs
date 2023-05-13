@@ -67,7 +67,7 @@ namespace Budgeting.Web.App.Tests.Unit.Views.LoginComponents
 
             this.loginViewServiceMock.Setup(service =>
                 service.LoginAsync(It.IsAny<LoginView>()))
-                   .ThrowsAsync(loginVewDependencyServiceException);
+                        .ThrowsAsync(loginVewDependencyServiceException);
 
             //when
             this.renderLoginComponent = RenderComponent<LoginComponent>();
