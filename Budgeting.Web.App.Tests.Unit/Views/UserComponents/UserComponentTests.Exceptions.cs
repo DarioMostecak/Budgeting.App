@@ -109,6 +109,5 @@ namespace Budgeting.Web.App.Tests.Unit.Views.UserComponents
             this.userViewServiceMock.VerifyNoOtherCalls();
             this.toastBroker.VerifyNoOtherCalls();
         }
-
     }
 }

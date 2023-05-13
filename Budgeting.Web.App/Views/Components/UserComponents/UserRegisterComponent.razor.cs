@@ -56,9 +56,17 @@ namespace Budgeting.Web.App.Views.Components.UserComponents
                    message: userViewDependencyValidationException.Message,
                    severity: Severity.Warning);
             }
-            catch (Exception exception)
+            catch (UserViewDependencyException userViewDependencyException)
             {
-
+                ApplySubmisionFailed(
+                   message: userViewDependencyException.Message,
+                   severity: Severity.Error);
+            }
+            catch (UserViewServiceException userViewServiceException)
+            {
+                ApplySubmisionFailed(
+                  message: userViewServiceException.Message,
+                  severity: Severity.Error);
             }
         }
 
