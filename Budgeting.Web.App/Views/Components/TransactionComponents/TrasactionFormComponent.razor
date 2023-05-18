@@ -1,0 +1,56 @@
+﻿@using Budgeting.Web.App.Views.Bases
+@using Budgeting.Web.App.Views.Components.ContainerComponents
+
+
+       
+
+
+
+
+<MudCard Style="width:30%; text-align:center; align-items:center;">
+
+    <MudCardHeader>
+        
+        <TextBase @ref=@TrasactionFormTitleText
+                  Typo="Typo.h6"
+                  Value="Create transaction"/>
+
+    </MudCardHeader>
+
+    <MudCardContent>
+
+        <ContainerComponent State=@State>
+
+            <Content>
+                <MudRadioGroup @bind-SelectedOption="@SelectedOptions">
+                    <MudRadio Size=Size.Small Option="@("Expanse")" Color="Color.Warning">Expanse</MudRadio>
+                    <MudRadio Size=Size.Small Option="@("Income")" Color="Color.Success">Income</MudRadio>
+                </MudRadioGroup>
+
+                <DecimalBoxBase @ref=@AmountDecimalBox
+                                IsRequired=@true
+                                RequiredError="Amount is requierd."
+                                Immediate=@true
+                                HelperText="Enter amount" />
+
+                <TextBoxBase @ref=@CategoryNameTextBox
+                             IsRequired=@true
+                             RequiredError="Category is requierd."
+                             Immediate=@true
+                             HelperText="Enter category" />
+
+           
+            </Content>
+
+        </ContainerComponent>
+
+    </MudCardContent>
+
+    <MudCardActions>
+        <ButtonBase @ref=@SubmitButton
+                    Label="SUBMIT"
+                    Color="Color.Dark" 
+                    Variant=@Variant.Filled />
+    </MudCardActions>
+
+</MudCard>

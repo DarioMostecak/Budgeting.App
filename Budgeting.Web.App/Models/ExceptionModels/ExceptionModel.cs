@@ -4,30 +4,40 @@ using System.Collections;
 
 namespace Budgeting.Web.App.Models.ExceptionModels
 {
+    /// <summary>
+    /// Represents a custom exception class that inherits from the base Exception class.
+    /// Provides additional functionality for handling exceptions and managing associated data.
+    /// </summary
     public class ExceptionModel : Exception
     {
+        // Default constructor
         public ExceptionModel()
         { }
 
+        // Constructor with message parameter
         public ExceptionModel(string message) : base(message)
         { }
 
+        // Constructor with message and inner exception parameters
         public ExceptionModel(string message, Exception innerException)
             : base(message, innerException)
         { }
 
+        // Constructor with inner exception and data parameters
         public ExceptionModel(Exception innerException, IDictionary data)
             : base(innerException.Message, innerException)
         {
             AddData(data);
         }
 
+        // Constructor with message, inner exception, and data parameters
         public ExceptionModel(string message, Exception innerException, IDictionary data)
             : base(message, innerException)
         {
             AddData(data);
         }
 
+        // Upsert a string value to a list in the Data dictionary based on the provided key
         public void UpsertDataList(string key, string value)
         {
             if (Data.Contains(key))
@@ -39,6 +49,7 @@ namespace Budgeting.Web.App.Models.ExceptionModels
             Data.Add(key, new List<string> { value });
         }
 
+        // Throw the exception if the Data dictionary contains any entries
         public void ThrowIfContainsErrors()
         {
             if (Data.Count > 0)
@@ -47,6 +58,7 @@ namespace Budgeting.Web.App.Models.ExceptionModels
             }
         }
 
+        // Add key-value pairs from the provided dictionary to the Data dictionary
         public void AddData(IDictionary dictionary)
         {
             if (dictionary == null) return;
@@ -58,11 +70,14 @@ namespace Budgeting.Web.App.Models.ExceptionModels
         }
 
         #region Methods for unit tests
+
+        // Add key-value pairs to the Data dictionary for unit testing
         public void AddData(string key, params string[] values)
         {
             Data.Add(key, values);
         }
 
+        // Compare the Data dictionary with the provided dictionary for unit testing
         public bool DataEquals(IDictionary dictionary)
         {
             foreach (DictionaryEntry item in dictionary)
@@ -76,6 +91,7 @@ namespace Budgeting.Web.App.Models.ExceptionModels
             return true;
         }
 
+        //Compare two objects for unit testing
         private bool CompareData(object firstObject, object secondObject)
         {
             AssertionScope assertionScope = new AssertionScope();

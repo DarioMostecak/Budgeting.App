@@ -1,7 +1,7 @@
 ﻿
-<AuthorizeView>
+@*<AuthorizeView>*@
 
-    <NotAuthorized>
+   @* <NotAuthorized>
         <MudAppBar Elevation="2">
             <MudSpacer />
             <MudLink Href="/login" Typo="Typo.inherit">Log in</MudLink>
@@ -10,28 +10,30 @@
             &nbsp;
             <MudLink Href="/userregistration" Typo="Typo.inherit">Sing up</MudLink>
         </MudAppBar>
-    </NotAuthorized>
+    </NotAuthorized>*@
 
-    <Authorized>
+    @*<Authorized>*@
         <MudAppBar Elevation="2">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
             <MudSpacer />
             <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
-            <MudText Color="Color.Inherit">@context.User.Identity!.Name</MudText>
+           @* <MudText Color="Color.Inherit">@context.User.Identity!.Name</MudText>*@
             &nbsp;
             |
             &nbsp;
             <MudLink Href="#">Log out</MudLink>
         </MudAppBar>
-        <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Width="10%">
             <MudDrawerHeader>
                 <MudText Color="Color.Primary" Typo="Typo.h6">Menu</MudText>
             </MudDrawerHeader>
             <MudNavMenu>
                 <MudNavLink Href="" IconColor="Color.Primary" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+                <MudNavLink Href="" IconColor="Color.Primary" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.AccountBalanceWallet">Account</MudNavLink>
+                <MudNavLink Href="" IconColor="Color.Primary" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.MultipleStop">Transactions</MudNavLink>
             </MudNavMenu>
         </MudDrawer>
-    </Authorized>
+    @*</Authorized>*@
 
-</AuthorizeView>
+@*</AuthorizeView>*@
 
