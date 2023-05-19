@@ -6,12 +6,12 @@
 
 using Budgeting.Web.App.Models.ExceptionModels;
 
-namespace Budgeting.Web.App.Models.Users.Exceptions
+namespace Budgeting.Web.App.Models.Categories.Exceptions
 {
-    public class NotFoundUserException : ExceptionModel
+    public class CategoryUnauthorizedException : ExceptionModel
     {
-        public NotFoundUserException(string userId)
-            : base(message: $"Can't find user with id {userId}.")
+        public CategoryUnauthorizedException(Exception innerException)
+            : base(message: "Unauthorized, access to data denied.", innerException)
         { }
 
     }

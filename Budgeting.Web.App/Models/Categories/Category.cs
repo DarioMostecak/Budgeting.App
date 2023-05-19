@@ -4,15 +4,14 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-using Budgeting.Web.App.Models.ExceptionModels;
-
-namespace Budgeting.Web.App.Models.Users.Exceptions
+namespace Budgeting.Web.App.Models.Categories
 {
-    public class NotFoundUserException : ExceptionModel
+    public class Category
     {
-        public NotFoundUserException(string userId)
-            : base(message: $"Can't find user with id {userId}.")
-        { }
-
+        public Guid CategoryId { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
+        public DateTime TimeCreated { get; set; }
+        public DateTime TimeModify { get; set; }
     }
 }

@@ -5,14 +5,14 @@
 // ---------------------------------------------------------------
 
 using Budgeting.Web.App.Models.ExceptionModels;
+using System.Collections;
 
-namespace Budgeting.Web.App.Models.Users.Exceptions
+namespace Budgeting.Web.App.Models.Categories.Exceptions
 {
-    public class NotFoundUserException : ExceptionModel
+    public class CategoryValidationException : ExceptionModel
     {
-        public NotFoundUserException(string userId)
-            : base(message: $"Can't find user with id {userId}.")
+        public CategoryValidationException(Exception innerException, IDictionary data)
+            : base(message: innerException.Message, innerException, data)
         { }
-
     }
 }

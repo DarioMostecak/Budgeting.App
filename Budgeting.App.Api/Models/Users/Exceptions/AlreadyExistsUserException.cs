@@ -7,6 +7,6 @@
         { }
 
         public AlreadyExistsUserException()
-            : base(message: "User email alredy exist.") { }
+            : base(message: "User email already exist.") { }
     }
 }

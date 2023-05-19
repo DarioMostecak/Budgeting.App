@@ -6,13 +6,12 @@
 
 using Budgeting.Web.App.Models.ExceptionModels;
 
-namespace Budgeting.Web.App.Models.Users.Exceptions
+namespace Budgeting.Web.App.Models.Categories.Exceptions
 {
-    public class NotFoundUserException : ExceptionModel
+    public class NotFoundCategoryException : ExceptionModel
     {
-        public NotFoundUserException(string userId)
-            : base(message: $"Can't find user with id {userId}.")
-        { }
+        public NotFoundCategoryException(Guid categoryId)
+            : base(message: string.Format($"Couldn't find category with id: {categoryId}.")) { }
 
     }
 }
