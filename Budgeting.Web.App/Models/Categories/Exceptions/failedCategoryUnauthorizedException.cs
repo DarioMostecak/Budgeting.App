@@ -8,10 +8,10 @@ using Budgeting.Web.App.Models.ExceptionModels;
 
 namespace Budgeting.Web.App.Models.Categories.Exceptions
 {
-    public class AlreadyExistsCategoryException : ExceptionModel
+    public class failedCategoryUnauthorizedException : ExceptionModel
     {
-        public AlreadyExistsCategoryException(Exception innerException)
-            : base(message: "Category already exist.", innerException)
+        public failedCategoryUnauthorizedException(Exception innerException)
+            : base(message: "Fail unauthorize error.", innerException)
         { }
     }
 }

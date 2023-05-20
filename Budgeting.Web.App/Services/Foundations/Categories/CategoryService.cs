@@ -1,0 +1,51 @@
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// ---------------------------------------------------------------
+
+using Budgeting.Web.App.Brokers.Apis;
+using Budgeting.Web.App.Brokers.Loggings;
+using Budgeting.Web.App.Models.Categories;
+
+namespace Budgeting.Web.App.Services.Foundations.Categories
+{
+    public partial class CategoryService : ICategoryService
+    {
+        private readonly IApiBroker apiBroker;
+        private readonly ILoggingBroker loggingBroker;
+
+        public CategoryService(
+            IApiBroker apiBroker,
+            ILoggingBroker loggingBroker)
+        {
+            this.apiBroker = apiBroker;
+            this.loggingBroker = loggingBroker;
+        }
+
+
+        public ValueTask<Category> AddCategoryAsync(Category category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValueTask<Category> DeleteCategoryAsync(Category category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValueTask<IEnumerable<Category>> RetrieveAllCategoriesAsync() =>
+        TryCatch(async () => await this.apiBroker.GetCategoryAsync());
+
+
+        public ValueTask<Category> GetCategoryById(Category category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValueTask<Category> ModifyCategoryAsync(Category category)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

@@ -8,9 +8,9 @@ using Budgeting.Web.App.Models.ExceptionModels;
 
 namespace Budgeting.Web.App.Models.Categories.Exceptions
 {
-    public class CategoryDependecyValidationException : ExceptionModel
+    public class CategoryDependencyValidationException : ExceptionModel
     {
-        public CategoryDependecyValidationException(Exception innerException)
+        public CategoryDependencyValidationException(Exception innerException)
             : base(message: "Category dependency validation occurred, try again or contact support.", innerException)
         {
 

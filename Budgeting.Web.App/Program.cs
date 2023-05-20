@@ -8,6 +8,7 @@ using Budgeting.Web.App.Brokers.Navigations;
 using Budgeting.Web.App.Brokers.Toasts;
 using Budgeting.Web.App.Brokers.UniqueIDGenerators;
 using Budgeting.Web.App.Services.Foundations;
+using Budgeting.Web.App.Services.Foundations.Categories;
 using Budgeting.Web.App.Services.Foundations.Identity;
 using Budgeting.Web.App.Services.Foundations.Users;
 using Budgeting.Web.App.Services.Views.LoginViews;
@@ -57,6 +58,7 @@ builder.Services.AddTransient<IUniqueIDGeneratorBroker, UniqueIDGeneratorBroker>
 #region Foudations
 builder.Services.AddTransient<IIdentityService, IdentityService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 #endregion
 
 #region Views
