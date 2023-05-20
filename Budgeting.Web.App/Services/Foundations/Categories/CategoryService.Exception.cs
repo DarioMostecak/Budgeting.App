@@ -33,7 +33,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             catch (HttpResponseUnauthorizedException httpResponseUnauthorizeException)
             {
                 var failedCategoryUnauthorizedException =
-                    new FailedCategoryDependencyException(httpResponseUnauthorizeException);
+                    new FailedCategoryUnauthorizedException(httpResponseUnauthorizeException);
 
                 throw CreateAndLogUnauthorizedException(failedCategoryUnauthorizedException);
             }
@@ -100,12 +100,12 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
                 var failedCategoryDependencyException =
                     new FailedCategoryDependencyException(httpRequestException);
 
-                throw CreateAndLogDependencyException(httpRequestException);
+                throw CreateAndLogDependencyException(failedCategoryDependencyException);
             }
             catch (HttpResponseUnauthorizedException httpResponseUnauthorizeException)
             {
                 var failedCategoryUnauthorizedException =
-                    new FailedCategoryDependencyException(httpResponseUnauthorizeException);
+                    new FailedCategoryUnauthorizedException(httpResponseUnauthorizeException);
 
                 throw CreateAndLogUnauthorizedException(failedCategoryUnauthorizedException);
             }
@@ -119,7 +119,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             catch (Exception serviceException)
             {
                 var failedCategoryServiceException =
-                    new FailedCategoryDependencyException(serviceException);
+                    new FailedCategoryServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedCategoryServiceException);
             }

@@ -12,7 +12,7 @@ namespace Budgeting.Web.App.Brokers.Apis
     {
         public const string categoryRelativUrl = "";
 
-        public async ValueTask<IEnumerable<Category>> GetCategoryAsync() =>
+        public async ValueTask<IEnumerable<Category>> GetCategoriesAsync() =>
             await this.GetContentAsync<IEnumerable<Category>>(categoryRelativUrl);
 
         public async ValueTask<Category> GetCategoryAsync(string categoryId) =>

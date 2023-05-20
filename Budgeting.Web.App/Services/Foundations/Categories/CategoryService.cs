@@ -35,7 +35,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         }
 
         public ValueTask<IEnumerable<Category>> RetrieveAllCategoriesAsync() =>
-        TryCatch(async () => await this.apiBroker.GetCategoryAsync());
+        TryCatch(async () => await this.apiBroker.GetCategoriesAsync());
 
 
         public ValueTask<Category> GetCategoryById(Category category)

@@ -10,7 +10,7 @@ namespace Budgeting.Web.App.Brokers.Apis
 {
     public partial interface IApiBroker
     {
-        ValueTask<IEnumerable<Category>> GetCategoryAsync();
+        ValueTask<IEnumerable<Category>> GetCategoriesAsync();
         ValueTask<Category> GetCategoryAsync(string id);
         ValueTask<Category> PostCategoryAsync(Category category);
         ValueTask<Category> PutCategoryAsync(Category category);

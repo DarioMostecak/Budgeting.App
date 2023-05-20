@@ -8,9 +8,9 @@ using Budgeting.Web.App.Models.ExceptionModels;
 
 namespace Budgeting.Web.App.Models.Categories.Exceptions
 {
-    public class failedCategoryUnauthorizedException : ExceptionModel
+    public class FailedCategoryUnauthorizedException : ExceptionModel
     {
-        public failedCategoryUnauthorizedException(Exception innerException)
+        public FailedCategoryUnauthorizedException(Exception innerException)
             : base(message: "Fail unauthorize error.", innerException)
         { }
     }

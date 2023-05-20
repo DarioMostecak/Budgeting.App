@@ -11,8 +11,7 @@ using System.Collections;
 namespace Budgeting.Web.App.Models.ExceptionModels
 {
     /// <summary>
-    /// Represents a custom exception class that inherits from the base Exception class.
-    /// Provides additional functionality for handling exceptions and managing associated data.
+    /// Represents a custom exception class that inherits from the base Exception class. Provides additional functionality for handling exceptions and managing associated data.
     /// </summary
     public class ExceptionModel : Exception
     {
