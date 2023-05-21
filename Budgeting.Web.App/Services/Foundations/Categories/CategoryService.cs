@@ -24,10 +24,13 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         }
 
 
-        public ValueTask<Category> AddCategoryAsync(Category category)
+        public ValueTask<Category> AddCategoryAsync(Category category) =>
+        TryCatch(async () =>
         {
-            throw new NotImplementedException();
-        }
+            //Validate category
+
+            return await this.apiBroker.PostCategoryAsync(category);
+        });
 
         public ValueTask<Category> DeleteCategoryAsync(Category category)
         {

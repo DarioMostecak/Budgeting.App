@@ -83,6 +83,9 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
         private static DateTime GetRandomDateTime() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
+        private static Category CreateRandomCategory() =>
+            CreateRandomCategoryFiller(dates: DateTime.UtcNow).Create();
+
         private static IEnumerable<Category> CreateRandomCategories(DateTime dates) =>
            CreateRandomCategoryFiller(dates).Create(GetRandomNumber()).AsEnumerable();
 
@@ -100,34 +103,5 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             return filler;
         }
-
-
-        private static IEnumerable<Category> GetCategoryList() =>
-            new List<Category>
-            {
-                new Category
-                {
-                    CategoryId = Guid.NewGuid(),
-                    Type = "Expense", Title="Restoran",
-                    TimeCreated = DateTime.Now,
-                    TimeModify = DateTime.Now.AddDays(10)
-                },
-
-                new Category
-                {
-                    CategoryId = Guid.NewGuid(),
-                    Type = "Income", Title="Stocks",
-                    TimeCreated = DateTime.Now,
-                    TimeModify = DateTime.Now.AddDays(10)
-                },
-
-                new Category
-                {
-                    CategoryId = Guid.NewGuid(),
-                    Type = "Expense", Title="Gym card",
-                    TimeCreated = DateTime.Now,
-                    TimeModify = DateTime.Now.AddDays(10)
-                },
-            };
     }
 }
