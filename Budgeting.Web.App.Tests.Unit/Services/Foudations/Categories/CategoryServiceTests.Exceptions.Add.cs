@@ -11,8 +11,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 {
     public partial class CategoryServiceTests
     {
+
+
         [Fact]
-        public async Task ShouldThrowUnauthorizedExceptionOnAddIfUnauthorizedExceptionOccursAndLogItAsync()
+        public async Task ShouldThrowUnauthorizedExceptionOnAddIfUnauthorizedExceptionOccurresAndLogItAsync()
         {
             //given
             Category randomCategory = CreateRandomCategory();
@@ -48,6 +50,50 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
                     SameExceptionAs(expectedCategoryUnauthorizedException))),
+                      Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfHttpResponseNotFoundExceptionOccurresAndLogItAsync()
+        {
+            //given
+            Category randomCategory = CreateRandomCategory();
+            string exceptionMessage = GetRandomString();
+            var responseMessage = new HttpResponseMessage();
+
+            var httpResponseNotFoundException =
+                new HttpResponseNotFoundException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            var failedCategoryDependencyException =
+                new FailedCategoryDependencyException(httpResponseNotFoundException);
+
+            var expectedCategoryDependencyValidationException =
+                new CategoryDependencyValidationException(failedCategoryDependencyException);
+
+            this.apiBrokerMock.Setup(broker =>
+                broker.PostCategoryAsync(It.IsAny<Category>()))
+                        .ThrowsAsync(httpResponseNotFoundException);
+
+            //when
+            ValueTask<Category> addCategoryTask =
+                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+
+            //then
+            await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
+                 addCategoryTask.AsTask());
+
+            this.apiBrokerMock.Verify(broker =>
+                broker.PostCategoryAsync(It.IsAny<Category>()),
+                  Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedCategoryDependencyValidationException))),
                       Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
