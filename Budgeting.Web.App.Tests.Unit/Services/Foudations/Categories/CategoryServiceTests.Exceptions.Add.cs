@@ -1,4 +1,10 @@
-﻿using Budgeting.Web.App.Models.Categories;
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// ---------------------------------------------------------------
+
+using Budgeting.Web.App.Models.Categories;
 using Budgeting.Web.App.Models.Categories.Exceptions;
 using Budgeting.Web.App.Models.ExceptionModels;
 using Moq;
@@ -221,6 +227,44 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(
                     SameExceptionAs(expectedCategoryDependencyException))),
+                      Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfExceptionOccurresAndLogItAsync()
+        {
+            //given
+            Category randomCategory = CreateRandomCategory();
+            var serviceException = new Exception();
+
+            var failedCategoryServiceException =
+                new FailedCategoryServiceException(serviceException);
+
+            var expectedCategoryServiceException =
+                new CategoryServiceException(failedCategoryServiceException);
+
+            this.apiBrokerMock.Setup(broker =>
+               broker.PostCategoryAsync(It.IsAny<Category>()))
+                       .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<Category> addCategoryTask =
+                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+
+            //then
+            await Assert.ThrowsAsync<CategoryServiceException>(() =>
+                addCategoryTask.AsTask());
+
+            this.apiBrokerMock.Verify(broker =>
+                broker.PostCategoryAsync(It.IsAny<Category>()),
+                  Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedCategoryServiceException))),
                       Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

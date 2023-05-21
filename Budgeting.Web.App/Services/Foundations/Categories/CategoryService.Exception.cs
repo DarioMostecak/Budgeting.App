@@ -82,7 +82,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             catch (Exception serviceException)
             {
                 var failedCategoryServiceException =
-                    new FailedCategoryDependencyException(serviceException);
+                    new FailedCategoryServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedCategoryServiceException);
             }
