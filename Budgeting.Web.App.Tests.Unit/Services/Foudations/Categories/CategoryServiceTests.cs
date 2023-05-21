@@ -46,15 +46,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 && (actualException.InnerException as ExceptionModel).DataEquals(expectedException.InnerException.Data);
         }
 
-        public static TheoryData DependencyValidationApiException()
+        public static TheoryData DependencyApiException()
         {
             string exceptionMessage = GetRandomString();
             var responseMessage = new HttpResponseMessage();
-
-            var httpResponseNotFoundException =
-                new HttpResponseNotFoundException(
-                    responseMessage: responseMessage,
-                    message: exceptionMessage);
 
             var httpResponseInternalserverError =
                 new HttpResponseInternalServerErrorException(
@@ -71,7 +66,6 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             return new TheoryData<Exception>
             {
-                httpResponseNotFoundException,
                 httpResponseInternalserverError,
                 httpResponseException,
                 httpRequestException
