@@ -53,10 +53,10 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             }
             catch (HttpResponseConflictException httpResponseConflictException)
             {
-                var alreadyExistCategoryException =
+                var alreadyExistsCategoryException =
                     new AlreadyExistsCategoryException(httpResponseConflictException);
 
-                throw CreateAndLogDependencyValidationException(alreadyExistCategoryException);
+                throw CreateAndLogDependencyValidationException(alreadyExistsCategoryException);
             }
             catch (HttpResponseInternalServerErrorException httpResponseInternalserverError)
             {

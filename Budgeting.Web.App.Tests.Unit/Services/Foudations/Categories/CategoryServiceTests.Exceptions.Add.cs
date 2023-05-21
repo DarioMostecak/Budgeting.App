@@ -144,6 +144,50 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
             this.apiBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfHttpResponseConflictExceptionOccurresAndLogitAsync()
+        {
+            //given
+            Category randomCategory = CreateRandomCategory();
+            string exceptionMessage = GetRandomString();
+            var responseMessage = new HttpResponseMessage();
+
+            var httpResponseConflictException =
+                new HttpResponseConflictException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            var alreadyExistsCategoryException =
+                new AlreadyExistsCategoryException(httpResponseConflictException);
+
+            var expectedCategoryDependencyValidationException =
+                new CategoryDependencyValidationException(alreadyExistsCategoryException);
+
+            this.apiBrokerMock.Setup(broker =>
+                broker.PostCategoryAsync(It.IsAny<Category>()))
+                        .ThrowsAsync(httpResponseConflictException);
+
+            //when
+            ValueTask<Category> addCategoryTask =
+                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+
+            //then
+            await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
+                 addCategoryTask.AsTask());
+
+            this.apiBrokerMock.Verify(broker =>
+                broker.PostCategoryAsync(It.IsAny<Category>()),
+                  Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedCategoryDependencyValidationException))),
+                      Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [MemberData(nameof(DependencyApiException))]
         public async Task ShouldThrowDependencyExceptionOnAddIfDependencyErrorOccurresAndLogItAsync(
