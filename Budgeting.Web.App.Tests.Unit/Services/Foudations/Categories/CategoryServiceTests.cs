@@ -7,10 +7,13 @@
 
 using Budgeting.Web.App.Brokers.Apis;
 using Budgeting.Web.App.Brokers.Loggings;
+using Budgeting.Web.App.Models.Categories;
 using Budgeting.Web.App.Models.ExceptionModels;
 using Budgeting.Web.App.Services.Foundations.Categories;
 using Moq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using Tynamix.ObjectFiller;
@@ -74,5 +77,57 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 httpRequestException
             };
         }
+
+        private static int GetRandomNumber() => new IntRange(min: 2, max: 10).GetValue();
+
+        private static DateTime GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static IEnumerable<Category> CreateRandomCategories(DateTime dates) =>
+           CreateRandomCategoryFiller(dates).Create(GetRandomNumber()).AsEnumerable();
+
+        private static Filler<Category> CreateRandomCategoryFiller(DateTime dates)
+        {
+            var filler = new Filler<Category>();
+            Guid categoryId = Guid.NewGuid();
+
+            filler.Setup()
+                .OnProperty(category => category.CategoryId).Use(categoryId)
+                .OnProperty(category => category.Title).Use("Lunch")
+                .OnProperty(category => category.Type).Use("Expense")
+                .OnProperty(category => category.TimeCreated).Use(dates)
+                .OnProperty(category => category.TimeModify).Use(dates.AddDays(10));
+
+            return filler;
+        }
+
+
+        private static IEnumerable<Category> GetCategoryList() =>
+            new List<Category>
+            {
+                new Category
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Type = "Expense", Title="Restoran",
+                    TimeCreated = DateTime.Now,
+                    TimeModify = DateTime.Now.AddDays(10)
+                },
+
+                new Category
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Type = "Income", Title="Stocks",
+                    TimeCreated = DateTime.Now,
+                    TimeModify = DateTime.Now.AddDays(10)
+                },
+
+                new Category
+                {
+                    CategoryId = Guid.NewGuid(),
+                    Type = "Expense", Title="Gym card",
+                    TimeCreated = DateTime.Now,
+                    TimeModify = DateTime.Now.AddDays(10)
+                },
+            };
     }
 }
