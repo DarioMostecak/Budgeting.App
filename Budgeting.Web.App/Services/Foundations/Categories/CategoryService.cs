@@ -46,9 +46,13 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             throw new NotImplementedException();
         }
 
-        public ValueTask<Category> ModifyCategoryAsync(Category category)
+        public ValueTask<Category> ModifyCategoryAsync(Category category) =>
+        TryCatch(async () =>
         {
-            throw new NotImplementedException();
-        }
+            //Validate category on modify
+
+            return await this.apiBroker.PutCategoryAsync(category);
+        });
+
     }
 }
