@@ -91,10 +91,10 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         private static IEnumerable<object[]> InvalidDataCategory() =>
             new List<object[]>
             {
-                new object[] {Guid.Empty, "   ", DateTime.MinValue, DateTime.MinValue },
-                new object[] {Guid.Empty, null, DateTime.MinValue, DateTime.MinValue },
-                new object[] {Guid.Empty, new MnemonicString(1, 1, 1).GetValue(), DateTime.MinValue, DateTime.MinValue },
-                new object[] {Guid.Empty, new MnemonicString(1, 20, 20).GetValue(), DateTime.MinValue, DateTime.MinValue }
+                new object[] {Guid.Empty, "   ", "   ", DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, null, null, DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, new MnemonicString(1, 1, 1).GetValue(), new MnemonicString(1, 1, 1).GetValue(), DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, new MnemonicString(1, 20, 20).GetValue(), new MnemonicString(1, 20, 20).GetValue(), DateTime.MinValue, DateTime.MinValue }
             };
     }
 }

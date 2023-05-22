@@ -7,6 +7,7 @@
 using Budgeting.Web.App.Models.Categories;
 using Budgeting.Web.App.Models.Categories.Exceptions;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -38,6 +39,71 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                broker.LogError(It.Is(SameExceptionAs(
                    expectedCategoryException))),
                       Times.Once());
+
+            this.apiBrokerMock.Verify(broker =>
+               broker.PostCategoryAsync(It.IsAny<Category>()),
+                  Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidDataCategory))]
+        public async Task ShouldThrowValidationExceptionOnAddIfCategoryIsInvalidAndLogItAsync(
+            Guid invalidId,
+            string invalidTitle,
+            string invalidType,
+            DateTime invalidDateCreated,
+            DateTime invalidDateModify)
+        {
+            //given
+            var invalidCategory = new Category
+            {
+                CategoryId = invalidId,
+                Title = invalidTitle,
+                Type = invalidType,
+                TimeCreated = invalidDateCreated,
+                TimeModify = invalidDateModify
+            };
+
+            var invalidCategoryException = new InvalidCategoryException();
+
+            invalidCategoryException.AddData(
+                key: nameof(Category.CategoryId),
+                values: "Id isn't valid.");
+
+            invalidCategoryException.AddData(
+                key: nameof(Category.Title),
+                values: "Must be between 2 and 19 characters long and can't be null or white space.");
+
+            invalidCategoryException.AddData(
+                key: nameof(Category.Type),
+                values: "Must be between 2 and 19 characters long and can't be null or white space.");
+
+            invalidCategoryException.AddData(
+                key: nameof(Category.TimeCreated),
+                values: "Date is required.");
+
+            invalidCategoryException.AddData(
+                key: nameof(Category.TimeModify),
+                values: "Date is required.");
+
+            var expectedCategoryValidationException =
+                new CategoryValidationException(invalidCategoryException, invalidCategoryException.Data);
+
+            //when
+            ValueTask<Category> addStudentTask =
+                this.categoryService.AddCategoryAsync(invalidCategory);
+
+            //then
+            await Assert.ThrowsAsync<CategoryValidationException>(() =>
+               addStudentTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedCategoryValidationException))),
+                   Times.Once);
 
             this.apiBrokerMock.Verify(broker =>
                broker.PostCategoryAsync(It.IsAny<Category>()),
