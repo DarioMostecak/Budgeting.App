@@ -25,14 +25,14 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
     {
         private readonly Mock<IApiBroker> apiBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly ICategoryService categoryServiceMock;
+        private readonly ICategoryService categoryService;
 
         public CategoryServiceTests()
         {
             this.apiBrokerMock = new Mock<IApiBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
-            this.categoryServiceMock = new CategoryService(
+            this.categoryService = new CategoryService(
                 apiBroker: this.apiBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }

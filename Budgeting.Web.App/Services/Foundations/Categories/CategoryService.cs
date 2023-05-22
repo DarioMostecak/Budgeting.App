@@ -27,7 +27,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         public ValueTask<Category> AddCategoryAsync(Category category) =>
         TryCatch(async () =>
         {
-            //Validate category
+            ValidateCategoryOnCreate(category);
 
             return await this.apiBroker.PostCategoryAsync(category);
         });

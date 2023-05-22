@@ -43,7 +43,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<Category> addCategoryTask =
-                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+                this.categoryService.AddCategoryAsync(randomCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryUnauthorizedException>(() =>
@@ -87,7 +87,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<Category> addCategoryTask =
-                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+                this.categoryService.AddCategoryAsync(randomCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
@@ -131,7 +131,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<Category> addCategoryTask =
-                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+                this.categoryService.AddCategoryAsync(randomCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
@@ -175,7 +175,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<Category> addCategoryTask =
-                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+                this.categoryService.AddCategoryAsync(randomCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
@@ -214,7 +214,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<Category> addCategoryTask =
-                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+                this.categoryService.AddCategoryAsync(randomCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
@@ -252,7 +252,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<Category> addCategoryTask =
-                this.categoryServiceMock.AddCategoryAsync(randomCategory);
+                this.categoryService.AddCategoryAsync(randomCategory);
 
             //then
             await Assert.ThrowsAsync<CategoryServiceException>(() =>

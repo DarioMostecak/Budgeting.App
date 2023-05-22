@@ -32,7 +32,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             IEnumerable<Category> actualCategories =
-                await this.categoryServiceMock.RetrieveAllCategoriesAsync();
+                await this.categoryService.RetrieveAllCategoriesAsync();
 
             //then
             actualCategories.Should().BeEquivalentTo(expectedCategories);

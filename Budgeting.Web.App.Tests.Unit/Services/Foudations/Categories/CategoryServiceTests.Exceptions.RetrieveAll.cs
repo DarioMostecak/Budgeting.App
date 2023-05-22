@@ -41,7 +41,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<IEnumerable<Category>> retrieveAllCategoriesTask =
-                this.categoryServiceMock.RetrieveAllCategoriesAsync();
+                this.categoryService.RetrieveAllCategoriesAsync();
 
             //then
             await Assert.ThrowsAsync<CategoryUnauthorizedException>(() =>
@@ -78,7 +78,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<IEnumerable<Category>> retrieveAllCategoriesTask =
-                this.categoryServiceMock.RetrieveAllCategoriesAsync();
+                this.categoryService.RetrieveAllCategoriesAsync();
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
@@ -121,7 +121,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<IEnumerable<Category>> retrieveAllCategoriesTask =
-                this.categoryServiceMock.RetrieveAllCategoriesAsync();
+                this.categoryService.RetrieveAllCategoriesAsync();
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
@@ -158,7 +158,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             //when
             ValueTask<IEnumerable<Category>> retrieveAllCategoriesTask =
-                this.categoryServiceMock.RetrieveAllCategoriesAsync();
+                this.categoryService.RetrieveAllCategoriesAsync();
 
             //then
             await Assert.ThrowsAsync<CategoryServiceException>(() =>
