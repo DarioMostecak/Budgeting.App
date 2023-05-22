@@ -77,6 +77,8 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
         private static DateTime GetRandomDateTime() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
+        private static Guid GetRandomId() => Guid.NewGuid();
+
         private static Category CreateRandomCategory() =>
             CreateRandomCategoryFiller(dates: DateTime.UtcNow).Create();
 

@@ -41,10 +41,13 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         TryCatch(async () => await this.apiBroker.GetCategoriesAsync());
 
 
-        public ValueTask<Category> GetCategoryById(Category category)
+        public ValueTask<Category> RetrieveCategoryByIdAsync(Guid categoryId) =>
+        TryCatch(async () =>
         {
-            throw new NotImplementedException();
-        }
+            ValidateCategoryIdIsNull(categoryId);
+
+            return await this.apiBroker.GetCategoryAsync(categoryId.ToString());
+        });
 
         public ValueTask<Category> ModifyCategoryAsync(Category category) =>
         TryCatch(async () =>

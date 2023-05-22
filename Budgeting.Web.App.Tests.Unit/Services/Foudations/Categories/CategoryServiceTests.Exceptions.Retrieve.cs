@@ -2,7 +2,7 @@
 // Author: Dario Mostecak
 // Copyright (c) 2023 Dario Mostecak. All rights reserved.
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
-// --
+// ---------------------------------------------------------------
 
 using Budgeting.Web.App.Models.Categories;
 using Budgeting.Web.App.Models.Categories.Exceptions;
@@ -18,10 +18,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
     public partial class CategoryServiceTests
     {
         [Fact]
-        public async Task ShouldThrowUnauthorizedExceptionOnModifyIfUnauthorizedExceptionOccurresAndLogItAsync()
+        public async Task ShouldThrowUnauthorizedExceptionOnRetrieveIfUnauthorizedExceptionOccurresAndLogItAsync()
         {
             //given
-            Category randomCategory = CreateRandomCategory();
+            Guid randomCategoryId = GetRandomId();
             var exceptionMessage = GetRandomString();
             var responseMessage = new HttpResponseMessage();
 
@@ -37,19 +37,19 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 new CategoryUnauthorizedException(failedCategoryUnauthorizedException);
 
             this.apiBrokerMock.Setup(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()))
+                broker.GetCategoryAsync(It.IsAny<string>()))
                         .ThrowsAsync(httpResponseUnauthorizeException);
 
             //when
-            ValueTask<Category> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(randomCategory);
+            ValueTask<Category> retrieveCategoryTask =
+                this.categoryService.RetrieveCategoryByIdAsync(randomCategoryId);
 
             //then
             await Assert.ThrowsAsync<CategoryUnauthorizedException>(() =>
-                modifyCategoryTask.AsTask());
+                retrieveCategoryTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()),
+                broker.GetCategoryAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -62,10 +62,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionModifyIfHttpResponseNotFoundExceptionOccurresAndLogItAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveIfHttpResponseNotFoundExceptionOccurresAndLogItAsync()
         {
             //given
-            Category randomCategory = CreateRandomCategory();
+            Guid randomCategoryId = GetRandomId();
             string exceptionMessage = GetRandomString();
             var responseMessage = new HttpResponseMessage();
 
@@ -81,19 +81,19 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 new CategoryDependencyValidationException(failedCategoryDependencyException);
 
             this.apiBrokerMock.Setup(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()))
+                broker.GetCategoryAsync(It.IsAny<string>()))
                         .ThrowsAsync(httpResponseNotFoundException);
 
             //when
-            ValueTask<Category> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(randomCategory);
+            ValueTask<Category> retrieveCategoryTask =
+                this.categoryService.RetrieveCategoryByIdAsync(randomCategoryId);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
-                 modifyCategoryTask.AsTask());
+                 retrieveCategoryTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()),
+                broker.GetCategoryAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -106,10 +106,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfHttpResponseBadRequestExceptionOccurresAndLogitAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveIfHttpResponseBadRequestExceptionOccurresAndLogitAsync()
         {
             //given
-            Category randomCategory = CreateRandomCategory();
+            Guid randomCategoryId = GetRandomId();
             string exceptionMessage = GetRandomString();
             var responseMessage = new HttpResponseMessage();
 
@@ -125,19 +125,19 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 new CategoryDependencyValidationException(invalidCategoryException);
 
             this.apiBrokerMock.Setup(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()))
+                broker.GetCategoryAsync(It.IsAny<string>()))
                         .ThrowsAsync(httpResponseBadRequestException);
 
             //when
-            ValueTask<Category> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(randomCategory);
+            ValueTask<Category> retrieveCategoryTask =
+                this.categoryService.RetrieveCategoryByIdAsync(randomCategoryId);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
-                 modifyCategoryTask.AsTask());
+                 retrieveCategoryTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()),
+                broker.GetCategoryAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -150,10 +150,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfHttpResponseConflictExceptionOccurresAndLogitAsync()
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveIfHttpResponseConflictExceptionOccurresAndLogitAsync()
         {
             //given
-            Category randomCategory = CreateRandomCategory();
+            Guid randomCategoryId = GetRandomId();
             string exceptionMessage = GetRandomString();
             var responseMessage = new HttpResponseMessage();
 
@@ -169,19 +169,19 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 new CategoryDependencyValidationException(alreadyExistsCategoryException);
 
             this.apiBrokerMock.Setup(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()))
+                broker.GetCategoryAsync(It.IsAny<string>()))
                         .ThrowsAsync(httpResponseConflictException);
 
             //when
-            ValueTask<Category> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(randomCategory);
+            ValueTask<Category> retrieveCategoryTask =
+                this.categoryService.RetrieveCategoryByIdAsync(randomCategoryId);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyValidationException>(() =>
-                 modifyCategoryTask.AsTask());
+                 retrieveCategoryTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()),
+                broker.GetCategoryAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -195,11 +195,11 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
         [Theory]
         [MemberData(nameof(DependencyApiException))]
-        public async Task ShouldThrowDependencyExceptionOnModifyIfDependencyErrorOccurresAndLogItAsync(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveIfDependencyErrorOccurresAndLogItAsync(
             Exception dependencyValidationException)
         {
             //given
-            Category randomCategory = CreateRandomCategory();
+            Guid randomCategoryId = GetRandomId();
 
             var failedCategoryDependencyException =
                 new FailedCategoryDependencyException(dependencyValidationException);
@@ -208,19 +208,19 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 new CategoryDependencyException(failedCategoryDependencyException);
 
             this.apiBrokerMock.Setup(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()))
+                broker.GetCategoryAsync(It.IsAny<string>()))
                         .ThrowsAsync(dependencyValidationException);
 
             //when
-            ValueTask<Category> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(randomCategory);
+            ValueTask<Category> retrieveCategoryTask =
+                this.categoryService.RetrieveCategoryByIdAsync(randomCategoryId);
 
             //then
             await Assert.ThrowsAsync<CategoryDependencyException>(() =>
-                modifyCategoryTask.AsTask());
+                retrieveCategoryTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()),
+                broker.GetCategoryAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -233,10 +233,10 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnModifyIfExceptionOccurresAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnRetrieveIfExceptionOccurresAndLogItAsync()
         {
             //given
-            Category randomCategory = CreateRandomCategory();
+            Guid randomCategoryId = GetRandomId();
             var serviceException = new Exception();
 
             var failedCategoryServiceException =
@@ -246,19 +246,19 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
                 new CategoryServiceException(failedCategoryServiceException);
 
             this.apiBrokerMock.Setup(broker =>
-               broker.PutCategoryAsync(It.IsAny<Category>()))
+               broker.GetCategoryAsync(It.IsAny<string>()))
                        .ThrowsAsync(serviceException);
 
             //when
-            ValueTask<Category> modifyCategoryTask =
-                this.categoryService.ModifyCategoryAsync(randomCategory);
+            ValueTask<Category> retrieveCategoryTask =
+                this.categoryService.RetrieveCategoryByIdAsync(randomCategoryId);
 
             //then
             await Assert.ThrowsAsync<CategoryServiceException>(() =>
-                modifyCategoryTask.AsTask());
+                retrieveCategoryTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
-                broker.PutCategoryAsync(It.IsAny<Category>()),
+                broker.GetCategoryAsync(It.IsAny<string>()),
                   Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

@@ -11,7 +11,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
     public interface ICategoryService
     {
         ValueTask<IEnumerable<Category>> RetrieveAllCategoriesAsync();
-        ValueTask<Category> GetCategoryById(Category category);
+        ValueTask<Category> RetrieveCategoryByIdAsync(Guid categoryId);
         ValueTask<Category> AddCategoryAsync(Category category);
         ValueTask<Category> ModifyCategoryAsync(Category category);
         ValueTask<Category> DeleteCategoryAsync(Category category);

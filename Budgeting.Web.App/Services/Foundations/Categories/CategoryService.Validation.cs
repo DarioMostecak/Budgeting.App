@@ -74,7 +74,16 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             if (category is null) throw new NullCategoryException();
         }
 
+        private static bool IsInvalid(Guid input) => input == Guid.Empty;
 
+        private static void ValidateCategoryIdIsNull(Guid categoryId)
+        {
+            if (IsInvalid(categoryId))
+            {
+                var invalidCategorytException = new InvalidCategoryException(nameof(Category.CategoryId), categoryId);
+                throw invalidCategorytException;
+            }
+        }
 
         private static void Validate(params (dynamic rule, string parameter)[] validations)
         {
