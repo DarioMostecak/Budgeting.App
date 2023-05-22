@@ -25,8 +25,8 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
 
         private static dynamic IsInvalidX(string text) => new
         {
-            Condition = String.IsNullOrWhiteSpace(text) || (text.Length >= 20 || text.Length <= 3),
-            Message = "Must be between 2 and 19 characters long and can't be null or white space."
+            Condition = string.IsNullOrWhiteSpace(text),
+            Message = "Value can't be null, white space or empty."
         };
 
         private static dynamic IsInvalidX(DateTime date) => new

@@ -75,11 +75,11 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 
             invalidCategoryException.AddData(
                 key: nameof(Category.Title),
-                values: "Must be between 2 and 19 characters long and can't be null or white space.");
+                values: "Value can't be null, white space or empty.");
 
             invalidCategoryException.AddData(
                 key: nameof(Category.Type),
-                values: "Must be between 2 and 19 characters long and can't be null or white space.");
+                values: "Value can't be null, white space or empty.");
 
             invalidCategoryException.AddData(
                 key: nameof(Category.TimeCreated),

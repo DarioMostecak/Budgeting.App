@@ -50,6 +50,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowValidationExceptionOnModifyIfCategoryIsInvalidAndLogItAsync(
             Guid invalidId,
             string invalidTitle,
+            string invalidType,
             DateTime invalidDateCreated,
             DateTime invalidDateModify)
         {
@@ -58,6 +59,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             {
                 CategoryId = invalidId,
                 Title = invalidTitle,
+                Type = invalidType,
                 TimeCreated = invalidDateCreated,
                 TimeModify = invalidDateModify
             };
@@ -70,6 +72,10 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             invalidCategoryException.AddData(
                 key: nameof(Category.Title),
+                values: "Must be between 2 and 19 characters long and can't be null or white space.");
+
+            invalidCategoryException.AddData(
+                key: nameof(Category.Type),
                 values: "Must be between 2 and 19 characters long and can't be null or white space.");
 
             invalidCategoryException.AddData(
