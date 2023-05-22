@@ -1,4 +1,10 @@
-﻿using Budgeting.Web.App.Models.Categories;
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// --
+
+using Budgeting.Web.App.Models.Categories;
 using Budgeting.Web.App.Models.Categories.Exceptions;
 using Budgeting.Web.App.Models.ExceptionModels;
 using Moq;

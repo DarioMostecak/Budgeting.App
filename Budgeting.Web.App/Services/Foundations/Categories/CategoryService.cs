@@ -49,7 +49,7 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         public ValueTask<Category> ModifyCategoryAsync(Category category) =>
         TryCatch(async () =>
         {
-            //Validate category on modify
+            ValidateCategoryOnModify(category);
 
             return await this.apiBroker.PutCategoryAsync(category);
         });

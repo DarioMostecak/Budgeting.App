@@ -23,6 +23,25 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
         }
 
+        private void ValidateCategoryOnModify(Category category)
+        {
+            ValidateCategoryIsNull(category);
+
+            Validate(
+                (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
+                (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
+                (rule: IsInvalidX(category.Type), parameter: nameof(Category.Type)),
+                (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
+                (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)),
+
+                (rule: IsSame(
+                        firstDate: category.TimeCreated,
+                        secondDate: category.TimeModify,
+                        secondDateName: nameof(Category.TimeModify)),
+                parameter: nameof(Category.TimeModify))
+                );
+        }
+
         private static dynamic IsInvalidX(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),
@@ -41,10 +60,21 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             Message = "Id isn't valid.",
         };
 
+        private static dynamic IsSame(
+            DateTime firstDate,
+            DateTime secondDate,
+            string secondDateName) => new
+            {
+                Condition = Math.Abs((firstDate - secondDate).TotalSeconds) <= 1,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
         private static void ValidateCategoryIsNull(Category category)
         {
             if (category is null) throw new NullCategoryException();
         }
+
+
 
         private static void Validate(params (dynamic rule, string parameter)[] validations)
         {
