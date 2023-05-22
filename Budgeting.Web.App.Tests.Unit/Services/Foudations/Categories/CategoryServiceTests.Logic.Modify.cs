@@ -4,7 +4,7 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-using Budgeting.App.Api.Models.Categories;
+using Budgeting.Web.App.Models.Categories;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
@@ -12,7 +12,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
+namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
 {
     public partial class CategoryServiceTests
     {
@@ -24,18 +24,12 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             Category randomCategory = CreateRandomCategory();
             Category inputCategory = randomCategory;
             Category afterUpdateCategory = inputCategory;
-            Category expectedCategory = afterUpdateCategory;
-            Category beforeUpdateStorageCategory = randomCategory.DeepClone();
-            inputCategory.TimeModify = randomDate;
-            Guid categoryId = inputCategory.CategoryId;
+            Category expectedCategory = inputCategory.DeepClone();
 
-            this.storageBrokerMock.Setup(broker =>
-               broker.SelectCategoriesByIdAsync(categoryId))
-                .ReturnsAsync(beforeUpdateStorageCategory);
 
-            this.storageBrokerMock.Setup(broker =>
-               broker.UpdateCategoryAsync(It.IsAny<Category>()))
-                .ReturnsAsync(afterUpdateCategory);
+            this.apiBrokerMock.Setup(broker =>
+               broker.PutCategoryAsync(It.IsAny<Category>()))
+                       .ReturnsAsync(afterUpdateCategory);
 
             //when
             Category actualCategory =
@@ -44,16 +38,11 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             //then
             actualCategory.Should().BeEquivalentTo(expectedCategory);
 
-            this.storageBrokerMock.Verify(broker =>
-               broker.SelectCategoriesByIdAsync(categoryId),
+            this.apiBrokerMock.Verify(broker =>
+               broker.PutCategoryAsync(It.IsAny<Category>()),
                  Times.Once());
 
-            this.storageBrokerMock.Verify(broker =>
-               broker.UpdateCategoryAsync(It.IsAny<Category>()),
-                 Times.Once());
-
-            this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
