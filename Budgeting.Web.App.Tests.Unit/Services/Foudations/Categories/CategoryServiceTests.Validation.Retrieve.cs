@@ -16,7 +16,7 @@ namespace Budgeting.Web.App.Tests.Unit.Services.Foudations.Categories
     public partial class CategoryServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfinvalidCategoryExceptionOccurresAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfInvalidCategoryExceptionOccurresAndLogItAsync()
         {
             //given
             Guid invalidCategoryId = Guid.Empty;
