@@ -14,6 +14,6 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
         ValueTask<Category> RetrieveCategoryByIdAsync(Guid categoryId);
         ValueTask<Category> AddCategoryAsync(Category category);
         ValueTask<Category> ModifyCategoryAsync(Category category);
-        ValueTask<Category> DeleteCategoryAsync(Category category);
+        ValueTask<Category> RemoveCategoryByIdAsync(Guid category);
     }
 }

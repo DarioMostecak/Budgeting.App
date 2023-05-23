@@ -32,10 +32,14 @@ namespace Budgeting.Web.App.Services.Foundations.Categories
             return await this.apiBroker.PostCategoryAsync(category);
         });
 
-        public ValueTask<Category> DeleteCategoryAsync(Category category)
+        public ValueTask<Category> RemoveCategoryByIdAsync(Guid categoryId) =>
+        TryCatch(async () =>
         {
-            throw new NotImplementedException();
-        }
+            ValidateCategoryIdIsNull(categoryId);
+
+            return await this.apiBroker.DeleteCategoryAsync(categoryId.ToString());
+        });
+
 
         public ValueTask<IEnumerable<Category>> RetrieveAllCategoriesAsync() =>
         TryCatch(async () => await this.apiBroker.GetCategoriesAsync());
