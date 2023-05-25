@@ -18,7 +18,6 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             Validate(
                 (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
                 (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
-                (rule: IsInvalidX(category.Type), parameter: nameof(Category.Type)),
                 (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)));
         }
@@ -30,7 +29,6 @@ namespace Budgeting.App.Api.Services.Foundations.Categories
             Validate(
                 (rule: IsInvalidX(category.CategoryId), parameter: nameof(Category.CategoryId)),
                 (rule: IsInvalidX(category.Title), parameter: nameof(Category.Title)),
-                (rule: IsInvalidX(category.Type), parameter: nameof(Category.Type)),
                 (rule: IsInvalidX(category.TimeCreated), parameter: nameof(Category.TimeCreated)),
                 (rule: IsInvalidX(category.TimeModify), parameter: nameof(Category.TimeModify)),
 

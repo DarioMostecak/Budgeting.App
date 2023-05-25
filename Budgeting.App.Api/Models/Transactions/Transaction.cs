@@ -4,25 +4,18 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-using Budgeting.App.Api.Attributes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Budgeting.App.Api.Models.Categories
+namespace Budgeting.App.Api.Models.Transactions
 {
-    [BsonCollection("categories")]
-    public sealed class Category
+    public class Transaction
     {
-        [BsonId]
-        [BsonElement("_categoryId")]
-        [BsonRepresentation(BsonType.String)]
+        public Guid TransactionId { get; set; }
+        public Guid AccountId { get; set; }
         public Guid CategoryId { get; set; }
-
-        [BsonElement("title")]
-        public string Title { get; set; }
-
-        [BsonElement("icon")]
-        public string Icon { get; set; }
+        public decimal Amount { get; set; }
+        public string Description { get; set; }
 
         [BsonElement("time_created")]
         [BsonRepresentation(BsonType.DateTime)]
@@ -31,6 +24,5 @@ namespace Budgeting.App.Api.Models.Categories
         [BsonElement("time_modify")]
         [BsonRepresentation(BsonType.DateTime)]
         public DateTime TimeModify { get; set; }
-
     }
 }

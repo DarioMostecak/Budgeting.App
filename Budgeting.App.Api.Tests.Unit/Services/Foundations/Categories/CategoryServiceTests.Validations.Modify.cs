@@ -1,4 +1,10 @@
-﻿using Budgeting.App.Api.Models.Categories;
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// ---------------------------------------------------------------
+
+using Budgeting.App.Api.Models.Categories;
 using Budgeting.App.Api.Models.Categories.Exceptions;
 using Force.DeepCloner;
 using Moq;
@@ -50,7 +56,6 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         public async Task ShouldThrowValidationExceptionOnModifyIfCategoryIsInvalidAndLogItAsync(
             Guid invalidId,
             string invalidTitle,
-            string invalidType,
             DateTime invalidDateCreated,
             DateTime invalidDateModify)
         {
@@ -59,7 +64,6 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
             {
                 CategoryId = invalidId,
                 Title = invalidTitle,
-                Type = invalidType,
                 TimeCreated = invalidDateCreated,
                 TimeModify = invalidDateModify
             };
@@ -72,10 +76,6 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
 
             invalidCategoryException.AddData(
                 key: nameof(Category.Title),
-                values: "Must be between 2 and 19 characters long and can't be null or white space.");
-
-            invalidCategoryException.AddData(
-                key: nameof(Category.Type),
                 values: "Must be between 2 and 19 characters long and can't be null or white space.");
 
             invalidCategoryException.AddData(

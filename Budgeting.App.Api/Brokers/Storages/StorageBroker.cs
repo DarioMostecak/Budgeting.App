@@ -11,6 +11,7 @@ namespace Budgeting.App.Api.Brokers.Storages
         public StorageBroker(IConfiguration configuration)
         {
             this.configuration = configuration;
+            RegisterClassMap();
             this.db = GetDatabase();
         }
 
@@ -24,8 +25,14 @@ namespace Budgeting.App.Api.Brokers.Storages
         {
             var connectionString = this.configuration["BudgedDatabaseSettings:ConnectionString"];
             var client = new MongoClient(connectionString);
+
             return client
                 .GetDatabase(this.configuration["BudgedDatabaseSettings:DatabaseName"]);
+        }
+
+        public static void RegisterClassMap()
+        {
+            RegisterAccountMap();
         }
     }
 }

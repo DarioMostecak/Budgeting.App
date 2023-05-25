@@ -38,7 +38,6 @@ namespace Budgeting.App.Api.Tests.Acceptance.APIs.Categories
                 .OnProperty(category => category.CategoryId).Use(categoryId)
                 .OnProperty(category => category.Title).Use(GetRandomString(1, 4, 10))
                 .OnProperty(category => category.Icon).Use(GetRandomString(1, 4, 10))
-                .OnProperty(category => category.Type).Use("Expense")
                 .OnProperty(category => category.TimeCreated).Use(DateTime.UtcNow.Round(new TimeSpan(0, 0, 0, 1)))
                 .OnProperty(category => category.TimeModify).Use(DateTime.UtcNow.Round(new TimeSpan(0, 0, 0, 1)).AddHours(1));
 

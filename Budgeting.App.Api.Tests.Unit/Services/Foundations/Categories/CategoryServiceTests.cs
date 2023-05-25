@@ -81,7 +81,6 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
                 .OnProperty(category => category.CategoryId).Use(categoryId)
                 .OnProperty(category => category.Title).Use("Lunch")
                 .OnProperty(category => category.Icon).Use("ffff")
-                .OnProperty(category => category.Type).Use("Expense")
                 .OnProperty(category => category.TimeCreated).Use(dates)
                 .OnProperty(category => category.TimeModify).Use(dates.AddDays(10));
 
@@ -91,10 +90,10 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Categories
         private static IEnumerable<object[]> InvalidDataCategory() =>
             new List<object[]>
             {
-                new object[] {Guid.Empty, "   ", "   ", DateTime.MinValue, DateTime.MinValue },
-                new object[] {Guid.Empty, null, null, DateTime.MinValue, DateTime.MinValue },
-                new object[] {Guid.Empty, new MnemonicString(1, 1, 1).GetValue(), new MnemonicString(1, 1, 1).GetValue(), DateTime.MinValue, DateTime.MinValue },
-                new object[] {Guid.Empty, new MnemonicString(1, 20, 20).GetValue(), new MnemonicString(1, 20, 20).GetValue(), DateTime.MinValue, DateTime.MinValue }
+                new object[] {Guid.Empty, "   ", DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, null, DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, new MnemonicString(1, 1, 1).GetValue(), DateTime.MinValue, DateTime.MinValue },
+                new object[] {Guid.Empty, new MnemonicString(1, 20, 20).GetValue(), DateTime.MinValue, DateTime.MinValue }
             };
     }
 }
