@@ -4,9 +4,11 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-namespace Budgeting.App.Api.Brokers.Storages
+namespace Budgeting.App.Api.Models.Transactions
 {
-    public partial class StorageBroker
+    public enum Type
     {
+        Income,
+        Expense
     }
 }

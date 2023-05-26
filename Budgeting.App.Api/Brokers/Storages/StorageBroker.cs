@@ -1,4 +1,10 @@
-﻿using Budgeting.App.Api.Attributes;
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// ---------------------------------------------------------------
+
+using Budgeting.App.Api.Attributes;
 using MongoDB.Driver;
 
 namespace Budgeting.App.Api.Brokers.Storages
@@ -33,6 +39,7 @@ namespace Budgeting.App.Api.Brokers.Storages
         public static void RegisterClassMap()
         {
             RegisterAccountMap();
+            RegisterTransactionMap();
         }
     }
 }

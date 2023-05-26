@@ -1,4 +1,10 @@
-﻿using Budgeting.App.Api.Models.Categories;
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// ---------------------------------------------------------------
+
+using Budgeting.App.Api.Models.Categories;
 using MongoDB.Driver;
 
 namespace Budgeting.App.Api.Brokers.Storages
@@ -30,8 +36,8 @@ namespace Budgeting.App.Api.Brokers.Storages
                 this.db.GetCollection<Category>(GetCollectionName<Category>());
 
             var categroy = await this.categoryCollection
-                                       .Find(obj => obj.CategoryId == categoryId)
-                                          .FirstOrDefaultAsync();
+                .Find(obj => obj.CategoryId == categoryId)
+                 .FirstOrDefaultAsync();
 
             return categroy;
         }
