@@ -4,9 +4,13 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
+using Budgeting.App.Api.Models.Accounts;
+
 namespace Budgeting.App.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
+        ValueTask<Account> InsertAccountAsync(Account account);
+        ValueTask<Account> SelectAccountByIdAsync(Guid accountId);
     }
 }

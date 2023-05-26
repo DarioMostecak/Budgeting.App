@@ -40,6 +40,10 @@ namespace Budgeting.App.Api.Brokers.Storages
                                .SetSerializer(new StringSerializer(BsonType.String))
                                 .SetElementName("description");
 
+                transactionMap.MapIdField(transaction => transaction.Note)
+                               .SetSerializer(new StringSerializer(BsonType.String))
+                                .SetElementName("note");
+
                 transactionMap.MapField(transaction => transaction.TimeCreated)
                            .SetSerializer(new StringSerializer(BsonType.DateTime))
                             .SetElementName("time_created")

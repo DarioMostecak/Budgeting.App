@@ -4,10 +4,12 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
+using Budgeting.App.Api.Attributes;
 using Budgeting.App.Api.Models.Categories;
 
 namespace Budgeting.App.Api.Models.Transactions
 {
+    [BsonCollection("transactions")]
     public class Transaction
     {
         public Guid TransactionId { get; set; }
