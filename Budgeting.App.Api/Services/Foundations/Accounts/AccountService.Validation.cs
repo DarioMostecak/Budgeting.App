@@ -4,12 +4,9 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-namespace Budgeting.App.Api.Models.Categories.Exceptions
+namespace Budgeting.App.Api.Services.Foundations.Accounts
 {
-    public class NotFoundCategoryException : Exception
+    public partial class AccountService
     {
-        public NotFoundCategoryException(Guid categoryId)
-            : base(message: $"Couldn't find category with id: {categoryId}.") { }
-
     }
 }

@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Brokers\UserManagment\" />
     <Folder Include="Controllers\V2\" />
-    <Folder Include="Models\Accounts\Exceptions\" />
     <Folder Include="Models\Transactions\Exceptions\" />
   </ItemGroup>
 

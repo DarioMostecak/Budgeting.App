@@ -4,12 +4,13 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-namespace Budgeting.App.Api.Models.Categories.Exceptions
-{
-    public class NotFoundCategoryException : Exception
-    {
-        public NotFoundCategoryException(Guid categoryId)
-            : base(message: $"Couldn't find category with id: {categoryId}.") { }
+using Budgeting.App.Api.Models.Accounts;
 
+namespace Budgeting.App.Api.Services.Foundations.Accounts
+{
+    public interface IAccountService
+    {
+        ValueTask<Account> AddAccountAsync(Account account);
+        ValueTask<Account> RetrieveAccountById(Guid accountId);
     }
 }
