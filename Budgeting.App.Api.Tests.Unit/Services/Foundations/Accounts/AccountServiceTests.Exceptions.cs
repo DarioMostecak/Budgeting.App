@@ -8,6 +8,7 @@ using Budgeting.App.Api.Models.Accounts;
 using Budgeting.App.Api.Models.Accounts.Exceptions;
 using MongoDB.Driver;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -43,6 +44,44 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Accounts
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedAccountDependencyException))),
+                     Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertAccountAsync(It.IsAny<Account>()),
+                 Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfExceptionOccurresAndLogItAsync()
+        {
+            //given
+            Account someAccount = CreateRandomAccount();
+            var exception = new Exception();
+
+            var failedAccountServiceException =
+                new FailedAccountServiceException(exception);
+
+            var expectedAccountServiceException =
+                new AccountServiceException(failedAccountServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertAccountAsync(It.IsAny<Account>()))
+                       .ThrowsAsync(exception);
+
+            //when
+            ValueTask<Account> addAccountTask =
+                this.accountService.AddAccountAsync(someAccount);
+
+            //then
+            await Assert.ThrowsAsync<AccountServiceException>(() =>
+                addAccountTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccountServiceException))),
                      Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
