@@ -33,7 +33,8 @@ namespace Budgeting.App.Api.Brokers.Storages
                              .SetIsRequired(true);
 
                 accountMap.MapField(accountMap => accountMap.Transactions)
-                           .SetElementName("transactions");
+                           .SetElementName("transactions")
+                            .SetIsRequired(false);
 
                 accountMap.MapField(account => account.TimeCreated)
                            .SetSerializer(new StringSerializer(BsonType.DateTime))

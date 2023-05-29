@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using Budgeting.App.Api.Brokers.Loggings;
+using Budgeting.App.Api.Brokers.Storages;
 using Budgeting.App.Api.Models.Accounts;
 
 namespace Budgeting.App.Api.Services.Foundations.Accounts
@@ -12,16 +13,23 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
     public partial class AccountService : IAccountService
     {
         private readonly ILoggingBroker loggingBroker;
+        private readonly IStorageBroker storageBroker;
 
-        public AccountService(ILoggingBroker loggingBroker)
+        public AccountService(
+            ILoggingBroker loggingBroker,
+            IStorageBroker storageBroker)
         {
             this.loggingBroker = loggingBroker;
+            this.storageBroker = storageBroker;
         }
 
-        public ValueTask<Account> AddAccountAsync(Account account)
+        public ValueTask<Account> AddAccountAsync(Account account) =>
+        TryCatch(async () =>
         {
-            throw new NotImplementedException();
-        }
+            //Validate account
+            return await this.storageBroker.InsertAccountAsync(account);
+        });
+
 
         public ValueTask<Account> RetrieveAccountById(Guid accountId)
         {
