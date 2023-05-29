@@ -26,7 +26,8 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
         public ValueTask<Account> AddAccountAsync(Account account) =>
         TryCatch(async () =>
         {
-            //Validate account
+            ValidateAccountOnCreate(account);
+
             return await this.storageBroker.InsertAccountAsync(account);
         });
 
