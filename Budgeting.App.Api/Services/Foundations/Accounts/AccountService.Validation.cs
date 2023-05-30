@@ -34,6 +34,7 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
         {
             Condition = !Guid.TryParse(userIdentityId, out _)
                || string.IsNullOrWhiteSpace(userIdentityId),
+
             Message = "UserIdentityId isn't valid.",
         };
 
@@ -48,6 +49,14 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
             Condition = date == default,
             Message = "Date is required."
         };
+
+        private static void ValidateUserIdentityIdIsInvalid(string userIdentityId)
+        {
+            if (!Guid.TryParse(userIdentityId, out _) || string.IsNullOrWhiteSpace(userIdentityId))
+                throw new InvalidAccountException(
+                    parameterName: nameof(userIdentityId),
+                    parameterValue: userIdentityId);
+        }
 
         private static void ValidateAccountIsNull(Account account)
         {

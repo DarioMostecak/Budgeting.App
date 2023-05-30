@@ -34,7 +34,8 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
         public ValueTask<Account> RetrieveAccountByUserIdentityIdAsync(string userIdentityId) =>
         TryCatch(async () =>
         {
-            //validate userIdentityId
+            ValidateUserIdentityIdIsInvalid(userIdentityId);
+
             Account account = await this.storageBroker.SelectAccountByUserIdentityIdAsync(userIdentityId);
             //ValidateAccountIsNull
             return new Account();
