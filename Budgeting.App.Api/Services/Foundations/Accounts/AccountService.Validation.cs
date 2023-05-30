@@ -32,7 +32,7 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
 
         private static dynamic IsInvalidX(string userIdentityId) => new
         {
-            Condition = Guid.TryParse(userIdentityId, out _)
+            Condition = !Guid.TryParse(userIdentityId, out _)
                || string.IsNullOrWhiteSpace(userIdentityId),
             Message = "UserIdentityId isn't valid.",
         };

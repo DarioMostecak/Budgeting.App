@@ -61,7 +61,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Accounts
             filler.Setup()
                 .OnProperty(account => account.AccountId).Use(accountId)
                 .OnProperty(account => account.UserIdentityId).Use(userIdentityId)
-                .OnProperty(account => account.Balance).Use(It.IsAny<decimal>())
+                .OnProperty(account => account.Balance).Use(0)
                 .OnProperty(account => account.TimeCreated).Use(dates)
                 .OnProperty(account => account.TimeModify).Use(dates.AddDays(10));
 
