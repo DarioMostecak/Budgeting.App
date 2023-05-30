@@ -12,6 +12,7 @@ using Budgeting.App.Api.Services.Foundations.Accounts;
 using MongoDB.Driver;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
@@ -40,6 +41,9 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Accounts
         private static MongoException GetMongoException() =>
             (MongoException)FormatterServices.GetSafeUninitializedObject(typeof(MongoException));
 
+        private static MongoWriteException GetMongoWriteException() =>
+            (MongoWriteException)FormatterServices.GetSafeUninitializedObject(typeof(MongoWriteException));
+
         private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
         {
             return actualException =>
@@ -63,6 +67,12 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Accounts
 
             return filler;
         }
+
+        private static IEnumerable<object[]> InvalidAccountData() =>
+            new List<object[]>
+            {
+                new object[] {Guid.Empty, null, 20M, DateTime.MinValue}
+            };
 
     }
 }

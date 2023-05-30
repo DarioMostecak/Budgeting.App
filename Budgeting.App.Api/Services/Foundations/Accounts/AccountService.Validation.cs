@@ -14,7 +14,40 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
         private static void ValidateAccountOnCreate(Account account)
         {
             ValidateAccountIsNull(account);
+
+            Validate(
+                (rule: IsInvalidX(account.AccountId), parameter: nameof(Account.AccountId)),
+                (rule: IsInvalidX(account.UserIdentityId), parameter: nameof(Account.UserIdentityId)),
+                (rule: IsInvalidX(account.Balance), parameter: nameof(Account.Balance)),
+                (rule: IsInvalidX(account.TimeCreated), parameter: nameof(Account.TimeCreated)),
+                (rule: IsInvalidX(account.TimeModify), parameter: nameof(Account.TimeModify))
+                );
         }
+
+        private static dynamic IsInvalidX(Guid accountId) => new
+        {
+            Condition = accountId == Guid.Empty,
+            Message = "Id isn't valid.",
+        };
+
+        private static dynamic IsInvalidX(string userIdentityId) => new
+        {
+            Condition = Guid.TryParse(userIdentityId, out _)
+               || string.IsNullOrWhiteSpace(userIdentityId),
+            Message = "UserIdentityId isn't valid.",
+        };
+
+        private static dynamic IsInvalidX(decimal decimalNumber) => new
+        {
+            Condition = decimalNumber != 0,
+            Message = "Balance must be zero.",
+        };
+
+        private static dynamic IsInvalidX(DateTime date) => new
+        {
+            Condition = date == default,
+            Message = "Date is required."
+        };
 
         private static void ValidateAccountIsNull(Account account)
         {
