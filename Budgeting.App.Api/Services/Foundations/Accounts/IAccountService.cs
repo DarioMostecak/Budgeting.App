@@ -11,6 +11,7 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
     public interface IAccountService
     {
         ValueTask<Account> AddAccountAsync(Account account);
-        ValueTask<Account> RetrieveAccountById(Guid accountId);
+        ValueTask<Account> RetrieveAccountByUserIdentityIdAsync(string userIdentityId);
+        ValueTask<Account> RetrieveAccountByIdAsync(Guid accountId);
     }
 }

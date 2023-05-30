@@ -6,7 +6,7 @@
 
 namespace Budgeting.App.Api.Models.Transactions
 {
-    public enum Type
+    public enum TransactionType
     {
         Income,
         Expense

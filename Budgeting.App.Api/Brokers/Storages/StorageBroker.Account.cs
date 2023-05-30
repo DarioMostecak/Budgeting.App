@@ -23,6 +23,16 @@ namespace Budgeting.App.Api.Brokers.Storages
             return account;
         }
 
+        public async ValueTask<Account> SelectAccountByUserIdentityIdAsync(string userIdentityId)
+        {
+            this.accountCollection =
+                this.db.GetCollection<Account>(GetCollectionName<Account>());
+
+            return await this.accountCollection
+                .Find(account => account.UserIdentityId == userIdentityId)
+                 .FirstOrDefaultAsync();
+        }
+
         public async ValueTask<Account> SelectAccountByIdAsync(Guid accountId)
         {
             this.accountCollection =

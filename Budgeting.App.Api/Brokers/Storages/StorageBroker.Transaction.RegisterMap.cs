@@ -18,7 +18,7 @@ namespace Budgeting.App.Api.Brokers.Storages
             BsonClassMap.RegisterClassMap<Transaction>(transactionMap =>
             {
                 transactionMap.MapIdField(transaction => transaction.TransactionId)
-                               .SetSerializer(new StringSerializer(BsonType.String))
+                               .SetSerializer(new GuidSerializer(BsonType.String))
                                 .SetElementName("_transaction_id")
                                  .SetIsRequired(true);
 
@@ -27,12 +27,12 @@ namespace Budgeting.App.Api.Brokers.Storages
                                  .SetIsRequired(true);
 
                 transactionMap.MapIdField(transaction => transaction.Type)
-                               .SetSerializer(new StringSerializer(BsonType.String))
+                               .SetSerializer(new EnumSerializer<TransactionType>(BsonType.String))
                                 .SetElementName("type")
                                  .SetIsRequired(true);
 
                 transactionMap.MapIdField(transaction => transaction.Amount)
-                               .SetSerializer(new StringSerializer(BsonType.Decimal128))
+                               .SetSerializer(new DecimalSerializer(BsonType.Decimal128))
                                 .SetElementName("amount")
                                  .SetIsRequired(true);
 
@@ -45,12 +45,12 @@ namespace Budgeting.App.Api.Brokers.Storages
                                 .SetElementName("note");
 
                 transactionMap.MapField(transaction => transaction.TimeCreated)
-                           .SetSerializer(new StringSerializer(BsonType.DateTime))
+                           .SetSerializer(new DateTimeSerializer(BsonType.DateTime))
                             .SetElementName("time_created")
                              .SetIsRequired(true);
 
                 transactionMap.MapField(transaction => transaction.TimeModify)
-                           .SetSerializer(new StringSerializer(BsonType.DateTime))
+                           .SetSerializer(new DateTimeSerializer(BsonType.DateTime))
                             .SetElementName("time_modify")
                              .SetIsRequired(true);
 

@@ -14,7 +14,7 @@ namespace Budgeting.App.Api.Models.Transactions
     {
         public Guid TransactionId { get; set; }
         public Category Category { get; set; }
-        public Type Type { get; set; }
+        public TransactionType Type { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
         public string Note { get; set; }

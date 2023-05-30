@@ -44,6 +44,8 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Accounts
         private static MongoWriteException GetMongoWriteException() =>
             (MongoWriteException)FormatterServices.GetSafeUninitializedObject(typeof(MongoWriteException));
 
+        private static string GetRandomIdentityUserId() => Guid.NewGuid().ToString();
+
         private static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
         {
             return actualException =>

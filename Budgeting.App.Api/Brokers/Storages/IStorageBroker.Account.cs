@@ -11,6 +11,7 @@ namespace Budgeting.App.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Account> InsertAccountAsync(Account account);
+        ValueTask<Account> SelectAccountByUserIdentityIdAsync(string userIdentityId);
         ValueTask<Account> SelectAccountByIdAsync(Guid accountId);
     }
 }

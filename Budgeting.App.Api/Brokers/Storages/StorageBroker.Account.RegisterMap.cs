@@ -18,7 +18,7 @@ namespace Budgeting.App.Api.Brokers.Storages
             BsonClassMap.RegisterClassMap<Account>(accountMap =>
             {
                 accountMap.MapIdField(account => account.AccountId)
-                           .SetSerializer(new StringSerializer(BsonType.String))
+                           .SetSerializer(new GuidSerializer(BsonType.String))
                              .SetElementName("_account_id")
                               .SetIsRequired(true);
 
@@ -28,7 +28,7 @@ namespace Budgeting.App.Api.Brokers.Storages
                              .SetIsRequired(true);
 
                 accountMap.MapField(account => account.Balance)
-                           .SetSerializer(new StringSerializer(BsonType.Decimal128))
+                           .SetSerializer(new DecimalSerializer(BsonType.Decimal128))
                             .SetElementName("balance")
                              .SetIsRequired(true);
 
@@ -37,12 +37,12 @@ namespace Budgeting.App.Api.Brokers.Storages
                             .SetIsRequired(false);
 
                 accountMap.MapField(account => account.TimeCreated)
-                           .SetSerializer(new StringSerializer(BsonType.DateTime))
+                           .SetSerializer(new DateTimeSerializer(BsonType.DateTime))
                             .SetElementName("time_created")
                              .SetIsRequired(true);
 
                 accountMap.MapField(account => account.TimeModify)
-                           .SetSerializer(new StringSerializer(BsonType.DateTime))
+                           .SetSerializer(new DateTimeSerializer(BsonType.DateTime))
                             .SetElementName("time_modify")
                              .SetIsRequired(true);
 

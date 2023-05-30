@@ -31,13 +31,16 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
             return await this.storageBroker.InsertAccountAsync(account);
         });
 
-        public ValueTask<Account> RetrieveAccountByUserIdentityId(string userIdentityId) =>
+        public ValueTask<Account> RetrieveAccountByUserIdentityIdAsync(string userIdentityId) =>
         TryCatch(async () =>
         {
+            //validate userIdentityId
+            Account account = await this.storageBroker.SelectAccountByUserIdentityIdAsync(userIdentityId);
+            //ValidateAccountIsNull
             return new Account();
         });
 
-        public ValueTask<Account> RetrieveAccountById(Guid accountId)
+        public ValueTask<Account> RetrieveAccountByIdAsync(Guid accountId)
         {
             throw new NotImplementedException();
         }
