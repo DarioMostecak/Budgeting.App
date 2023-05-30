@@ -13,5 +13,9 @@ namespace Budgeting.App.Api.Models.Accounts.Exceptions
         public NotFoundAccountException(Guid id)
             : base(message: $"Account with id:{id} couldn't be found.")
         { }
+
+        public NotFoundAccountException(string id)
+            : base(message: $"Account with userIdentityid:{id} couldn't be found.")
+        { }
     }
 }

@@ -58,6 +58,12 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
                     parameterValue: userIdentityId);
         }
 
+        private static void ValidateStorageAccountIsNull(Account storageAccount, string userIdentityId)
+        {
+            if (storageAccount is null)
+                throw new NotFoundAccountException(userIdentityId);
+        }
+
         private static void ValidateAccountIsNull(Account account)
         {
             if (account is null)

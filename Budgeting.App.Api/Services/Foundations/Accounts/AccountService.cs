@@ -36,9 +36,11 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
         {
             ValidateUserIdentityIdIsInvalid(userIdentityId);
 
-            Account account = await this.storageBroker.SelectAccountByUserIdentityIdAsync(userIdentityId);
-            //ValidateAccountIsNull
-            return new Account();
+            Account storageAccount = await this.storageBroker.SelectAccountByUserIdentityIdAsync(userIdentityId);
+
+            ValidateStorageAccountIsNull(storageAccount, userIdentityId);
+
+            return storageAccount;
         });
 
         public ValueTask<Account> RetrieveAccountByIdAsync(Guid accountId)
