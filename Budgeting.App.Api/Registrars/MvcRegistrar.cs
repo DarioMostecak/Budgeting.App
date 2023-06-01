@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Budgeting.App.Api.Options;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace Budgeting.App.Api.Registrars
@@ -8,6 +9,16 @@ namespace Budgeting.App.Api.Registrars
         public void RegisterServices(WebApplicationBuilder builder)
         {
             builder.Services.AddControllers();
+
+            #region Add Mongo options
+            var mongoDbOptions = new MongoDbOptions();
+
+            builder.Configuration.Bind(nameof(MongoDbOptions), mongoDbOptions);
+            var mongoDbOptionsSection = builder.Configuration.GetSection(nameof(MongoDbOptions));
+
+            builder.Services.Configure<MongoDbOptions>(mongoDbOptionsSection);
+            builder.Services.AddScoped<MongoDbOptions>();
+            #endregion
 
             builder.Services.AddApiVersioning(config =>
             {

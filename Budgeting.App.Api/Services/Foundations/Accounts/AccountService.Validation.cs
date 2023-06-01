@@ -82,7 +82,6 @@ namespace Budgeting.App.Api.Services.Foundations.Accounts
                         key: parameter,
                         value: rule.Message);
                 }
-
             }
             invalidaccountException.ThrowIfContainsErrors();
         }

@@ -29,11 +29,11 @@ namespace Budgeting.App.Api.Brokers.Storages
 
         private IMongoDatabase GetDatabase()
         {
-            var connectionString = this.configuration["BudgedDatabaseSettings:ConnectionString"];
+            var connectionString = this.configuration["MongoDbOptions:ConnectionString"];
             var client = new MongoClient(connectionString);
 
             return client
-                .GetDatabase(this.configuration["BudgedDatabaseSettings:DatabaseName"]);
+                .GetDatabase(this.configuration["MongoDbOptions:DatabaseName"]);
         }
 
         public static void RegisterClassMap()

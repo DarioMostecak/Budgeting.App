@@ -4,12 +4,13 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-namespace Budgeting.App.Api.Options
+namespace Budgeting.App.Api.Brokers.DbTransactions
 {
-    public class JwtSettings
+    public interface IDbTransactionBroker
     {
-        public string SigningKey { get; set; }
-        public string Issuer { get; set; }
-        public string[] Audiences { get; set; }
+        void BeginTransaction();
+        void CommitTransaction();
+        void RollBackTransaction();
+        void DisposeTransaction();
     }
 }

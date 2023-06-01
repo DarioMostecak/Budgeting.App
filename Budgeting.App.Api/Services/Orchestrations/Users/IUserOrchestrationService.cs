@@ -4,12 +4,12 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-namespace Budgeting.App.Api.Options
+using Budgeting.App.Api.Models.Users;
+
+namespace Budgeting.App.Api.Services.Orchestrations.Users
 {
-    public class JwtSettings
+    public interface IUserOrchestrationService
     {
-        public string SigningKey { get; set; }
-        public string Issuer { get; set; }
-        public string[] Audiences { get; set; }
+        ValueTask<User> RegirsterUserAsync(User user);
     }
 }

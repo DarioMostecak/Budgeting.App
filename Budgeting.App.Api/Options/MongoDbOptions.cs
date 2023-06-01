@@ -6,10 +6,9 @@
 
 namespace Budgeting.App.Api.Options
 {
-    public class JwtSettings
+    public class MongoDbOptions
     {
-        public string SigningKey { get; set; }
-        public string Issuer { get; set; }
-        public string[] Audiences { get; set; }
+        public string DatabaseName { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

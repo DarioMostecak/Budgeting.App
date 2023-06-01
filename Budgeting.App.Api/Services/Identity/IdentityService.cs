@@ -1,5 +1,11 @@
-﻿using Budgeting.App.Api.Brokers.Loggings;
-using Budgeting.App.Api.Brokers.UserManagment;
+﻿// ---------------------------------------------------------------
+// Author: Dario Mostecak
+// Copyright (c) 2023 Dario Mostecak. All rights reserved.
+// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
+// ---------------------------------------------------------------
+
+using Budgeting.App.Api.Brokers.Loggings;
+using Budgeting.App.Api.Brokers.UserManagers;
 using Budgeting.App.Api.Models.IdentityRequests;
 using Budgeting.App.Api.Models.IdentityResponses;
 using Budgeting.App.Api.Models.Users;

@@ -1,7 +1,7 @@
 ﻿using Budgeting.App.Api.Models.Users;
 using Microsoft.AspNetCore.Identity;
 
-namespace Budgeting.App.Api.Brokers.UserManagment
+namespace Budgeting.App.Api.Brokers.UserManagers
 {
     public interface IUserManagerBroker
     {

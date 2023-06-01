@@ -28,8 +28,8 @@ namespace Budgeting.App.Api.Registrars
             {
                 MongoDbSettings = new MongoDbSettings
                 {
-                    ConnectionString = builder.Configuration["BudgedDatabaseSettings:ConnectionString"],
-                    DatabaseName = builder.Configuration["BudgedDatabaseSettings:DatabaseName"]
+                    ConnectionString = builder.Configuration["MongoDbOptions:ConnectionString"],
+                    DatabaseName = builder.Configuration["MongoDbOptions:DatabaseName"]
                 },
                 IdentityOptionsAction = (options) =>
                 {

@@ -1,5 +1,5 @@
 ﻿using Budgeting.App.Api.Brokers.Loggings;
-using Budgeting.App.Api.Brokers.UserManagment;
+using Budgeting.App.Api.Brokers.UserManagers;
 using Budgeting.App.Api.Models.ExceptionModels;
 using Budgeting.App.Api.Models.IdentityRequests;
 using Budgeting.App.Api.Models.IdentityResponses;
