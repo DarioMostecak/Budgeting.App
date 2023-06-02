@@ -2,6 +2,7 @@
 using Budgeting.App.Api.Brokers.DbTransactions;
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.Storages;
+using Budgeting.App.Api.Brokers.UniqueIDGenerators;
 using Budgeting.App.Api.Brokers.UserManagers;
 using Budgeting.App.Api.Services.Foundations.Accounts;
 using Budgeting.App.Api.Services.Foundations.Categories;
@@ -20,6 +21,7 @@ namespace Budgeting.App.Api.Registrars
             builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             builder.Services.AddTransient<IUserManagerBroker, UserManagerBroker>();
             builder.Services.AddTransient<IDbTransactionBroker, DbTransactionBroker>();
+            builder.Services.AddTransient<IUniqueIDGeneratorBroker, UniqueIDGeneratorBroker>();
             #endregion
 
             #region Add Foundations

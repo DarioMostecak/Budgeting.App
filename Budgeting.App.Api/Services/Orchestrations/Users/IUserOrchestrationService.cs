@@ -10,6 +10,6 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
 {
     public interface IUserOrchestrationService
     {
-        ValueTask<User> RegirsterUserAsync(User user);
+        ValueTask<User> RegirsterUserAsync(User user, string password);
     }
 }

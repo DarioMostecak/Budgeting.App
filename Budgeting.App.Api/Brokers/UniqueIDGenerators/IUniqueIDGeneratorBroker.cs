@@ -4,13 +4,10 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-using Budgeting.App.Api.Extensions;
-
-namespace Budgeting.App.Api.Brokers.DateTimes
+namespace Budgeting.App.Api.Brokers.UniqueIDGenerators
 {
-    public class DateTimeBroker : IDateTimeBroker
+    public interface IUniqueIDGeneratorBroker
     {
-        public DateTime GetCurrentDateTime() =>
-            DateTime.UtcNow.Round(new TimeSpan(0, 0, 0, 1));
+        Guid GenerateUniqueID();
     }
 }
