@@ -5,14 +5,13 @@
 // ---------------------------------------------------------------
 
 using Budgeting.App.Api.Models.ExceptionModels;
-using System.Collections;
 
 namespace Budgeting.App.Api.Models.Users.Exceptions
 {
-    public class UserValidationException : ExceptionModel
+    public class UserOrchestrationDependencyException : ExceptionModel
     {
-        public UserValidationException(Exception innerException, IDictionary data)
-            : base(message: innerException.Message, innerException, data)
+        public UserOrchestrationDependencyException(Exception innerException)
+            : base(message: "User orchestration dependency errror occurr, please contact support", innerException)
         { }
     }
 }

@@ -9,9 +9,9 @@ using System.Collections;
 
 namespace Budgeting.App.Api.Models.Users.Exceptions
 {
-    public class UserValidationException : ExceptionModel
+    public class UserOrchestrationDependencyValidationException : ExceptionModel
     {
-        public UserValidationException(Exception innerException, IDictionary data)
+        public UserOrchestrationDependencyValidationException(Exception innerException, IDictionary data)
             : base(message: innerException.Message, innerException, data)
         { }
     }

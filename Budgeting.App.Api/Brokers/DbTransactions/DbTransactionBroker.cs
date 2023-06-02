@@ -4,12 +4,6 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
-// ---------------------------------------------------------------
-// Author: Dario Mostecak
-// Copyright (c) 2023 Dario Mostecak. All rights reserved.
-// FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
-// ---------------------------------------------------------------
-
 using Budgeting.App.Api.Options;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -34,7 +28,6 @@ namespace Budgeting.App.Api.Brokers.DbTransactions
 
         public void CommitTransaction() =>
             this.clientSessionHandle.CommitTransaction();
-
 
         public void RollBackTransaction() =>
             this.clientSessionHandle.AbortTransaction();
