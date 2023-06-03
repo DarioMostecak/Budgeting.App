@@ -21,7 +21,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
         private readonly IAccountService accountService;
         private readonly ILoggingBroker loggingBroker;
         private readonly IDbTransactionBroker dbTransactionBroker;
-        private readonly IUniqueIDGeneratorBroker uniqueIdGeneratorBroker;
+        private readonly IUniqueIDGeneratorBroker uniqueIDGeneratorBroker;
         private readonly IDateTimeBroker dateTimeBroker;
 
         public UserOrchestrationService(
@@ -36,10 +36,11 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
             this.accountService = accountService;
             this.loggingBroker = loggingBroker;
             this.dbTransactionBroker = dbTransactionBroker;
-            this.uniqueIdGeneratorBroker = uniqueIDGeneratorBroker;
+            this.uniqueIDGeneratorBroker = uniqueIDGeneratorBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<User> RegirsterUserAsync(User user, string password) =>
+        public ValueTask<User> RegisterUserAsync(User user, string password) =>
         TryCatch(async () =>
         {
             //Validate user is null
@@ -50,7 +51,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
             User newUser =
                 await this.userService.AddUserAsync(user, password);
 
-            //validate user is  null
+            //validate user is null
 
             Account account = CreateAccount(newUser.Id.ToString());
 
@@ -70,13 +71,15 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
                 this.dateTimeBroker.GetCurrentDateTime();
 
             Guid accountId =
-                this.uniqueIdGeneratorBroker.GenerateUniqueID();
+                this.uniqueIDGeneratorBroker.GenerateUniqueID();
+
+            decimal initialBalance = 0;
 
             return new Account
             {
                 AccountId = accountId,
                 UserIdentityId = userIdentityId,
-                Balance = 0,
+                Balance = initialBalance,
                 TimeCreated = currentDateTime,
                 TimeModify = currentDateTime,
             };

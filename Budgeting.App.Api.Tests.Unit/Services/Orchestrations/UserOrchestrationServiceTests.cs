@@ -8,14 +8,22 @@ using Budgeting.App.Api.Brokers.DateTimes;
 using Budgeting.App.Api.Brokers.DbTransactions;
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.UniqueIDGenerators;
+using Budgeting.App.Api.Models.Accounts.Exceptions;
+using Budgeting.App.Api.Models.ExceptionModels;
+using Budgeting.App.Api.Models.Users;
+using Budgeting.App.Api.Models.Users.Exceptions;
 using Budgeting.App.Api.Services.Foundations.Accounts;
 using Budgeting.App.Api.Services.Foundations.Users;
 using Budgeting.App.Api.Services.Orchestrations.Users;
 using Moq;
+using System;
+using System.Linq.Expressions;
+using Tynamix.ObjectFiller;
+using Xunit;
 
 namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
 {
-    public class UserOrchestrationServiceTests
+    public partial class UserOrchestrationServiceTests
     {
         private readonly Mock<IUserService> userServiceMock;
         private readonly Mock<IAccountService> accountserviceMock;
@@ -41,6 +49,56 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
                 dbTransactionBroker: this.dbTransactionBrokerMock.Object,
                 uniqueIDGeneratorBroker: this.uniqueIDGeneratorBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
+        }
+
+        private static string GetRandomPassword() => new MnemonicString(1, 8, 20).GetValue();
+
+        private static Expression<Func<ExceptionModel, bool>> SameExceptionAs(Exception expectedException)
+        {
+            return actualException => actualException.Message == expectedException.Message
+                && actualException.InnerException.Message == expectedException.InnerException.Message
+                && (actualException.InnerException as ExceptionModel).DataEquals(expectedException.InnerException.Data);
+        }
+
+        public static TheoryData UserOrchestrationDependencyExceptions()
+        {
+            var dependencyServiceException = new Exception();
+
+            var userDependencyException =
+                new UserDependencyException(dependencyServiceException);
+
+            var userServiceException =
+                new UserServiceException(dependencyServiceException);
+
+            var accountDependencyException =
+                new AccountDependencyException(dependencyServiceException);
+
+            var accountServiceExceotion =
+                new AccountServiceException(dependencyServiceException);
+
+            return new TheoryData<Exception>
+            {
+                userDependencyException,
+                userServiceException,
+                accountDependencyException,
+                accountServiceExceotion
+            };
+        }
+
+
+        private static User CreateUser()
+        {
+            var newUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = "travis@mail.com",
+                FirstName = "Travis",
+                LastName = "Kongo",
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow.AddDays(10),
+            };
+
+            return newUser;
         }
     }
 }

@@ -82,7 +82,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
         private UserOrchestrationDependencyException CreateAndLogDependencyException(Exception exception)
         {
             var userOrchestrationDependencyException =
-                new UserOrchestrationDependencyException(exception.InnerException);
+                new UserOrchestrationDependencyException(exception);
 
             this.loggingBroker.LogError(userOrchestrationDependencyException);
 
