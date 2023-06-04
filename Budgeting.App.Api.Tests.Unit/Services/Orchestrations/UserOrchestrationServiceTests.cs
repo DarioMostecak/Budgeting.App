@@ -76,12 +76,34 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
             var accountServiceExceotion =
                 new AccountServiceException(dependencyServiceException);
 
-            return new TheoryData<Exception>
+            return new TheoryData<ExceptionModel>
             {
                 userDependencyException,
                 userServiceException,
                 accountDependencyException,
                 accountServiceExceotion
+            };
+        }
+
+        public static TheoryData UserOrchestratioDependencyValidationExceptions()
+        {
+            string errorMessage = "Alert Error.";
+            var validationException = new ExceptionModel(errorMessage);
+
+            var userValidationException =
+                new UserValidationException(
+                    innerException: validationException,
+                    data: validationException.Data);
+
+            var accountValidationException =
+                new AccountValidationException(
+                    innerException: validationException,
+                    data: validationException.Data);
+
+            return new TheoryData<Exception>
+            {
+                userValidationException,
+                accountValidationException
             };
         }
 

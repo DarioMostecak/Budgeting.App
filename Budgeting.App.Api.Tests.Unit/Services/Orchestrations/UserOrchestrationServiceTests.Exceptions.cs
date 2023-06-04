@@ -16,6 +16,61 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
     public partial class UserOrchestrationServiceTests
     {
         [Theory]
+        [MemberData(nameof(UserOrchestratioDependencyValidationExceptions))]
+        public async Task ShouldThrowDependencyValidationExceptionOnRegisterIfValidationExceptionOccuresAndLogItAsync(
+            Exception validationException)
+        {
+            //given
+            User randomUser = CreateUser();
+            string randomPassword = GetRandomPassword();
+
+            var expectedUserOrchestrationDependencyValidationException =
+                new UserOrchestrationDependencyValidationException(
+                    validationException,
+                    validationException.Data);
+
+            this.userServiceMock.Setup(broker =>
+                broker.AddUserAsync(It.IsAny<User>(), It.IsAny<string>()))
+                       .ThrowsAsync(validationException);
+
+            //when
+            ValueTask<User> registerUserTask =
+                this.userOrchestrationService.RegisterUserAsync(randomUser, randomPassword);
+
+            //then
+            await Assert.ThrowsAsync<UserOrchestrationDependencyValidationException>(() =>
+                registerUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedUserOrchestrationDependencyValidationException))),
+                     Times.Once);
+
+            this.userServiceMock.Verify(broker =>
+                broker.AddUserAsync(It.IsAny<User>(), It.IsAny<string>()),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.BeginTransaction(),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.RollBackTransaction(),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.DisposeTransaction(),
+                 Times.Once);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.accountserviceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dbTransactionBrokerMock.VerifyNoOtherCalls();
+            this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
         [MemberData(nameof(UserOrchestrationDependencyExceptions))]
         public async Task ShouldThrowDependencyExceptionOnRegisterIfDependencyOrServiceExceptionOccurresAndLogItAsync(
             Exception dependencyServiceException)
