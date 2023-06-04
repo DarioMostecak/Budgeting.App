@@ -58,7 +58,9 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
             Account newUserAccount =
                await this.accountService.AddAccountAsync(account);
 
-            //validate account is null
+            ValidateNewUserAccountIsNull(newUserAccount);
+
+            //Validate account id is euqal to new userId
 
             this.dbTransactionBroker.CommitTransaction();
 

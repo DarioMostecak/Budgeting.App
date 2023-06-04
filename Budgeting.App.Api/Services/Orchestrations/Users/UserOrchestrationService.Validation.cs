@@ -30,7 +30,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
                 throw new FailedOperationUserOrchestrationException();
         }
 
-        private static void ValidateUserNewAccountIsNull(Account account)
+        private static void ValidateNewUserAccountIsNull(Account account)
         {
             if (account is null)
                 throw new FailedOperationUserOrchestrationException();

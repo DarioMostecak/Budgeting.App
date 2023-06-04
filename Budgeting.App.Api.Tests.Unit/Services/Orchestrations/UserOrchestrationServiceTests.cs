@@ -8,6 +8,7 @@ using Budgeting.App.Api.Brokers.DateTimes;
 using Budgeting.App.Api.Brokers.DbTransactions;
 using Budgeting.App.Api.Brokers.Loggings;
 using Budgeting.App.Api.Brokers.UniqueIDGenerators;
+using Budgeting.App.Api.Models.Accounts;
 using Budgeting.App.Api.Models.Accounts.Exceptions;
 using Budgeting.App.Api.Models.ExceptionModels;
 using Budgeting.App.Api.Models.Users;
@@ -26,7 +27,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
     public partial class UserOrchestrationServiceTests
     {
         private readonly Mock<IUserService> userServiceMock;
-        private readonly Mock<IAccountService> accountserviceMock;
+        private readonly Mock<IAccountService> accountServiceMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly Mock<IDbTransactionBroker> dbTransactionBrokerMock;
         private readonly Mock<IUniqueIDGeneratorBroker> uniqueIDGeneratorBrokerMock;
@@ -36,7 +37,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
         public UserOrchestrationServiceTests()
         {
             this.userServiceMock = new Mock<IUserService>();
-            this.accountserviceMock = new Mock<IAccountService>();
+            this.accountServiceMock = new Mock<IAccountService>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
             this.dbTransactionBrokerMock = new Mock<IDbTransactionBroker>();
             this.uniqueIDGeneratorBrokerMock = new Mock<IUniqueIDGeneratorBroker>();
@@ -44,7 +45,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
 
             this.userOrchestrationService = new UserOrchestrationService(
                 userService: this.userServiceMock.Object,
-                accountService: this.accountserviceMock.Object,
+                accountService: this.accountServiceMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object,
                 dbTransactionBroker: this.dbTransactionBrokerMock.Object,
                 uniqueIDGeneratorBroker: this.uniqueIDGeneratorBrokerMock.Object,
@@ -121,6 +122,22 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
             };
 
             return newUser;
+        }
+
+        private static Filler<Account> CreateRandomAccountFiller(DateTime dates)
+        {
+            var filler = new Filler<Account>();
+            Guid accountId = Guid.NewGuid();
+            string userIdentityId = Guid.NewGuid().ToString();
+
+            filler.Setup()
+                .OnProperty(account => account.AccountId).Use(accountId)
+                .OnProperty(account => account.UserIdentityId).Use(userIdentityId)
+                .OnProperty(account => account.Balance).Use(0)
+                .OnProperty(account => account.TimeCreated).Use(dates)
+                .OnProperty(account => account.TimeModify).Use(dates.AddDays(10));
+
+            return filler;
         }
     }
 }
