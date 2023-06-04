@@ -51,7 +51,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
             User newUser =
                 await this.userService.AddUserAsync(user, password);
 
-            //validate user is null
+            ValidateNewUserIsNull(newUser);
 
             Account account = CreateAccount(newUser.Id.ToString());
 

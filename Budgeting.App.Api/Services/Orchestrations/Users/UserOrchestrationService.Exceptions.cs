@@ -33,6 +33,12 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
 
                 throw CreateAndLogValidationException(nullUserPasswordException);
             }
+            catch (FailedOperationUserOrchestrationException failedOperationUserOrchestrationException)
+            {
+                this.dbTransactionBroker.RollBackTransaction();
+
+                throw CreateAndLogDependencyException(failedOperationUserOrchestrationException);
+            }
             catch (UserValidationException userValidationException)
             {
                 this.dbTransactionBroker.RollBackTransaction();

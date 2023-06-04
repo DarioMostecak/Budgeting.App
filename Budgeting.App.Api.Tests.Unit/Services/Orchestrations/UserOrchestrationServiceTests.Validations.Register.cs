@@ -95,5 +95,104 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
             this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRegisterIfUserPasswordIsEmptyAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateUser();
+            string nullPassword = string.Empty;
+
+            var nullUserPasswordException =
+                new NullUserPasswordException();
+
+            var expectedUserOrchestrationValidationException =
+                new UserOrchestrationValidationException(nullUserPasswordException);
+
+            //when
+            ValueTask<User> registerUserAsyncTask =
+                this.userOrchestrationService.RegisterUserAsync(randomUser, nullPassword);
+
+            //then
+            await Assert.ThrowsAsync<UserOrchestrationValidationException>(() =>
+                registerUserAsyncTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserOrchestrationValidationException))),
+                     Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+               broker.RollBackTransaction(),
+                Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.DisposeTransaction(),
+                 Times.Once);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.accountserviceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dbTransactionBrokerMock.VerifyNoOtherCalls();
+            this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnRegisterIfCreatedUserIsNullAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateUser();
+            string randomPassword = GetRandomPassword();
+            User nullUser = null;
+
+            var failedOperationUserOrchestrationException =
+                new FailedOperationUserOrchestrationException();
+
+            var expectedUserOrchestrationDependencyException =
+                new UserOrchestrationDependencyException(failedOperationUserOrchestrationException);
+
+            this.userServiceMock.Setup(service =>
+                service.AddUserAsync(It.IsAny<User>(), It.IsAny<string>()))
+                        .ReturnsAsync(nullUser);
+
+            //when
+            ValueTask<User> registerUserAsyncTask =
+                this.userOrchestrationService.RegisterUserAsync(randomUser, randomPassword);
+
+            //then
+            await Assert.ThrowsAsync<UserOrchestrationDependencyException>(() =>
+                registerUserAsyncTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserOrchestrationDependencyException))),
+                     Times.Once);
+
+            this.userServiceMock.Verify(service =>
+                service.AddUserAsync(It.IsAny<User>(), It.IsAny<string>()),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.BeginTransaction(),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.RollBackTransaction(),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                 broker.DisposeTransaction(),
+                  Times.Once);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.accountserviceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dbTransactionBrokerMock.VerifyNoOtherCalls();
+            this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+
+
+        }
     }
 }
