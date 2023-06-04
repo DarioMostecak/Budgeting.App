@@ -266,5 +266,76 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
             this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnRegisterIfAccuntIdentityIdDoNotEqualToUserIdAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateUser();
+            string randomPassword = GetRandomPassword();
+            Account randomAccount = CreateRandomAccount();
+
+            var failedOperationUserOrchestrationException =
+                new FailedOperationUserOrchestrationException();
+
+            var expectedUserOrchestrationDependencyException =
+                new UserOrchestrationDependencyException(failedOperationUserOrchestrationException);
+
+            this.userServiceMock.Setup(service =>
+                service.AddUserAsync(It.IsAny<User>(), It.IsAny<string>()))
+                       .ReturnsAsync(randomUser);
+
+            this.accountServiceMock.Setup(service =>
+                service.AddAccountAsync(It.IsAny<Account>()))
+                       .ReturnsAsync(randomAccount);
+
+            //when
+            ValueTask<User> registerUserAsyncTask =
+                this.userOrchestrationService.RegisterUserAsync(randomUser, randomPassword);
+
+            //then
+            await Assert.ThrowsAsync<UserOrchestrationDependencyException>(() =>
+                registerUserAsyncTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserOrchestrationDependencyException))),
+                     Times.Once);
+
+            this.userServiceMock.Verify(service =>
+                service.AddUserAsync(It.IsAny<User>(), It.IsAny<string>()),
+                 Times.Once);
+
+            this.uniqueIDGeneratorBrokerMock.Verify(broker =>
+                broker.GenerateUniqueID(),
+                 Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                 Times.Once);
+
+            this.accountServiceMock.Verify(service =>
+                service.AddAccountAsync(It.IsAny<Account>()),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.BeginTransaction(),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.RollBackTransaction(),
+                 Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.DisposeTransaction(),
+                 Times.Once);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.accountServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dbTransactionBrokerMock.VerifyNoOtherCalls();
+            this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

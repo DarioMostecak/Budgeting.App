@@ -35,5 +35,14 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
             if (account is null)
                 throw new FailedOperationUserOrchestrationException();
         }
+
+        private static void ValidateAccountIdentityIdNotEqualToUserId(Account newUserAccount, User newUser)
+        {
+            string userId = newUser.Id.ToString();
+            string userIdentityId = newUserAccount.UserIdentityId;
+
+            if (userId != userIdentityId)
+                throw new FailedOperationUserOrchestrationException();
+        }
     }
 }

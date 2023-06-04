@@ -54,6 +54,9 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
 
         private static string GetRandomPassword() => new MnemonicString(1, 8, 20).GetValue();
 
+        private static Account CreateRandomAccount() =>
+            CreateRandomAccountFiller(dates: DateTime.UtcNow).Create();
+
         private static Expression<Func<ExceptionModel, bool>> SameExceptionAs(Exception expectedException)
         {
             return actualException => actualException.Message == expectedException.Message

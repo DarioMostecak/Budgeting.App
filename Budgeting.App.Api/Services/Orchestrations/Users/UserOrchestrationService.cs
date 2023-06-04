@@ -60,7 +60,9 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
 
             ValidateNewUserAccountIsNull(newUserAccount);
 
-            //Validate account id is euqal to new userId
+            ValidateAccountIdentityIdNotEqualToUserId(
+                newUser: newUser,
+                newUserAccount: newUserAccount);
 
             this.dbTransactionBroker.CommitTransaction();
 

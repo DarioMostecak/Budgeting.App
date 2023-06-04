@@ -75,6 +75,5 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Foundations.Accounts
             {
                 new object[] {Guid.Empty, null, 20M, DateTime.MinValue}
             };
-
     }
 }
