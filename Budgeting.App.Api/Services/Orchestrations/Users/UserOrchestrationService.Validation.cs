@@ -4,9 +4,23 @@
 // FREE TO USE AS LONG AS SOFTWARE FUNDS ARE DONATED TO THE POOR
 // ---------------------------------------------------------------
 
+using Budgeting.App.Api.Models.Users;
+using Budgeting.App.Api.Models.Users.Exceptions;
+
 namespace Budgeting.App.Api.Services.Orchestrations.Users
 {
     public partial class UserOrchestrationService
     {
+        private static void ValidateUserIsNull(User user)
+        {
+            if (user is null)
+                throw new NullUserException();
+        }
+
+        private static void ValidatePasswordIsNullOrEmpty(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new NullUserPasswordException();
+        }
     }
 }

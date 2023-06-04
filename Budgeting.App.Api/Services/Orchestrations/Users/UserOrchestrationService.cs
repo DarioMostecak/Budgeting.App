@@ -43,7 +43,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
         public ValueTask<User> RegisterUserAsync(User user, string password) =>
         TryCatch(async () =>
         {
-            //Validate user is null
+            ValidateUserIsNull(user);
             //validate passwor is null
 
             this.dbTransactionBroker.BeginTransaction();
