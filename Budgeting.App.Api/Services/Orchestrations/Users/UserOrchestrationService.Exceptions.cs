@@ -27,6 +27,12 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
 
                 throw CreateAndLogValidationException(nullUserException);
             }
+            catch (NullUserPasswordException nullUserPasswordException)
+            {
+                this.dbTransactionBroker.RollBackTransaction();
+
+                throw CreateAndLogValidationException(nullUserPasswordException);
+            }
             catch (UserValidationException userValidationException)
             {
                 this.dbTransactionBroker.RollBackTransaction();

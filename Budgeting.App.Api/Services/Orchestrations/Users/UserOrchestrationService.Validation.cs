@@ -17,7 +17,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
                 throw new NullUserException();
         }
 
-        private static void ValidatePasswordIsNullOrEmpty(string password)
+        private static void ValidatePasswordIsNull(string password)
         {
             if (string.IsNullOrEmpty(password))
                 throw new NullUserPasswordException();

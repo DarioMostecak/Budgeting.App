@@ -44,7 +44,7 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
         TryCatch(async () =>
         {
             ValidateUserIsNull(user);
-            //validate passwor is null
+            ValidatePasswordIsNull(password);
 
             this.dbTransactionBroker.BeginTransaction();
 

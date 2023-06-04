@@ -22,7 +22,7 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
             string randomPassword = GetRandomPassword();
             var nullUserException = new NullUserException();
 
-            var expectedUserOrchestrationException =
+            var expectedUserOrchestrationValidationException =
                 new UserOrchestrationValidationException(nullUserException);
 
             //when
@@ -35,7 +35,49 @@ namespace Budgeting.App.Api.Tests.Unit.Services.Orchestrations
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserOrchestrationException))),
+                    expectedUserOrchestrationValidationException))),
+                     Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+               broker.RollBackTransaction(),
+                Times.Once);
+
+            this.dbTransactionBrokerMock.Verify(broker =>
+                broker.DisposeTransaction(),
+                 Times.Once);
+
+            this.userServiceMock.VerifyNoOtherCalls();
+            this.accountserviceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dbTransactionBrokerMock.VerifyNoOtherCalls();
+            this.uniqueIDGeneratorBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRegisterIfUserPasswordIsNullAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateUser();
+            string nullPassword = null;
+
+            var nullUserPasswordException =
+                new NullUserPasswordException();
+
+            var expectedUserOrchestrationValidationException =
+                new UserOrchestrationValidationException(nullUserPasswordException);
+
+            //when
+            ValueTask<User> registerUserAsyncTask =
+                this.userOrchestrationService.RegisterUserAsync(randomUser, nullPassword);
+
+            //then
+            await Assert.ThrowsAsync<UserOrchestrationValidationException>(() =>
+                registerUserAsyncTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserOrchestrationValidationException))),
                      Times.Once);
 
             this.dbTransactionBrokerMock.Verify(broker =>
