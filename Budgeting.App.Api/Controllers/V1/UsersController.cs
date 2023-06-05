@@ -1,6 +1,8 @@
-﻿using Budgeting.App.Api.Models.Users;
+﻿using Budgeting.App.Api.Models.Accounts.Exceptions;
+using Budgeting.App.Api.Models.Users;
 using Budgeting.App.Api.Models.Users.Exceptions;
 using Budgeting.App.Api.Services.Foundations.Users;
+using Budgeting.App.Api.Services.Orchestrations.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +16,14 @@ namespace Budgeting.App.Api.Controllers.V1
     public class UsersController : BaseController
     {
         private readonly IUserService userService;
+        private readonly IUserOrchestrationService userOrchestrationService;
 
-        public UsersController(IUserService userService)
+        public UsersController(
+            IUserService userService,
+            IUserOrchestrationService userOrchestrationService)
         {
             this.userService = userService;
+            this.userOrchestrationService = userOrchestrationService;
         }
 
         [HttpGet]
@@ -58,26 +64,31 @@ namespace Budgeting.App.Api.Controllers.V1
             try
             {
                 User createdUser =
-                    await this.userService.AddUserAsync(user, password);
+                    await this.userOrchestrationService.RegisterUserAsync(user, password);
 
                 return Created(createdUser);
             }
-            catch (UserValidationException userValidationException)
-               when (userValidationException.InnerException is AlreadyExistsUserException)
+            catch (UserOrchestrationValidationException userOrchestrationValidationException)
             {
-                return Conflict(userValidationException.InnerException);
+                return BadRequest(userOrchestrationValidationException);
             }
-            catch (UserValidationException userValidationException)
+            catch (UserOrchestrationDependencyValidationException userOrchestrationDependencyValidationException)
+              when (userOrchestrationDependencyValidationException.InnerException is AlreadyExistsUserException)
             {
-                return BadRequest(userValidationException);
+                return Conflict(userOrchestrationDependencyValidationException.InnerException);
             }
-            catch (UserDependencyException userDependencyException)
+            catch (UserOrchestrationDependencyValidationException userOrchestrationDependencyValidationException)
+              when (userOrchestrationDependencyValidationException.InnerException is AlreadyExistsAccountExceptions)
             {
-                return InternalServerError(userDependencyException);
+                return Conflict(userOrchestrationDependencyValidationException.InnerException);
             }
-            catch (UserServiceException userServiceException)
+            catch (UserOrchestrationDependencyValidationException userOrchestrationDependencyValidationException)
             {
-                return InternalServerError(userServiceException);
+                return BadRequest(userOrchestrationDependencyValidationException);
+            }
+            catch (UserOrchestrationDependencyException userOrchestrationDependencyException)
+            {
+                return InternalServerError(userOrchestrationDependencyException);
             }
         }
 

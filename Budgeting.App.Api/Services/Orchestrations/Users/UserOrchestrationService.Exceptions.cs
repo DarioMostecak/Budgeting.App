@@ -84,7 +84,9 @@ namespace Budgeting.App.Api.Services.Orchestrations.Users
         private UserOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(Exception exception)
         {
             var userOrchestrationDependencyValidationException =
-                new UserOrchestrationDependencyValidationException(exception, exception.Data);
+                new UserOrchestrationDependencyValidationException(
+                    exception.InnerException,
+                    exception.InnerException.Data);
 
             this.loggingBroker.LogError(userOrchestrationDependencyValidationException);
 

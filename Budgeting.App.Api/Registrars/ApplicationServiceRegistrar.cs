@@ -8,6 +8,7 @@ using Budgeting.App.Api.Services.Foundations.Accounts;
 using Budgeting.App.Api.Services.Foundations.Categories;
 using Budgeting.App.Api.Services.Foundations.Users;
 using Budgeting.App.Api.Services.Identity;
+using Budgeting.App.Api.Services.Orchestrations.Users;
 
 namespace Budgeting.App.Api.Registrars
 {
@@ -35,6 +36,7 @@ namespace Budgeting.App.Api.Registrars
             #endregion
 
             #region Add Orchestration
+            builder.Services.AddTransient<IUserOrchestrationService, UserOrchestrationService>();
             #endregion
         }
     }
