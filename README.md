@@ -11,12 +11,12 @@ Our application is s a powerful budgeting application that simplifies your finan
 * [2 Services](#2-services)
   * [2.1 Identity Service](#21-identity-service)
 * [3 Api enpoints](#3-api-enpoints)
-  * [3.1 Identity Service](#31-identity-service )
+  * [Identity Controller](#31-identity-controller)
 
 
 # 1. Introduction
 ## 1.1 Authentication 
-Our application is secured using JWT bearer tokens. When a user logs in, they receive a token which they can use to access the protected endpoints of our application. The token includes information about the user's role, which is used to determine what endpoints they can access.
+Our application is secured using JWT bearer tokens. When a user logs in, they receive a token which they can use to access the protected endpoints of our application. 
 
 
 # 2. Services
